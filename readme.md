@@ -10,4 +10,4 @@
 - Marco Hernández Vásquez (marco.hernandez@itcr.ac.cr)
 ----
 ### Objetivo 
--Desarrollar un proyecto tecnológico que involucre software y hardware, utilizando scrum, con el fin de obtener un producto listo para colocar en producción.
+- Desarrollar un proyecto tecnológico que involucre software y hardware, utilizando scrum, con el fin de obtener un producto listo para colocar en producción.
