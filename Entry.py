@@ -2,14 +2,16 @@ import pygame, sys
 from pygame import *
 
 class Entry:
-    def __init__(self, colorActive, colorPassive, color, text, activeness):
+    def __init__(self, x, y, colorActive, colorPassive, color, text, activeness):
         self.colorActive = colorActive
         self.colorPassive = colorPassive
         self.color = color
         self.text = text
         self.activeness = activeness
-        self.font = pygame.font.Font(None, 30)
-        self.input_user = pygame.Rect(300, 300, 140, 32)
+        self.font = pygame.font.Font(None, 20)
+        self.x = x
+        self.y = y
+        self.input_user = pygame.Rect(self.x, self.y, 140, 32)
 
     def drawEntry(self, window):
         pygame.draw.rect(window, self.color, self.input_user, 1)
