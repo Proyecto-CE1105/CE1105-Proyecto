@@ -1,0 +1,18 @@
+{
+    "users": [
+        {
+            "user": "si",
+            "email": "cor",
+            "password": "asd",
+            "music": "sdf",
+            "photo": "asfl"
+        },
+        {
+            "user": "si",
+            "email": "cor",
+            "password": "asd",
+            "music": "sdf",
+            "photo": "asf"
+        }
+    ]
+}
