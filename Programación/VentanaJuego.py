@@ -1,55 +1,62 @@
-#Importación de paquetes
-import pygame,sys
+import pygame
+import sys
 from pygame.locals import *
 from pygame.sprite import Group
 from Bomb import Bomb
 
-#Inicialización de Pygame
 pygame.init()
 
-#Variables para la pantalla
-widht,height=500,400
-fps=60
-reloj=pygame.time.Clock()
+width, height = 500, 400
+fps = 60
+clock = pygame.time.Clock()
 
-#Colores
-blanco=(255,255,255)
-negro=(0,0,0)
+blanco = (255, 255, 255)
+negro = (0, 0, 0)
 
-#Assets para usar a lo largo del proyecto
-icono=pygame.image.load("Assets/Logo_Game.jpg")
-tanque=pygame.image.load("Assets/Tank_Image.png")
+icono = pygame.image.load("Assets/Logo_Game.jpg")
+tanque = pygame.image.load("Assets/Tank_Image.png")
 
-#Creación de la pantalla
-pantalla= pygame.display.set_mode((widht,height))
+pantalla = pygame.display.set_mode((width, height))
 
-#Especificación de título
 pygame.display.set_caption("Eagle Defender")
 
 pantalla.fill(negro)
 pygame.display.set_icon(icono)
 
-#Grupo de sprites, instanciación del objeto bomba
-sprites=Group()
-bomb=Bomb()
-sprites.add(bomb)
+sprites = Group()
+bombs = []  # Lista para almacenar las bombas
 
-#Bucle de ejecución
+font = pygame.font.Font(None, 36)  # Fuente para el contador
+
+def mostrar_contador_bombas(contador):
+    texto = font.render(f'Bombas: {contador}', True, blanco)
+    pantalla.blit(texto, (width - texto.get_width() - 10, 10))  # Ubicación en la esquina superior derecha
+
 while True:
-    #Cerrar el juego
     for event in pygame.event.get():
-        if event.type==QUIT:
+        if event.type == QUIT:
             pygame.quit()
             sys.exit()
-        elif event.type==MOUSEBUTTONDOWN and event.button==1:
-            #Si se realiza click izquierdo, coloca una bomba en la posicón del mouse
-            bomb.place_bomb(pygame.mouse.get_pos())
-            
-    #Control FPS
-    reloj.tick(fps)
-    #Actualización de la bomba
+        elif event.type == MOUSEBUTTONDOWN and event.button == 1:
+            if Bomb.can_place_bomb():
+                bomb = Bomb()
+                bomb.place_bomb(pygame.mouse.get_pos())
+                sprites.add(bomb)
+                bombs.append(bomb)
+
+    clock.tick(fps)
+
     sprites.update()
-    #Dibujar el sprite en la pantalla
     sprites.draw(pantalla)
-    #Actualización de la ventana
+    mostrar_contador_bombas(Bomb.bomb_count)  # Mostrar el contador de bombas
     pygame.display.update()
+
+    # Elimina las bombas que han salido de la pantalla
+    bombs_to_remove = []
+    for bomb in bombs:
+        if bomb.rect.bottom < 0:
+            bombs_to_remove.append(bomb)
+            Bomb.bomb_count -= 1
+
+    for bomb in bombs_to_remove:
+        bombs.remove(bomb)
