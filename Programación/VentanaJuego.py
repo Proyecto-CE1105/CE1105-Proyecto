@@ -24,13 +24,24 @@ pantalla.fill(negro)
 pygame.display.set_icon(icono)
 
 sprites = Group()
-bombs = []  # Lista para almacenar las bombas
+bombs = []  # List to store bombs
 
-font = pygame.font.Font(None, 36)  # Fuente para el contador
+font = pygame.font.Font(None, 36)  # Font for the counter
 
 def mostrar_contador_bombas(contador):
+    """
+    Display the bomb counter on the screen.
+
+    Args:
+        contador (int): The bomb count.
+
+    Returns:
+        None
+    """
+    # Clear the counter area
+    pygame.draw.rect(pantalla, negro, (width - 150, 0, 150, 30))
     texto = font.render(f'Bombas: {contador}', True, blanco)
-    pantalla.blit(texto, (width - texto.get_width() - 10, 10))  # Ubicación en la esquina superior derecha
+    pantalla.blit(texto, (width - texto.get_width() - 10, 10))
 
 while True:
     for event in pygame.event.get():
@@ -48,15 +59,15 @@ while True:
 
     sprites.update()
     sprites.draw(pantalla)
-    mostrar_contador_bombas(Bomb.bomb_count)  # Mostrar el contador de bombas
+    mostrar_contador_bombas(Bomb.bomb_count)  # Display bomb counter
     pygame.display.update()
 
-    # Elimina las bombas que han salido de la pantalla
+    # Remove bombs that have gone off-screen
     bombs_to_remove = []
     for bomb in bombs:
         if bomb.rect.bottom < 0:
             bombs_to_remove.append(bomb)
-            Bomb.bomb_count -= 1
+            Bomb.bomb_count += 1
 
     for bomb in bombs_to_remove:
         bombs.remove(bomb)
