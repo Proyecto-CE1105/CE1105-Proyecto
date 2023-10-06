@@ -1,16 +1,16 @@
 {
     "users": [
         {
-            "user": "si",
-            "email": "cor",
-            "password": "asd",
+            "user": "jorge",
+            "email": "sdf",
+            "password": "1234",
             "music": "sdf",
             "photo": "asfl"
         },
         {
-            "user": "si",
+            "user": "andrea",
             "email": "cor",
-            "password": "asd",
+            "password": "123",
             "music": "sdf",
             "photo": "asf"
         }

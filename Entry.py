@@ -19,3 +19,6 @@ class Entry:
         window.blit(textSurface, (self.input_user.x + 5, self.input_user.y + 5))
     def is_clicked(self, mouse_pos):
         return self.input_user.x < mouse_pos[0] < self.input_user.x + self.input_user.width and self.input_user.y < mouse_pos[1] < self.input_user.y + self.input_user.height
+
+    def showText(self):
+        return self.text
