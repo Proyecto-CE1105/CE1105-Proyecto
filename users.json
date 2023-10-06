@@ -13,34 +13,6 @@
             "password": "asd",
             "music": "sdf",
             "photo": "asf"
-        },
-        {
-            "user": "2",
-            "email": "3",
-            "password": null,
-            "music": null,
-            "photo": null
-        },
-        {
-            "user": "2",
-            "email": "3",
-            "password": null,
-            "music": null,
-            "photo": null
-        },
-        {
-            "user": "2",
-            "email": "3",
-            "password": null,
-            "music": null,
-            "photo": null
-        },
-        {
-            "user": "2",
-            "email": "3",
-            "password": null,
-            "music": null,
-            "photo": null
         }
     ]
 }

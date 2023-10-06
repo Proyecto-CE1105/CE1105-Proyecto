@@ -26,8 +26,21 @@ class JsonControllerUsers:
             return True
         else: return False
 
+    def verifyUser(self, user_given, password_given):
+        with open('users.json', 'r') as file:
+            data = json.load(file)
+        for user in data['users']:
+            if user['user'] == user_given:
+                if user['password'] == password_given:
+                    return True
+                else:
+                    return False
+        return False
+
+
 fileManagement = JsonControllerUsers("users")
 fileManagement.createJsonFile()
 fileManagement.addUsers("si", "cor", "asd", "sdf", "asfl")
 fileManagement.addUsers("si", "cor", "asd", "sdf", "asf")
 fileManagement.verifyJsonFileExistence()
+fileManagement.verifyUser('si','ad')

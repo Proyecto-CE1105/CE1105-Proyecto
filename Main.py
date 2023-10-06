@@ -13,6 +13,7 @@ pygame.display.set_icon(icono)
 
 # Set background
 bg = pygame.image.load("imagenes/Background.png")
+bg2 = pygame.image.load("imagenes/bg2.jpg")
 
 #File controller
 FileDialog = FilesController.FileControllers(' ', ' ')
@@ -29,8 +30,8 @@ buttonSelectSong = Button.Button(760, 400, 100, 25, 'Select Music', (86, 140, 25
 buttonSelectPhoto = Button.Button(760, 450, 100, 25, 'Select Photo', (86, 140, 255), 23)
 
 user_entry = Entry.Entry(750, 250, (8, 42, 79),(12, 76, 143),(12, 76, 143),'',False)
-passwordRegister_entry = Entry.Entry(750, 300, (8, 42, 79), (12, 76, 143), (12, 76, 143), '', False)
 password_entry = Entry.Entry(750, 300, (8, 42, 79),(12, 76, 143),(12, 76, 143),'',False)
+passwordRegister_entry = Entry.Entry(750, 350, (8, 42, 79), (12, 76, 143), (12, 76, 143), '', False)
 email_entry = Entry.Entry(750, 300, (8, 42, 79),(12, 76, 143),(12, 76, 143),'',False)
 
 labelUser = Label.Label('User:',20,675,250,(0,0,0))
@@ -43,6 +44,9 @@ labelPhoto = Label.Label('Photo:',20, 675,450,(0,0,0))
 WantToShowObjects = True
 WantToShowObjectsSignIn = False
 WantToShowObjectsSignUp = False
+WantToPlay = False
+
+#song = pygame.mixer.music.load('Songs/Trouble.mp3')
 
 # Run while true the window and also update it
 while True:
@@ -64,7 +68,11 @@ while True:
             if buttonSelectPhoto.is_clicked(mouse.get_pos()):
                 FileDialog.photo = FileDialog.selectFile()
             if buttonRegisterUser.is_clicked(mouse.get_pos()):
-                userFile.addUsers(user_entry.text, email_entry.text, passwordRegister_entry.text, FileDialog.music, FileDialog.photo, FileDialog.photo)
+                userFile.addUsers(1,user_entry.text, email_entry.text, passwordRegister_entry.text, FileDialog.music, FileDialog.photo)
+            if buttonEnter.is_clicked(mouse.get_pos()):
+                if userFile.verifyUser(0,user_entry.text,password_entry.text):
+                    WantToPlay = True
+                    WantToShowObjectsSignIn = False
 
         # This checks the events related with the user_entry
         if user_entry.is_clicked(mouse.get_pos()):
@@ -74,14 +82,6 @@ while True:
             user_entry.color = user_entry.colorPassive
             user_entry.activeness = False
 
-        # This checks the events related with the email_entry
-        if email_entry.is_clicked(mouse.get_pos()):
-            email_entry.color = email_entry.colorActive
-            email_entry.activeness = True
-        else:
-            email_entry.color = email_entry.colorPassive
-            email_entry.activeness = False
-
         # This checks the events related with the password_entry
         if password_entry.is_clicked(mouse.get_pos()):
             password_entry.color = password_entry.colorActive
@@ -89,6 +89,14 @@ while True:
         else:
             password_entry.color = password_entry.colorPassive
             password_entry.activeness = False
+
+        # This checks the events related with the email_entry
+        if email_entry.is_clicked(mouse.get_pos()):
+            email_entry.color = email_entry.colorActive
+            email_entry.activeness = True
+        else:
+            email_entry.color = email_entry.colorPassive
+            email_entry.activeness = False
 
         if passwordRegister_entry.is_clicked(mouse.get_pos()):
             passwordRegister_entry.color = passwordRegister_entry.colorActive
@@ -102,7 +110,7 @@ while True:
             buttonEnter.activeness = True
         else:
             buttonEnter.color = user_entry.colorPassive
-            buttonEnter.activeness = False
+            buttonEnter.activeness = False"""
 
         # This allow us to write in the entry
         if event.type == pygame.KEYDOWN:
@@ -116,17 +124,17 @@ while True:
                     email_entry.text = email_entry.text[:-1] #Remove the last letter
                 else:
                     email_entry.text += event.unicode #Add a new letter
-            elif password_entry.activeness == True:
-                if event.key == pygame.K_BACKSPACE:
-                    password_entry.text = password_entry.text[:-1] #Remove the last letter
-                else:
-                    password_entry.text += event.unicode #Add a new letter
-
             elif passwordRegister_entry.activeness == True:
                 if event.key == pygame.K_BACKSPACE:
                     passwordRegister_entry.text = passwordRegister_entry.text[:-1] #Remove the last letter
                 else:
                     passwordRegister_entry.text += event.unicode #Add a new letter
+
+            elif password_entry.activeness == True:
+                if event.key == pygame.K_BACKSPACE:
+                    password_entry.text = password_entry.text[:-1] #Remove the last letter
+                else:
+                    password_entry.text += event.unicode #Add a new letter
 
 
         # This is for eliminate or create objects in the window
@@ -202,6 +210,9 @@ while True:
             buttonSelectPhoto.drawButton(MainWindow)
             buttonRegisterUser.color = (111, 84, 247)
             buttonRegisterUser.drawButton(MainWindow)
+
+    if WantToPlay == True:
+        MainWindow.blit(bg2, (0, 0))
 
 
     pygame.display.update()
