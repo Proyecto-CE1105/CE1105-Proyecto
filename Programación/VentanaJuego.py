@@ -3,6 +3,7 @@ import sys
 from pygame.locals import *
 from pygame.sprite import Group
 from Weapons.Bomb import Bomb
+import InterfazBloques
 
 pygame.init()
 
@@ -43,6 +44,8 @@ def mostrar_contador_bombas(contador):
     texto = font.render(f'Bombas: {contador}', True, blanco)
     pantalla.blit(texto, (width - texto.get_width() - 10, 10))
 
+#interfaz_bloques=InterfazBloques()
+
 while True:
     for event in pygame.event.get():
         if event.type == QUIT:
@@ -54,12 +57,15 @@ while True:
                 bomb.place_bomb(pygame.mouse.get_pos())
                 sprites.add(bomb)
                 bombs.append(bomb)
+        #elif event.type==KEYDOWN:
+            #interfaz_bloques.cambiar_bloque_seleccionado(event.key)
 
     clock.tick(fps)
 
     sprites.update()
     sprites.draw(pantalla)
     mostrar_contador_bombas(Bomb.bomb_count)  # Display bomb counter
+    #interfaz_bloques.display(pantalla)
     pygame.display.update()
 
     # Remove bombs that have gone off-screen
