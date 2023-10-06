@@ -2,7 +2,7 @@ import pygame
 import sys
 from pygame.locals import *
 from pygame.sprite import Group
-from Bomb import Bomb
+from Weapons.Bomb import Bomb
 
 pygame.init()
 
