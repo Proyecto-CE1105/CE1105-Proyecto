@@ -72,8 +72,6 @@ while True:
                 FileDialog.photo = FileDialog.selectFile()
             if buttonRegisterUser.is_clicked(mouse.get_pos()):
                 userFile.addUsers(1,user_entry.text, email_entry.text, password_entry.text, FileDialog.music, FileDialog.photo)
-                WantToShowObjectsSignUp = False
-                WantToShowObjects = True
             if buttonEnter.is_clicked(mouse.get_pos()):
                 if userFile.verifyUser(0,user_entry.text,password_entry.text) and listoDefensor:
                     Atacante = False
@@ -158,7 +156,7 @@ while True:
         if Atacante:
             labelCharacter.draw(MainWindow)
         if Defensor:
-            labelCharacter.update_text("Defensor")
+            labelCharacter.update_text("Defenso")
         labelCharacter.draw(MainWindow)
         user_entry.drawEntry(MainWindow)
         password_entry.drawEntry(MainWindow)
