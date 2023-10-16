@@ -1,7 +1,12 @@
-import pygame, sys, JsonController, Button, Entry, Label, FilesController
+import pygame, sys, JsonController, Button, Entry, Label, FilesController, Player
 from pygame import *
+from pygame.sprite import Group
 
 pygame.init()
+
+fps = 60
+clock = pygame.time.Clock()
+tanque = pygame.image.load("imagenes/Tank_Image.png")
 
 # Create window and refactor name
 MainWindow = pygame.display.set_mode((1200, 650))
@@ -40,6 +45,10 @@ labelMusic = Label.Label('Music:',20, 675,400,(0,0,0))
 labelPhoto = Label.Label('Photo:',20, 675,450,(0,0,0))
 labelCharacter = Label.Label('Atacante',60, 700,180,(0,0,0))
 labelShowGameScreen = Label.Label(str(user_entry.showText()),80, 10,10,(0,0,0))
+
+tanqueSprite=Group()
+mitanque= Player.Player(MainWindow)
+tanqueSprite.add(mitanque)
 
 WantToShowObjects = True
 WantToShowObjectsSignIn = False
@@ -156,7 +165,7 @@ while True:
         if Atacante:
             labelCharacter.draw(MainWindow)
         if Defensor:
-            labelCharacter.update_text("Defenso")
+            labelCharacter.update_text("Defensor")
         labelCharacter.draw(MainWindow)
         user_entry.drawEntry(MainWindow)
         password_entry.drawEntry(MainWindow)
@@ -214,6 +223,13 @@ while True:
         user_entry.drawEntry(MainWindow)
         MainWindow.blit(bg2, (0, 0))
         labelShowGameScreen.draw(MainWindow)
+
+
+        MainWindow.blit(pygame.transform.scale(pygame.image.load("imagenes/mapBack.jpg"), (500, 400)), (0, 00))
+        clock.tick(fps)
+
+        tanqueSprite.update(MainWindow)
+        tanqueSprite.draw(MainWindow)
 
 
     pygame.display.update()
