@@ -21,11 +21,15 @@ class Entry:
     def is_clicked(self, mouse_pos):
         return self.input_user.x < mouse_pos[0] < self.input_user.x + self.input_user.width and self.input_user.y < mouse_pos[1] < self.input_user.y + self.input_user.height
 
-    def add_Text(self):
-        self.text += event.unicode
-
-    def eliminate_Text(self):
-        self.text = self.text[:-1]  # Remove the last letter
+    def seeEntryActiveness(self, mouse_pos,window):
+        if self.is_clicked(mouse_pos):
+            self.color = self.colorActive
+            self.activeness = True
+            self.drawEntry(window)
+        else:
+            self.color = self.colorPassive
+            self.activeness = False
+            self.drawEntry(window)
 
     def showText(self):
         return self.text

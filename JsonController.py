@@ -3,6 +3,7 @@ import json, os
 class JsonControllerUsers:
     def __init__(self, name):
         self.name = name
+
     def addUsers(self, user, email, password, music, photo):
         jsonDirection = os.path.dirname(__file__)
         with open(jsonDirection + "/users.json") as file:
@@ -38,9 +39,8 @@ class JsonControllerUsers:
         return False
 
 
-fileManagement = JsonControllerUsers("users")
-fileManagement.createJsonFile()
+"""fileManagement = JsonControllerUsers("users")
 fileManagement.addUsers("jorge", "sdf", "1234", "sdf", "asfl")
 fileManagement.addUsers("andrea", "cor", "123", "sdf", "asf")
 fileManagement.verifyJsonFileExistence()
-fileManagement.verifyUser('si','ad')
+fileManagement.verifyUser('si','ad')"""
