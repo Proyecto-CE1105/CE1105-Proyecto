@@ -284,6 +284,46 @@ class Screens:
 
             for bomb in bombs_to_remove:
                 bombs.remove(bomb)
+    def winScreen(self):
+        fps = 60
+        clock = pygame.time.Clock()
+
+        pygame.display.set_caption("You Win!")
+
+        background_color_hex = 0x008aff
+
+        background_color = (
+        background_color_hex >> 16 & 255, background_color_hex >> 8 & 255, background_color_hex & 255)
+        self.MainWindow.fill(background_color)
+
+        background_image = pygame.image.load("imagenes/gamewinScreen.jpg")
+        background_image = pygame.transform.scale(background_image, (1000, 650))
+        while True:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+
+            self.MainWindow.blit(background_image, (100, 0))
+
+            pygame.display.update()
+
+    def gameoverScreen(self):
+        fps = 60
+        clock = pygame.time.Clock()
+
+        pygame.display.set_caption("You Lost!")
+        background_image = pygame.image.load("imagenes/gameoverScreen.jpg")
+        background_image = pygame.transform.scale(background_image, (1200, 650))
+        while True:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+
+            self.MainWindow.blit(background_image, (0, 0))
+
+            pygame.display.update()
 
     def mainScreen(self):
         running = True
