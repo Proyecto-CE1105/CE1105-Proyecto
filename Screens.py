@@ -1,4 +1,4 @@
-import pygame, sys, Button, Entry, Label, FilesController, JsonController, Player
+import pygame, sys, Button, Entry, Label, FilesController, JsonController, Player, Aguila
 from pygame import *
 from pygame.sprite import Group
 from pygame.locals import *
@@ -216,6 +216,13 @@ class Screens:
         mitanque = Player.Player(self.MainWindow)
         tanqueSprite.add(mitanque)
 
+        aguila = Aguila.Aguila(self.MainWindow)
+        aguilaSprite = Group()
+        aguilaSprite.add(aguila)
+        aguila.set_position(0,200)
+
+
+
         while(True):
             self.SteelButton.drawButton(self.MainWindow)
             self.MainWindow.blit(self.bg, (0, 0))
@@ -253,6 +260,8 @@ class Screens:
 
             tanqueSprite.update(self.MainWindow)
             tanqueSprite.draw(self.MainWindow)
+
+            aguilaSprite.draw(self.MainWindow)
 
             sprites.update()
             sprites.draw(self.MainWindow)
