@@ -1,0 +1,117 @@
+#Importación de paquetes
+import pygame,sys
+from pygame import mouse
+from pygame.locals import *
+from pygame.sprite import Group
+from Bomb import Bomb
+import Button
+from Weapons.Bomb import Bomb
+from Programación.SteelBlock import SteelBlock
+
+pygame.init()
+
+widht,height=900,700
+fps=60
+clock = pygame.time.Clock()
+
+blanco=(255,255,255)
+negro=(0,0,0)
+
+icono=pygame.image.load("Assets/Logo_Game.jpg")
+tanque=pygame.image.load("Assets/Tank_Image.png")
+
+pantalla= pygame.display.set_mode((widht,height))
+
+pygame.display.set_caption("Eagle Defender")
+
+pantalla.fill(negro)
+pygame.display.set_icon(icono)
+
+sprites = Group()
+bombs = []  # List to store bombs
+
+font = pygame.font.Font(None, 36)  # Font for the counter
+
+#Steel Block
+steelBlock = SteelBlock()
+sprites.add(steelBlock)
+
+#Font for the labels
+Font = pygame.font.SysFont("Arial", 30)
+
+#Variable for blocks
+steelBlock = 10
+desBlocks = 0
+
+SteelButton = Button.Button(700, 0,150,50,'Steel', (86,140,255),30)
+SteelButtonClicked = False
+
+def mostrar_contador_bombas(contador):
+    """
+    Display the bomb counter on the screen.
+
+    Args:
+        contador (int): The bomb count.
+
+    Returns:
+        None
+    """
+    # Clear the counter area
+    pygame.draw.rect(pantalla, negro, (width - 150, 0, 150, 30))
+    texto = font.render(f'Bombas: {contador}', True, blanco)
+    pantalla.blit(texto, (width - texto.get_width() - 10, 10))
+
+# Execution loop
+while True:
+    Timer = (pygame.time.get_ticks())/1000
+
+    for event in pygame.event.get():
+        # Close the game
+        if event.type == QUIT:
+            pygame.quit()
+            sys.exit()
+        elif event.type == MOUSEBUTTONDOWN and event.button == 1:
+            if Bomb.can_place_bomb():
+                bomb = Bomb()
+                bomb.place_bomb(pygame.mouse.get_pos())
+                sprites.add(bomb)
+                bombs.append(bomb)
+
+        elif event.type == MOUSEBUTTONDOWN and SteelButtonClicked == True:
+            steelBlock.place_steel(pygame.mouse.get_pos())
+
+        if SteelButton.is_clicked(mouse.get_pos()):
+            if SteelButtonClicked == True:
+                print("boton de acero en False")
+                SteelButtonClicked = False
+                SteelButton.color = (86, 140, 255)
+                SteelButton.drawButton(pantalla)
+            else:
+                print("boton de acero en True")
+                SteelButtonClicked = True
+                SteelButton.color = (2, 82, 253)
+                SteelButton.drawButton(pantalla)
+
+    # Showing the timer in the window
+    timerLabel = Font.render("Time: " + str(int(Timer)), 0, (63, 176, 224))
+    pantalla.blit(timerLabel, (20, 10))
+
+    #Showing the destroyed blocks
+    desBlocksLabel = Font.render("Destroyed blocks: " + str(desBlocks), 0, (63, 176, 224))
+    pantalla.blit(desBlocksLabel, (120, 10))
+
+    clock.tick(fps)
+    sprites.update()
+    sprites.draw(pantalla)
+    mostrar_contador_bombas(Bomb.bomb_count)  # Display bomb counter
+    pygame.display.update()
+
+    # Remove bombs that have gone off-screen
+    bombs_to_remove = []
+    for bomb in bombs:
+        if bomb.rect.bottom < 0:
+            bombs_to_remove.append(bomb)
+            Bomb.bomb_count += 1
+
+    for bomb in bombs_to_remove:
+        bombs.remove(bomb)
