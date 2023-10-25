@@ -82,14 +82,15 @@ class Screens:
                 if event.type == MOUSEBUTTONDOWN and event.button == 1:
                     if self.buttonEnter.is_clicked(mouse.get_pos()):
                         #Screens.playScreen(self)
-                        if self.userFile.verifyUser(0, self.user_entry_signIn.text, self.password_entry_signIn.text) and Defensor==False:
+                        if self.userFile.verifyUser(self.user_entry_signIn.text, self.password_entry_signIn.text) and Defensor==False:
                             Atacante = False
                             Defensor = True
-                            self.labelCharacter_singIn.text = 'Defensor'
-                            self.playScreen()
+                            self.labelCharacter_singIn.update_text("Defensor")
+                            self.user_entry_signIn.text = ''
+                            self.password_entry_signIn.text = ''
 
-                        elif self.userFile.verifyUser(0, self.user_entry_signIn.text, self.password_entry_signIn.text):
-                            0
+                        elif self.userFile.verifyUser(self.user_entry_signIn.text, self.password_entry_signIn.text):
+                            self.playScreen()
                 if event.type == pygame.KEYDOWN:
                     if self.user_entry_signIn.activeness:
                         if event.key == pygame.K_BACKSPACE:
@@ -254,7 +255,8 @@ class Screens:
                     sys.exit()
                 if event.type == MOUSEBUTTONDOWN and event.button == 1:
                     if self.buttonSignIn.is_clicked(mouse.get_pos()):
-                        Screens.signInScreen(self)
+                        #Screens.signInScreen(self)
+                        Screens.playScreen(self)
                         running = False
 
                     if self.buttonSignUp.is_clicked(mouse.get_pos()):

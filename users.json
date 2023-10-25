@@ -8,11 +8,11 @@
             "photo": "asfl"
         },
         {
-            "user": "hola",
+            "user": "admin",
             "email": "sisisissisi",
-            "password": "jorge",
+            "password": "admin",
             "music": null,
             "photo": null
-        },
-        {
-            "user": 
+        }
+    ]
+}
