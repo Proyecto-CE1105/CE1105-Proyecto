@@ -38,6 +38,9 @@ class Screens:
         self.labelCharacter_singIn = Label.Label('Atacante', 60, 700, 180, (0, 0, 0))
         self.userFile = JsonController.JsonControllerUsers("users")
 
+        self.SteelButton = Button.Button(915, 0, 150, 50, 'Steel', (111, 84, 247), (78, 42, 255), (111, 84, 247), 25)
+        self.steel_selection = Entry.Entry(750, 300, (8, 42, 79), (12, 76, 143), (12, 76, 143), '', False)
+
     def signInScreen(self):
 
         Atacante = True
@@ -195,19 +198,28 @@ class Screens:
     def playScreen(self):
         fps = 60
         clock = pygame.time.Clock()
+        tiempo_inicial = pygame.time.get_ticks()
         tanque = pygame.image.load("imagenes/Tank_Image.png")
         sprites = Group()
         bombs = []  # List to store bombs
+        destroyedBlocks = 0
+        points = 0
+
+        SteelButtonClicked = False
+        steelBlock = 10
 
         blanco = (255, 255, 255)
         negro = (0, 0, 0)
+        font = pygame.font.Font(None, 36)
 
         tanqueSprite = Group()
         mitanque = Player.Player(self.MainWindow)
         tanqueSprite.add(mitanque)
 
         while(True):
+            self.SteelButton.drawButton(self.MainWindow)
             self.MainWindow.blit(self.bg, (0, 0))
+
             for event in pygame.event.get():
                 if event.type == QUIT:
                     pygame.quit()
@@ -220,6 +232,20 @@ class Screens:
                         bombs.append(bomb)
                 # elif event.type==KEYDOWN:
                 # interfaz_bloques.cambiar_bloque_seleccionado(event.key)
+                    elif self.SteelButton.is_clicked(mouse.get_pos()):
+                        print("button steel clicked")
+                        print(self.SteelButton.seeActiveness(mouse.get_pos(), self.MainWindow))
+
+                        self.SteelButton.seeActiveness(mouse.get_pos(), self.MainWindow)
+                        '''
+                        if self.SteelButton.seeActiveness(mouse.get_pos(), self.MainWindow)) == False:
+                            self.SteelButton.color = self.steel_selection.colorActive
+                            self.SteelButton.activeness = True
+                        else:
+                            self.SteelButton.color = self.steel_selection.colorPassive
+                            self.SteelButton.activeness = False
+                            '''
+
 
             self.MainWindow.blit(pygame.transform.scale(pygame.image.load("imagenes/mapBack.jpg"), (500, 400)), (0, 00))
 
@@ -231,6 +257,21 @@ class Screens:
             sprites.update()
             sprites.draw(self.MainWindow)
             self.mostrar_contador_bombas(Bomb.Bomb.bomb_count, self.MainWindow)
+
+            # Timer
+            tiempo_transcurrido = (pygame.time.get_ticks() - tiempo_inicial) // 1000
+            timerLabel = font.render("Time: " + str(tiempo_transcurrido), True, (63, 176, 224))
+            self.MainWindow.blit(timerLabel, (20, 10))
+
+            # Showing the destroyed blocks
+            desBlocksLabel = font.render("Destroyed blocks: " + str(destroyedBlocks), 0, (63, 176, 224))
+            self.MainWindow.blit(desBlocksLabel, (120, 10))
+
+            # Points
+            pointsLabel = font.render("Points: " + str(points), 0, (63, 176, 224))
+            self.MainWindow.blit(pointsLabel, (400, 10))
+
+            self.SteelButton.drawButton(self.MainWindow)
 
             pygame.display.update()
 
