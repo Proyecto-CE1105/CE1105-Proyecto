@@ -1,6 +1,8 @@
 import pygame, sys, Button, Entry, Label, FilesController, JsonController, Player
 from pygame import *
 from pygame.sprite import Group
+from pygame.locals import *
+import Bomb
 
 class Screens:
     def __init__(self):
@@ -34,7 +36,7 @@ class Screens:
         self.labelUser_signIn = Label.Label('User:', 20, 675, 250, (0, 0, 0))
         self.labelPassword_signIn = Label.Label('Password:', 20, 675, 300, (0, 0, 0))
         self.labelCharacter_singIn = Label.Label('Atacante', 60, 700, 180, (0, 0, 0))
-        self.userFile = JsonController.JsonControllerUsers
+        self.userFile = JsonController.JsonControllerUsers("users")
 
     def signInScreen(self):
 
@@ -84,6 +86,7 @@ class Screens:
                             Atacante = False
                             Defensor = True
                             self.labelCharacter_singIn.text = 'Defensor'
+                            self.playScreen()
 
                         elif self.userFile.verifyUser(0, self.user_entry_signIn.text, self.password_entry_signIn.text):
                             0
@@ -106,7 +109,7 @@ class Screens:
 
     def signUpScreen(self):
         userFile = JsonController.JsonControllerUsers
-        FileDialog = FilesController.FileControllers(' ', ' ')
+        FileDialog = FilesController.FileControllers("","")
 
         running = True
         while (running):
@@ -127,7 +130,7 @@ class Screens:
                     if self.buttonSelectPhoto.is_clicked(mouse.get_pos()):
                         FileDialog.photo = FileDialog.selectFile()
                     if self.buttonRegisterUser.is_clicked(mouse.get_pos()):
-                        userFile.addUsers(1, self.user_entry.text, self.email_entry.text, self.password_entry.text, FileDialog.music, FileDialog.photo)
+                        userFile.addUsers(0, self.user_entry, self.email_entry, self.password_entry, FileDialog.music, FileDialog.photo)
                         running = False
                         self.mainScreen()
 
@@ -170,27 +173,75 @@ class Screens:
 
                 pygame.display.update()
 
+    def mostrar_contador_bombas(self, contador, MainWindow):
+        """
+        Display the bomb counter on the screen.
+
+        Args:
+            contador (int): The bomb count.
+
+        Returns:
+            None
+        """
+        blanco = (255, 255, 255)
+        negro = (0, 0, 0)
+        # Clear the counter area
+        font = pygame.font.Font(None, 36)
+        pygame.draw.rect(MainWindow, negro, (1200 - 150, 0, 150, 30))
+        texto = font.render(f'Bombas: {contador}', True, blanco)
+        MainWindow.blit(texto, (1200 - texto.get_width() - 10, 10))
+
     def playScreen(self):
         fps = 60
         clock = pygame.time.Clock()
         tanque = pygame.image.load("imagenes/Tank_Image.png")
+        sprites = Group()
+        bombs = []  # List to store bombs
+
+        blanco = (255, 255, 255)
+        negro = (0, 0, 0)
 
         tanqueSprite = Group()
         mitanque = Player.Player(self.MainWindow)
         tanqueSprite.add(mitanque)
+
         while(True):
             self.MainWindow.blit(self.bg, (0, 0))
             for event in pygame.event.get():
                 if event.type == QUIT:
                     pygame.quit()
                     sys.exit()
+                elif event.type == MOUSEBUTTONDOWN and event.button == 1:
+                    if Bomb.Bomb.can_place_bomb():
+                        bomb = Bomb.Bomb()
+                        bomb.place_bomb(pygame.mouse.get_pos())
+                        sprites.add(bomb)
+                        bombs.append(bomb)
+                # elif event.type==KEYDOWN:
+                # interfaz_bloques.cambiar_bloque_seleccionado(event.key)
 
-                self.MainWindow.blit(pygame.transform.scale(pygame.image.load("imagenes/mapBack.jpg"), (500, 400)), (0, 00))
-                clock.tick(fps)
-                tanqueSprite.update(self.MainWindow)
-                tanqueSprite.draw(self.MainWindow)
+            self.MainWindow.blit(pygame.transform.scale(pygame.image.load("imagenes/mapBack.jpg"), (500, 400)), (0, 00))
 
-                pygame.display.update()
+            clock.tick(fps)
+
+            tanqueSprite.update(self.MainWindow)
+            tanqueSprite.draw(self.MainWindow)
+
+            sprites.update()
+            sprites.draw(self.MainWindow)
+            self.mostrar_contador_bombas(Bomb.Bomb.bomb_count, self.MainWindow)
+
+            pygame.display.update()
+
+            # Remove bombs that have gone off-screen
+            bombs_to_remove = []
+            for bomb in bombs:
+                if bomb.rect.bottom < 0:
+                    bombs_to_remove.append(bomb)
+                    bomb.bomb_count += 1
+
+            for bomb in bombs_to_remove:
+                bombs.remove(bomb)
 
     def mainScreen(self):
         running = True
