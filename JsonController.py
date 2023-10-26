@@ -41,4 +41,6 @@ class JsonControllerUsers:
 
 """fileManagement = JsonControllerUsers("users")
 fileManagement.addUsers("jorge", "sdf", "1234", "sdf", "asfl")
-fileManagement.addUsers("andrea", "cor", "123", "sdf", "asf")"""
+fileManagement.addUsers("andrea", "cor", "123", "sdf", "asf")
+fileManagement.verifyJsonFileExistence()
+fileManagement.verifyUser('si','ad')"""

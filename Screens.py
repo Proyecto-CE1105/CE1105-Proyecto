@@ -4,9 +4,6 @@ from pygame import *
 from pygame.sprite import Group
 from pygame.locals import *
 import Bomb
-import Music
-import time
-
 
 class Screens:
     def __init__(self):
@@ -27,8 +24,8 @@ class Screens:
         self.buttonEnter = Button.Button(740, 350, 100, 50, 'Enter', (86, 140, 255), (2, 82, 253), (86, 140, 255), 20)
 
         self.user_entry = Entry.Entry(750, 250, (8, 42, 79), (12, 76, 143), (12, 76, 143), '', False)
-        self.email_entry = Entry.Entry(750, 300, (8, 42, 79), (12, 76, 143), (12, 76, 143), '', False)
-        self.password_entry = Entry.Entry(750, 350, (8, 42, 79), (12, 76, 143), (12, 76, 143), '', False)
+        self.password_entry = Entry.Entry(750, 300, (8, 42, 79), (12, 76, 143), (12, 76, 143), '', False)
+        self.email_entry = Entry.Entry(750, 350, (8, 42, 79), (12, 76, 143), (12, 76, 143), '', False)
         self.user_entry_signIn = Entry.Entry(750, 250, (8, 42, 79), (12, 76, 143), (12, 76, 143), '', False)
         self.password_entry_signIn = Entry.Entry(750, 300, (8, 42, 79), (12, 76, 143), (12, 76, 143), '', False)
 
@@ -134,11 +131,11 @@ class Screens:
                     sys.exit()
                 if event.type == MOUSEBUTTONDOWN and event.button == 1:
                     if self.buttonSelectSong.is_clicked(mouse.get_pos()):
-                        FileDialog.selectFile("music")
+                        FileDialog.music = FileDialog.selectFile()
                     if self.buttonSelectPhoto.is_clicked(mouse.get_pos()):
-                        FileDialog.selectFile("photo")
+                        FileDialog.photo = FileDialog.selectFile()
                     if self.buttonRegisterUser.is_clicked(mouse.get_pos()):
-                        userFile.addUsers(0, self.user_entry.text, self.email_entry.text, self.password_entry.text, str(FileDialog.music), str(FileDialog.photo))
+                        userFile.addUsers(0, self.user_entry, self.email_entry, self.password_entry, FileDialog.music, FileDialog.photo)
                         running = False
                         self.mainScreen()
 
@@ -223,7 +220,6 @@ class Screens:
         mitanque = Player.Player(self.MainWindow)
         tanqueSprite.add(mitanque)
 
-<<<<<<< Updated upstream
         aguila = Aguila.Aguila(self.MainWindow)
         aguilaSprite = Group()
         aguilaSprite.add(aguila)
@@ -233,13 +229,6 @@ class Screens:
 
         while(True):
             self.SteelButton.drawButton(self.MainWindow)
-=======
-        music = Music.Music(self.MainWindow)
-        music.playSong()
-
-        running = True
-        while(running):
->>>>>>> Stashed changes
             self.MainWindow.blit(self.bg, (0, 0))
 
             for event in pygame.event.get():
@@ -254,10 +243,6 @@ class Screens:
                         bomb.place_bomb(pygame.mouse.get_pos())
                         sprites.add(bomb)
                         bombs.append(bomb)
-                elif event.type == music.songEnd:
-                    # Aquí puedes ejecutar el código que deseas cuando la canción termine
-                    print("La canción ha terminado de reproducirse.")
-                    running = False  # Puedes agregar tu propia lógica para continuar después de la canción
                 # elif event.type==KEYDOWN:
                 # interfaz_bloques.cambiar_bloque_seleccionado(event.key)
                     elif self.SteelButton.is_clicked(mouse.get_pos()):
@@ -355,16 +340,6 @@ class Screens:
 
             pygame.display.update()
 
-
-            #This belongs to the music played
-            remainTime = time.time() - music.startTime
-            times = music.duration - remainTime
-
-            # Actualiza la pantalla
-            # self.MainWindow.fill((255, 255, 255))
-            text = music.font.render(f'Tiempo: {int(times)} / {int(music.duration)} segundos', False, (0, 0, 0))
-            self.MainWindow.blit(text, (500, 0))
-            pygame.display.flip()
     def mainScreen(self):
         running = True
         while (running):
@@ -377,8 +352,8 @@ class Screens:
                     sys.exit()
                 if event.type == MOUSEBUTTONDOWN and event.button == 1:
                     if self.buttonSignIn.is_clicked(mouse.get_pos()):
-                        Screens.signInScreen(self)
-                        #Screens.playScreen(self)
+                        #Screens.signInScreen(self)
+                        Screens.playScreen(self)
                         running = False
 
                     if self.buttonSignUp.is_clicked(mouse.get_pos()):

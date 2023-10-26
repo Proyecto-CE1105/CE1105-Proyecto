@@ -7,14 +7,12 @@ class FileControllers:
     def __init__(self, music, photo):
         self.music = music
         self.photo = photo
-    def selectFile(self, data):
+    def selectFile(self):
         root = tk.Tk()
         root.withdraw()  #Hide the tkinter window
 
         file_path = filedialog.askopenfilename()
-        if data == "music":
-            self.music = os.path.basename(file_path)
-            print(self.music)
-        elif data == "photo":
-            self.photo = os.path.basename(file_path)
-            print(self.photo)
+        self.photo = os.path.basename(file_path)
+        self.music = os.path.basename(file_path)
+        if file_path:
+            print("Archivo seleccionado:", str(file_path))
