@@ -8,11 +8,18 @@
             "photo": "asfl"
         },
         {
-            "user": "admin",
-            "email": "sisisissisi",
-            "password": "admin",
-            "music": null,
-            "photo": null
+            "user": "1",
+            "email": "2",
+            "password": "3",
+            "music": "Maps.mp3",
+            "photo": "logo.jpg"
+        },
+        {
+            "user": "4",
+            "email": "5",
+            "password": "6",
+            "music": "Trouble.mp3",
+            "photo": ""
         }
     ]
 }
