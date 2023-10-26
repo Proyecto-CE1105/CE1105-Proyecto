@@ -1,4 +1,5 @@
-import pygame, sys, Button, Entry, Label, FilesController, JsonController, Player, Aguila
+from random import randint
+import pygame, sys, Button, Entry, Label, FilesController, JsonController, Player
 from pygame import *
 from pygame.sprite import Group
 from pygame.locals import *
@@ -212,6 +213,9 @@ class Screens:
         negro = (0, 0, 0)
         font = pygame.font.Font(None, 36)
 
+        self.fondosDisponibles=[pygame.transform.scale(pygame.image.load("imagenes/fondo2.jpg"),(1920,1920)),pygame.transform.scale(pygame.image.load("imagenes/fondo3.jpg"),(1920,1920)),pygame.transform.scale(pygame.image.load("imagenes/fondo4.jpg"),(1920,1920))]
+        self.fondo=self.fondosDisponibles[0]
+
         tanqueSprite = Group()
         mitanque = Player.Player(self.MainWindow)
         tanqueSprite.add(mitanque)
@@ -231,6 +235,8 @@ class Screens:
                 if event.type == QUIT:
                     pygame.quit()
                     sys.exit()
+                elif event.type == KEYDOWN and event.key == K_g:
+                    self.fondo = self.fondosDisponibles[randint(0,len(self.fondosDisponibles)-1)]
                 elif event.type == MOUSEBUTTONDOWN and event.button == 1:
                     if Bomb.Bomb.can_place_bomb():
                         bomb = Bomb.Bomb()
@@ -254,8 +260,8 @@ class Screens:
                             '''
 
 
-            self.MainWindow.blit(pygame.transform.scale(pygame.image.load("imagenes/mapBack.jpg"), (500, 400)), (0, 00))
 
+            self.MainWindow.blit(pygame.transform.scale(pygame.image.load("imagenes/mapBack.jpg"), (500, 400)), (0, 00))
             clock.tick(fps)
 
             tanqueSprite.update(self.MainWindow)
@@ -337,6 +343,7 @@ class Screens:
     def mainScreen(self):
         running = True
         while (running):
+
             self.MainWindow.blit(self.bg, (0,0))
 
             for event in pygame.event.get():
