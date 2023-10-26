@@ -1,9 +1,11 @@
 from random import randint
-import pygame, sys, Button, Entry, Label, FilesController, JsonController, Player
+import pygame, sys, Button, Entry, Label, FilesController, JsonController, Player, Aguila
 from pygame import *
 from pygame.sprite import Group
 from pygame.locals import *
 import Bomb
+import Music
+import time
 
 class Screens:
     def __init__(self):
@@ -24,8 +26,8 @@ class Screens:
         self.buttonEnter = Button.Button(740, 350, 100, 50, 'Enter', (86, 140, 255), (2, 82, 253), (86, 140, 255), 20)
 
         self.user_entry = Entry.Entry(750, 250, (8, 42, 79), (12, 76, 143), (12, 76, 143), '', False)
-        self.password_entry = Entry.Entry(750, 300, (8, 42, 79), (12, 76, 143), (12, 76, 143), '', False)
-        self.email_entry = Entry.Entry(750, 350, (8, 42, 79), (12, 76, 143), (12, 76, 143), '', False)
+        self.email_entry = Entry.Entry(750, 300, (8, 42, 79), (12, 76, 143), (12, 76, 143), '', False)
+        self.password_entry = Entry.Entry(750, 350, (8, 42, 79), (12, 76, 143), (12, 76, 143), '', False)
         self.user_entry_signIn = Entry.Entry(750, 250, (8, 42, 79), (12, 76, 143), (12, 76, 143), '', False)
         self.password_entry_signIn = Entry.Entry(750, 300, (8, 42, 79), (12, 76, 143), (12, 76, 143), '', False)
 
@@ -131,11 +133,11 @@ class Screens:
                     sys.exit()
                 if event.type == MOUSEBUTTONDOWN and event.button == 1:
                     if self.buttonSelectSong.is_clicked(mouse.get_pos()):
-                        FileDialog.music = FileDialog.selectFile()
+                        FileDialog.selectFile("music")
                     if self.buttonSelectPhoto.is_clicked(mouse.get_pos()):
-                        FileDialog.photo = FileDialog.selectFile()
+                        FileDialog.selectFile("photo")
                     if self.buttonRegisterUser.is_clicked(mouse.get_pos()):
-                        userFile.addUsers(0, self.user_entry, self.email_entry, self.password_entry, FileDialog.music, FileDialog.photo)
+                        userFile.addUsers(0, self.user_entry.text, self.email_entry.text, self.password_entry.text, str(FileDialog.music), str(FileDialog.photo))
                         running = False
                         self.mainScreen()
 
@@ -225,9 +227,12 @@ class Screens:
         aguilaSprite.add(aguila)
         aguila.set_position(0,200)
 
+        music = Music.Music(self.MainWindow)
+        music.playSong()
+        musicStartTime = time.time()
 
-
-        while(True):
+        running = True
+        while(running):
             self.SteelButton.drawButton(self.MainWindow)
             self.MainWindow.blit(self.bg, (0, 0))
 
@@ -258,6 +263,10 @@ class Screens:
                             self.SteelButton.color = self.steel_selection.colorPassive
                             self.SteelButton.activeness = False
                             '''
+                elif event.type == music.songEnd:
+                    # Aquí puedes ejecutar el código que deseas cuando la canción termine
+                    print("La canción ha terminado de reproducirse.")
+                    running = False  # Puedes agregar tu propia lógica para continuar después de la canción
 
 
 
@@ -273,6 +282,12 @@ class Screens:
             sprites.draw(self.MainWindow)
             self.mostrar_contador_bombas(Bomb.Bomb.bomb_count, self.MainWindow)
 
+            elapsed_time = time.time() - musicStartTime
+
+            # Actualiza la pantalla
+            text = font.render(f'Tiempo: {int(elapsed_time)} / {int(music.duration)} segundos', True, (0, 0, 0))
+            self.MainWindow.blit(text, (100, 100))
+            #pygame.display.flip()
             # Timer
             tiempo_transcurrido = (pygame.time.get_ticks() - tiempo_inicial) // 1000
             timerLabel = font.render("Time: " + str(tiempo_transcurrido), True, (63, 176, 224))
