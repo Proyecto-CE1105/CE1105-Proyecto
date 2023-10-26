@@ -261,7 +261,7 @@ class Screens:
 
 
 
-            self.MainWindow.blit(pygame.transform.scale(pygame.image.load("imagenes/mapBack.jpg"), (500, 400)), (0, 00))
+            self.MainWindow.blit(self.fondo,(0,0))
             clock.tick(fps)
 
             tanqueSprite.update(self.MainWindow)
