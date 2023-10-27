@@ -1,25 +1,12 @@
-import Music
-
 import threading
 from random import randint
-import time
-
-import pygame, sys, Player
-
-import JsonController
-
-import Button
-import Entry
-import Label
-
-import FilesController
-
-import Aguila
-import Bomb
-
+import pygame, sys, Button, Entry, Label, FilesController, JsonController, Player, Aguila
 from pygame import *
 from pygame.sprite import Group
 from pygame.locals import *
+import Bomb
+import Music
+import time
 
 class Screens:
     def __init__(self):
