@@ -4,15 +4,33 @@
             "user": "jorge",
             "email": "sdf",
             "password": "1234",
-            "music": "sdf",
-            "photo": "asfl"
+            "music": "Maps.mp3",
+            "photo": "asfl",
+            "rol": "A"
         },
         {
             "user": "admin",
             "email": "sisisissisi",
             "password": "admin",
-            "music": null,
-            "photo": null
+            "music": "Trouble.mp3",
+            "photo": null,
+            "rol": "D"
+        },
+        {
+            "user": "1",
+            "email": "2",
+            "password": "3",
+            "music": "Trouble.mp3",
+            "photo": "logo.jpg",
+            "rol": "A"
+        },
+        {
+            "user": "1",
+            "email": "2",
+            "password": "3",
+            "music": "Maps.mp3",
+            "photo": "logo.jpg",
+            "rol": "4"
         }
     ]
 }

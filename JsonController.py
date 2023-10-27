@@ -4,7 +4,7 @@ class JsonControllerUsers:
     def __init__(self, name):
         self.name = name
 
-    def addUsers(self, user, email, password, music, photo):
+    def addUsers(self, user, email, password, music, photo, rol):
         jsonDirection = os.path.dirname(__file__)
         with open(jsonDirection + "/users.json") as file:
             data = json.load(file)
@@ -13,7 +13,8 @@ class JsonControllerUsers:
                 "email": email,
                 "password": password,
                 "music": music,
-                "photo": photo
+                "photo": photo,
+                "rol": rol
             })
             with open("users.json", "w") as file:
                 json.dump(data, file, indent=4)
@@ -37,6 +38,15 @@ class JsonControllerUsers:
                 else:
                     return False
         return False
+
+    def selectSong(self, user_given):
+        with open('users.json', 'r') as file:
+            data = json.load(file)
+        for user in data['users']:
+            if user['user'] == user_given:
+                if user['music']:
+                    return user['music']
+
 
 
 """fileManagement = JsonControllerUsers("users")

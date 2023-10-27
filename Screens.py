@@ -1,9 +1,12 @@
+import threading
 from random import randint
-import pygame, sys, Button, Entry, Label, FilesController, JsonController, Player
+import pygame, sys, Button, Entry, Label, FilesController, JsonController, Player, Aguila
 from pygame import *
 from pygame.sprite import Group
 from pygame.locals import *
 import Bomb
+import Music
+import time
 
 class Screens:
     def __init__(self):
@@ -18,30 +21,36 @@ class Screens:
         self.buttonSignIn = Button.Button(650, 300, 150, 50, 'Sign In', (86, 140, 255), (2, 82, 253), (86, 140, 255), 30)
         self.buttonSignUp = Button.Button(850, 300, 150, 50, 'Sign Up', (86, 140, 255), (2, 82, 253), (86, 140, 255), 30)
 
-        self.buttonRegisterUser = Button.Button(740, 500, 150, 50, 'Register User', (111, 84, 247), (78, 42, 255), (111, 84, 247), 25)
-        self.buttonSelectSong = Button.Button(760, 400, 100, 25, 'Select Music', (86, 140, 255), (2, 82, 253), (86, 140, 255), 23)
-        self.buttonSelectPhoto = Button.Button(760, 450, 100, 25, 'Select Photo', (86, 140, 255), (2, 82, 253), (86, 140, 255), 23)
+        self.buttonRegisterUser = Button.Button(740, 550, 150, 50, 'Register User', (111, 84, 247), (78, 42, 255), (111, 84, 247), 25)
+        self.buttonSelectSong = Button.Button(760, 450, 100, 25, 'Select Music', (86, 140, 255), (2, 82, 253), (86, 140, 255), 23)
+        self.buttonSelectPhoto = Button.Button(760, 500, 100, 25, 'Select Photo', (86, 140, 255), (2, 82, 253), (86, 140, 255), 23)
         self.buttonEnter = Button.Button(740, 350, 100, 50, 'Enter', (86, 140, 255), (2, 82, 253), (86, 140, 255), 20)
 
         self.user_entry = Entry.Entry(750, 250, (8, 42, 79), (12, 76, 143), (12, 76, 143), '', False)
-        self.password_entry = Entry.Entry(750, 300, (8, 42, 79), (12, 76, 143), (12, 76, 143), '', False)
-        self.email_entry = Entry.Entry(750, 350, (8, 42, 79), (12, 76, 143), (12, 76, 143), '', False)
+        self.email_entry = Entry.Entry(750, 300, (8, 42, 79), (12, 76, 143), (12, 76, 143), '', False)
+        self.password_entry = Entry.Entry(750, 350, (8, 42, 79), (12, 76, 143), (12, 76, 143), '', False)
+        self.rol_entry = Entry.Entry(750, 400, (8, 42, 79), (12, 76, 143), (12, 76, 143), '', False)
         self.user_entry_signIn = Entry.Entry(750, 250, (8, 42, 79), (12, 76, 143), (12, 76, 143), '', False)
         self.password_entry_signIn = Entry.Entry(750, 300, (8, 42, 79), (12, 76, 143), (12, 76, 143), '', False)
 
         self.labelUser = Label.Label('User:', 20, 675, 250, (0, 0, 0))
         self.labelEmail = Label.Label('Email:', 20, 675, 300, (0, 0, 0))
         self.labelPassword = Label.Label('Password:', 20, 675, 350, (0, 0, 0))
-        self.labelMusic = Label.Label('Music:', 20, 675, 400, (0, 0, 0))
-        self.labelPhoto = Label.Label('Photo:', 20, 675, 450, (0, 0, 0))
+        self.labelMusic = Label.Label('Music:', 20, 675, 450, (0, 0, 0))
+        self.labelPhoto = Label.Label('Photo:', 20, 675, 500, (0, 0, 0))
+        self.labelRol = Label.Label('Rol:', 20, 675, 400, (0, 0, 0))
         self.labelUser_signIn = Label.Label('User:', 20, 675, 250, (0, 0, 0))
         self.labelPassword_signIn = Label.Label('Password:', 20, 675, 300, (0, 0, 0))
         self.labelCharacter_singIn = Label.Label('Atacante', 60, 700, 180, (0, 0, 0))
+        self.labelCharacterInScreen = Label.Label('Player', 30, 650, 20, (0, 0, 0))
+
         self.userFile = JsonController.JsonControllerUsers("users")
 
         self.SteelButton = Button.Button(915, 0, 150, 50, 'Steel', (111, 84, 247), (78, 42, 255), (111, 84, 247), 25)
         self.steel_selection = Entry.Entry(750, 300, (8, 42, 79), (12, 76, 143), (12, 76, 143), '', False)
 
+        self.playerName = ""
+        self.favoriteSong = ""
     def signInScreen(self):
 
         Atacante = True
@@ -90,6 +99,8 @@ class Screens:
                             Atacante = False
                             Defensor = True
                             self.labelCharacter_singIn.update_text("Defensor")
+                            self.playerName = self.user_entry_signIn.text
+                            self.favoriteSong = str(self.userFile.selectSong(self.user_entry_signIn.text))
                             self.user_entry_signIn.text = ''
                             self.password_entry_signIn.text = ''
 
@@ -108,8 +119,6 @@ class Screens:
                         else:
                             self.password_entry_signIn.text += event.unicode  # Add a new letter
 
-
-
                 pygame.display.update()
 
     def signUpScreen(self):
@@ -124,6 +133,7 @@ class Screens:
             self.labelPassword.draw(self.MainWindow)
             self.labelMusic.draw(self.MainWindow)
             self.labelPhoto.draw(self.MainWindow)
+            self.labelRol.draw(self.MainWindow)
 
             for event in pygame.event.get():
                 if event.type == QUIT:
@@ -131,11 +141,11 @@ class Screens:
                     sys.exit()
                 if event.type == MOUSEBUTTONDOWN and event.button == 1:
                     if self.buttonSelectSong.is_clicked(mouse.get_pos()):
-                        FileDialog.music = FileDialog.selectFile()
+                        FileDialog.selectFile("music")
                     if self.buttonSelectPhoto.is_clicked(mouse.get_pos()):
-                        FileDialog.photo = FileDialog.selectFile()
+                        FileDialog.selectFile("photo")
                     if self.buttonRegisterUser.is_clicked(mouse.get_pos()):
-                        userFile.addUsers(0, self.user_entry, self.email_entry, self.password_entry, FileDialog.music, FileDialog.photo)
+                        userFile.addUsers(0, self.user_entry.text, self.email_entry.text, self.password_entry.text, str(FileDialog.music), str(FileDialog.photo), self.rol_entry.text)
                         running = False
                         self.mainScreen()
 
@@ -146,6 +156,7 @@ class Screens:
                 self.user_entry.seeEntryActiveness(mouse.get_pos(), self.MainWindow)
                 self.password_entry.seeEntryActiveness(mouse.get_pos(), self.MainWindow)
                 self.email_entry.seeEntryActiveness(mouse.get_pos(), self.MainWindow)
+                self.rol_entry.seeEntryActiveness(mouse.get_pos(), self.MainWindow)
 
 
                 #Write on the entries
@@ -167,10 +178,17 @@ class Screens:
                             self.password_entry.drawEntry(self.MainWindow)
                         else:
                             self.password_entry.text += event.unicode  # Add a new letter
+                    elif self.rol_entry.activeness:
+                        if event.key == pygame.K_BACKSPACE:
+                            self.rol_entry.text = self.rol_entry.text[:-1]  # Remove the last letter
+                            self.rol_entry.drawEntry(self.MainWindow)
+                        else:
+                            self.rol_entry.text += event.unicode  # Add a new letter
 
                 self.user_entry.drawEntry(self.MainWindow)
                 self.email_entry.drawEntry(self.MainWindow)
                 self.password_entry.drawEntry(self.MainWindow)
+                self.rol_entry.drawEntry(self.MainWindow)
 
                 self.buttonRegisterUser.drawButton(self.MainWindow)
                 self.buttonSelectSong.drawButton(self.MainWindow)
@@ -225,9 +243,14 @@ class Screens:
         aguilaSprite.add(aguila)
         aguila.set_position(0,200)
 
+        music = Music.Music(self.MainWindow, self.favoriteSong)
+        music.playSong()
+        musicStartTime = time.time()
 
+        self.labelCharacterInScreen.update_text(self.playerName)
 
-        while(True):
+        running = True
+        while(running):
             self.SteelButton.drawButton(self.MainWindow)
             self.MainWindow.blit(self.bg, (0, 0))
 
@@ -258,6 +281,10 @@ class Screens:
                             self.SteelButton.color = self.steel_selection.colorPassive
                             self.SteelButton.activeness = False
                             '''
+                elif event.type == music.songEnd:
+                    # Aquí puedes ejecutar el código que deseas cuando la canción termine
+                    print("La canción ha terminado de reproducirse.")
+                    running = False  # Puedes agregar tu propia lógica para continuar después de la canción
 
 
 
@@ -273,6 +300,14 @@ class Screens:
             sprites.draw(self.MainWindow)
             self.mostrar_contador_bombas(Bomb.Bomb.bomb_count, self.MainWindow)
 
+            self.labelCharacterInScreen.draw(self.MainWindow)
+
+            elapsed_time = time.time() - musicStartTime
+
+            # Actualiza la pantalla
+            text = font.render(f'Tiempo: {int(elapsed_time)} / {int(music.duration)} segundos', True, (0, 0, 0))
+            self.MainWindow.blit(text, (100, 100))
+            #pygame.display.flip()
             # Timer
             tiempo_transcurrido = (pygame.time.get_ticks() - tiempo_inicial) // 1000
             timerLabel = font.render("Time: " + str(tiempo_transcurrido), True, (63, 176, 224))
@@ -352,8 +387,7 @@ class Screens:
                     sys.exit()
                 if event.type == MOUSEBUTTONDOWN and event.button == 1:
                     if self.buttonSignIn.is_clicked(mouse.get_pos()):
-                        #Screens.signInScreen(self)
-                        Screens.playScreen(self)
+                        Screens.signInScreen(self)
                         running = False
 
                     if self.buttonSignUp.is_clicked(mouse.get_pos()):
