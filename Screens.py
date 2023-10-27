@@ -239,9 +239,8 @@ class Screens:
         tanqueSprite.add(mitanque)
 
         aguila = Aguila.Aguila(self.MainWindow)
-        aguilaSprite = Group()
-        aguilaSprite.add(aguila)
         aguila.set_position(0,200)
+
 
         music = Music.Music(self.MainWindow, self.favoriteSong)
         music.playSong()
@@ -284,8 +283,8 @@ class Screens:
                 elif event.type == music.songEnd:
                     # Aquí puedes ejecutar el código que deseas cuando la canción termine
                     print("La canción ha terminado de reproducirse.")
-                    running = False  # Puedes agregar tu propia lógica para continuar después de la canción
-
+                    #running = False  # Puedes agregar tu propia lógica para continuar después de la canción
+                    self.winScreen(points)
 
 
             self.MainWindow.blit(self.fondo,(0,0))
@@ -293,8 +292,6 @@ class Screens:
 
             tanqueSprite.update(self.MainWindow)
             tanqueSprite.draw(self.MainWindow)
-
-            aguilaSprite.draw(self.MainWindow)
 
             sprites.update()
             sprites.draw(self.MainWindow)
@@ -321,6 +318,8 @@ class Screens:
             pointsLabel = font.render("Points: " + str(points), 0, (63, 176, 224))
             self.MainWindow.blit(pointsLabel, (400, 10))
 
+            self.MainWindow.blit(aguila.image, aguila.rect)
+
             self.SteelButton.drawButton(self.MainWindow)
 
             pygame.display.update()
@@ -328,13 +327,19 @@ class Screens:
             # Remove bombs that have gone off-screen
             bombs_to_remove = []
             for bomb in bombs:
+                # Saber si la bomba toca el aguila
+                if mitanque.rect.colliderect(bomb.rect):
+                    #self.gameoverScreen(points)
+                    print("collide")
+                    aguila.update()
+
                 if bomb.rect.bottom < 0:
                     bombs_to_remove.append(bomb)
                     bomb.bomb_count += 1
 
             for bomb in bombs_to_remove:
                 bombs.remove(bomb)
-    def winScreen(self):
+    def winScreen(self, points):
         fps = 60
         clock = pygame.time.Clock()
 
@@ -356,9 +361,16 @@ class Screens:
 
             self.MainWindow.blit(background_image, (100, 0))
 
+            font = pygame.font.Font(None, 36)
+            pointsLabel = font.render("Points Obtained: " + str(points), 0, (0, 0, 0))
+            self.MainWindow.blit(pointsLabel, (600, 50))
+            #reproducir cancion elegida
+
+            #salon de la fama
+
             pygame.display.update()
 
-    def gameoverScreen(self):
+    def gameoverScreen(self, points):
         fps = 60
         clock = pygame.time.Clock()
 
@@ -370,6 +382,10 @@ class Screens:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
+
+            font = pygame.font.Font(None, 36)
+            pointsLabel = font.render("Points Obtained: " + str(points), 0, (0, 0, 0))
+            self.MainWindow.blit(pointsLabel, (600, 50))
 
             self.MainWindow.blit(background_image, (0, 0))
 

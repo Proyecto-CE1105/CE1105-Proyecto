@@ -47,6 +47,7 @@ class Bomb(pygame.sprite.Sprite):
             None
         """
         self.rect.y -= 1
+
         if self.rect.bottom < 0:
             self.kill()
 
