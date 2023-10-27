@@ -5,9 +5,9 @@ pygame.init()
 
 class Music:
 
-    def __init__(self, MainWindow):
+    def __init__(self, MainWindow, song):
         self.font = pygame.font.Font(None, 36)
-        self.songPath = 'Songs/Maps.mp3'
+        self.songPath = 'Songs/'+song
         self.songEnd = pygame.USEREVENT +1
         self.duration = pygame.mixer.Sound.get_length(pygame.mixer.Sound(self.songPath))
         self.MainWindow = MainWindow
