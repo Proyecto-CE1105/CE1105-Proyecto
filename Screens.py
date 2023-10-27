@@ -214,6 +214,8 @@ class Screens:
         texto = font.render(f'Bombas: {contador}', True, blanco)
         MainWindow.blit(texto, (1200 - texto.get_width() - 10, 10))
 
+
+    explosionsprite = pygame.sprite.Group()
     def playScreen(self):
         fps = 60
         clock = pygame.time.Clock()
@@ -265,6 +267,7 @@ class Screens:
                         bomb.place_bomb(pygame.mouse.get_pos())
                         sprites.add(bomb)
                         bombs.append(bomb)
+                        mitanque.disparar()
                 # elif event.type==KEYDOWN:
                 # interfaz_bloques.cambiar_bloque_seleccionado(event.key)
                     elif self.SteelButton.is_clicked(mouse.get_pos()):
@@ -328,10 +331,9 @@ class Screens:
             bombs_to_remove = []
             for bomb in bombs:
                 # Saber si la bomba toca el aguila
-                if mitanque.rect.colliderect(bomb.rect):
-                    #self.gameoverScreen(points)
+                if aguila.rect.colliderect(bomb.rect):
+                    self.gameoverScreen(points)
                     print("collide")
-                    aguila.update()
 
                 if bomb.rect.bottom < 0:
                     bombs_to_remove.append(bomb)
@@ -339,6 +341,7 @@ class Screens:
 
             for bomb in bombs_to_remove:
                 bombs.remove(bomb)
+
     def winScreen(self, points):
         fps = 60
         clock = pygame.time.Clock()

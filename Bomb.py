@@ -28,7 +28,7 @@ class Bomb(pygame.sprite.Sprite):
             None
         """
         super().__init__()
-        self.original_image = pygame.image.load("imagenes/Bomb_Image.webp").convert()
+        self.original_image = pygame.image.load("imagenes/Bomb_Image.webp")
         self.image = pygame.transform.scale(self.original_image, (50, 50))
         self.rect = self.image.get_rect()
         self.rect.x = -self.rect.width

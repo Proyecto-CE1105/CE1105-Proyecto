@@ -10,8 +10,8 @@ class Aguila(pygame.sprite.Sprite):
     def __init__(self, MainWindow):
 
         super().__init__()
-        self.original_image = pygame.image.load("imagenes/aguila.png").convert()
-        self.image = pygame.transform.scale(self.original_image, (50, 50))
+        self.original_image = pygame.image.load("imagenes/aguila.png")
+        self.image = pygame.transform.scale(self.original_image, (70, 70))
 
         self.rect = self.image.get_rect()
         self.rect.x = -self.rect.width
