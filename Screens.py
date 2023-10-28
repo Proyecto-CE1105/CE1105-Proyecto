@@ -250,6 +250,8 @@ class Screens:
 
         self.labelCharacterInScreen.update_text(self.playerName)
 
+        image_change_time = pygame.time.get_ticks() + 1000
+
         running = True
         while(running):
             self.SteelButton.drawButton(self.MainWindow)
@@ -267,7 +269,18 @@ class Screens:
                         bomb.place_bomb(pygame.mouse.get_pos())
                         sprites.add(bomb)
                         bombs.append(bomb)
-                        mitanque.disparar()
+
+                        #mitanque.disparar()
+                        current_time = pygame.time.get_ticks()
+                        if current_time >= image_change_time:
+                            if mitanque.image == mitanque.skins[1]:
+                                mitanque.image = mitanque.skins[0]
+                            else:
+                                mitanque.image = mitanque.skins[1]
+
+                            image_change_time = current_time + 1000
+
+                            print("cambia skin")
                 # elif event.type==KEYDOWN:
                 # interfaz_bloques.cambiar_bloque_seleccionado(event.key)
                     elif self.SteelButton.is_clicked(mouse.get_pos()):

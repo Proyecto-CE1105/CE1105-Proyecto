@@ -44,5 +44,8 @@ class Player(pygame.sprite.Sprite):
         self.rotaciones = [pygame.transform.rotate(self.icon,0),pygame.transform.rotate(self.icon,270),pygame.transform.rotate(self.icon,180),pygame.transform.rotate(self.icon,90)]
         self.image=self.rotaciones[0]
 
-    def disparar(self ):
+    def disparar(self):
         self.image = self.skins[1]
+        self.shoot_time = pygame.time.get_ticks()
+
+
