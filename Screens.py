@@ -4,7 +4,7 @@ import pygame, sys, Button, Entry, Label, FilesController, JsonController, Playe
 from pygame import *
 from pygame.sprite import Group
 from pygame.locals import *
-import Bomb
+from Weapons.Bomb import Bomb
 import Music
 import time
 
@@ -261,8 +261,8 @@ class Screens:
                 elif event.type == KEYDOWN and event.key == K_g:
                     self.fondo = self.fondosDisponibles[randint(0,len(self.fondosDisponibles)-1)]
                 elif event.type == MOUSEBUTTONDOWN and event.button == 1:
-                    if Bomb.Bomb.can_place_bomb():
-                        bomb = Bomb.Bomb()
+                    if Bomb.can_place_bomb():
+                        bomb = Bomb()
                         bomb.place_bomb(pygame.mouse.get_pos())
                         sprites.add(bomb)
                         bombs.append(bomb)
@@ -298,7 +298,7 @@ class Screens:
 
             sprites.update()
             sprites.draw(self.MainWindow)
-            self.mostrar_contador_bombas(Bomb.Bomb.bomb_count, self.MainWindow)
+            self.mostrar_contador_bombas(Bomb.bomb_count, self.MainWindow)
 
             self.labelCharacterInScreen.draw(self.MainWindow)
 
@@ -329,11 +329,12 @@ class Screens:
             bombs_to_remove = []
             for bomb in bombs:
                 if bomb.rect.bottom < 0:
-                    bombs_to_remove.append(bomb)
-                    bomb.bomb_count += 1
+                   bombs_to_remove.append(bomb)
+                   Bomb.bomb_count += 1
 
             for bomb in bombs_to_remove:
                 bombs.remove(bomb)
+
     def winScreen(self):
         fps = 60
         clock = pygame.time.Clock()
