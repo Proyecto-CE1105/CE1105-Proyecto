@@ -10,6 +10,12 @@ ALTO_BLOQUE = 20
 ESPACIO_ENTRE_BLOQUES = 5
 DISTANCIA_AL_BORDE = 20
 RECARGA_ACERO_TIEMPO = 30000  # 30 segundos en milisegundos
+MENSAJE_TIEMPO = 3000  # 3 segundos en milisegundos
+MOSTRAR_MENSAJE_EVENTO = pygame.USEREVENT +1
+
+# Variable para rastrear la recarga de bloques de acero
+tiempo_ultima_recarga = pygame.time.get_ticks()
+bloques_recargados = 0
 
 CANTIDAD_BLOQUES = {
     'acero': 5,    # Cantidad de bloques de acero
@@ -42,10 +48,15 @@ def dibujar_contador(ventana):
         ventana.blit(texto, texto_rect)
         contador_y -= (ALTO_BLOQUE + ESPACIO_ENTRE_BLOQUES)
 
-# Función para recargar bloques de acero
+# Función para recargar bloques de acero y mostrar un mensaje
 def recargar_acero():
-    if CANTIDAD_BLOQUES['acero'] < 5:
+    global bloques_recargados, tiempo_ultima_recarga, mensaje_tiempo_inicio
+    tiempo_actual = pygame.time.get_ticks()
+    if CANTIDAD_BLOQUES['acero'] < 5 and tiempo_actual - tiempo_ultima_recarga >= RECARGA_ACERO_TIEMPO:
         CANTIDAD_BLOQUES['acero'] += 1
+        bloques_recargados += 1
+        tiempo_ultima_recarga = tiempo_actual
+        mensaje_tiempo_inicio = tiempo_actual  # Establece el tiempo de inicio del mensaje
 
 # Configuración de Pygame
 pygame.init()
@@ -53,36 +64,47 @@ VENTANA_ANCHO, VENTANA_ALTO = 800, 600
 ventana = pygame.display.set_mode((VENTANA_ANCHO, VENTANA_ALTO))
 pygame.display.set_caption("Contador de Bloques")
 
+# Cargar la imagen del bloque de acero
+steelblock = pygame.image.load("Assets/Blocks/SteelBlock.png")
+steelblock = pygame.transform.scale(steelblock, (50, 50))
+
 # Bucle principal
 reloj = pygame.time.Clock()
 ultimo_tiempo_acero = pygame.time.get_ticks()
+mensaje_tiempo_inicio = None  # Variable para almacenar el tiempo de inicio del mensaje
 
-ejecutando = True
+bloques_acero = []  # Lista para almacenar los bloques de acero
 
-while ejecutando:
+while True:
     for evento in pygame.event.get():
         if evento.type == QUIT:
-            ejecutando = False
+            pygame.quit()
+            sys.exit()
         elif evento.type == KEYDOWN:
-            if evento.key == K_1:
-                if CANTIDAD_BLOQUES['acero'] > 0:
-                    CANTIDAD_BLOQUES['acero'] -= 1
-            elif evento.key == K_2:
-                if CANTIDAD_BLOQUES['ladrillo'] > 0:
-                    CANTIDAD_BLOQUES['ladrillo'] -= 1
-            elif evento.key == K_3:
-                if CANTIDAD_BLOQUES['madera'] > 0:
-                    CANTIDAD_BLOQUES['madera'] -= 1
+            if evento.key == K_1 and CANTIDAD_BLOQUES['acero'] > 0:
+                CANTIDAD_BLOQUES['acero'] -= 1
+                x, y = pygame.mouse.get_pos()
+                bloque_acero = (x - 25, y - 25)
+                bloques_acero.append(bloque_acero)
+                ultimo_tiempo_acero = pygame.time.get_ticks()
+                mensaje_tiempo_inicio = tiempo_ultima_recarga  # Establece el tiempo de inicio del mensaje para mostrarlo 3 segundos
 
     tiempo_actual = pygame.time.get_ticks()
-    if tiempo_actual - ultimo_tiempo_acero >= RECARGA_ACERO_TIEMPO:
+    if tiempo_actual - tiempo_ultima_recarga >= RECARGA_ACERO_TIEMPO:
         recargar_acero()
-        ultimo_tiempo_acero = tiempo_actual
+        mensaje_tiempo_inicio = pygame.time.get_ticks()  # Inicia el tiempo del mensaje de recarga
 
     ventana.fill((255, 255, 255))  # Fondo blanco
     dibujar_contador(ventana)  # Dibuja el contador en la ventana
+
+    for bloque_acero in bloques_acero:
+        ventana.blit(steelblock, bloque_acero)  # Coloca los bloques de acero en la posición almacenada
+
+    if mensaje_tiempo_inicio is not None and tiempo_actual - mensaje_tiempo_inicio < MENSAJE_TIEMPO:
+        fuente_mensaje = pygame.font.SysFont(FUENTE, TAMANO_FUENTE)
+        texto_mensaje = fuente_mensaje.render("Bloque de acero recargado", True, COLOR_TEXTO)
+        texto_mensaje_rect = texto_mensaje.get_rect(midbottom=(VENTANA_ANCHO // 2, VENTANA_ALTO - 20))
+        ventana.blit(texto_mensaje, texto_mensaje_rect)
+
     pygame.display.flip()
     reloj.tick(60)  # 60 FPS
-
-pygame.quit()
-sys.exit()
