@@ -9,6 +9,7 @@ ANCHO_BLOQUE = 50
 ALTO_BLOQUE = 20
 ESPACIO_ENTRE_BLOQUES = 5
 DISTANCIA_AL_BORDE = 20
+RECARGA_ACERO_TIEMPO = 30000  # 30 segundos en milisegundos
 
 CANTIDAD_BLOQUES = {
     'acero': 5,    # Cantidad de bloques de acero
@@ -41,6 +42,11 @@ def dibujar_contador(ventana):
         ventana.blit(texto, texto_rect)
         contador_y -= (ALTO_BLOQUE + ESPACIO_ENTRE_BLOQUES)
 
+# Función para recargar bloques de acero
+def recargar_acero():
+    if CANTIDAD_BLOQUES['acero'] < 5:
+        CANTIDAD_BLOQUES['acero'] += 1
+
 # Configuración de Pygame
 pygame.init()
 VENTANA_ANCHO, VENTANA_ALTO = 800, 600
@@ -49,6 +55,8 @@ pygame.display.set_caption("Contador de Bloques")
 
 # Bucle principal
 reloj = pygame.time.Clock()
+ultimo_tiempo_acero = pygame.time.get_ticks()
+
 ejecutando = True
 
 while ejecutando:
@@ -65,6 +73,11 @@ while ejecutando:
             elif evento.key == K_3:
                 if CANTIDAD_BLOQUES['madera'] > 0:
                     CANTIDAD_BLOQUES['madera'] -= 1
+
+    tiempo_actual = pygame.time.get_ticks()
+    if tiempo_actual - ultimo_tiempo_acero >= RECARGA_ACERO_TIEMPO:
+        recargar_acero()
+        ultimo_tiempo_acero = tiempo_actual
 
     ventana.fill((255, 255, 255))  # Fondo blanco
     dibujar_contador(ventana)  # Dibuja el contador en la ventana
