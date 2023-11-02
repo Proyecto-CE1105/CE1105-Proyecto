@@ -51,6 +51,7 @@ class Screens:
 
         self.playerName = ""
         self.favoriteSong = ""
+
     def signInScreen(self):
 
         Atacante = True
@@ -213,7 +214,7 @@ class Screens:
         pygame.draw.rect(MainWindow, negro, (1200 - 150, 0, 150, 30))
         texto = font.render(f'Bombas: {contador}', True, blanco)
         MainWindow.blit(texto, (1200 - texto.get_width() - 10, 10))
-
+    
     def playScreen(self):
         fps = 60
         clock = pygame.time.Clock()
@@ -399,5 +400,3 @@ class Screens:
                 self.buttonSignIn.seeActiveness(mouse.get_pos(), self.MainWindow)
 
                 pygame.display.update()
-
-

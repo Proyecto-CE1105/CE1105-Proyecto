@@ -1,8 +1,9 @@
+# Importación de las bibliotecas necesarias
 import pygame
 import sys
 from pygame.locals import *
 
-# Configuraciones
+# Configuraciones generales del programa
 ANCHO_CONTADOR = 180
 ALTO_CONTADOR = 60
 ANCHO_BLOQUE = 50
@@ -11,12 +12,13 @@ ESPACIO_ENTRE_BLOQUES = 5
 DISTANCIA_AL_BORDE = 20
 RECARGA_ACERO_TIEMPO = 30000  # 30 segundos en milisegundos
 MENSAJE_TIEMPO = 3000  # 3 segundos en milisegundos
-MOSTRAR_MENSAJE_EVENTO = pygame.USEREVENT +1
+MOSTRAR_MENSAJE_EVENTO = pygame.USEREVENT + 1
 
-# Variable para rastrear la recarga de bloques de acero
+# Variables para rastrear la recarga de bloques de acero
 tiempo_ultima_recarga = pygame.time.get_ticks()
 bloques_recargados = 0
 
+# Diccionarios que almacenan la cantidad de bloques y sus colores
 CANTIDAD_BLOQUES = {
     'acero': 5,    # Cantidad de bloques de acero
     'madera': 3,   # Cantidad de bloques de madera
@@ -27,11 +29,11 @@ COLORES_BLOQUES = {
     'madera': (139, 69, 19),    # Café
     'ladrillo': (255, 0, 0)    # Rojo
 }
-COLOR_TEXTO = (0, 0, 0)  # Negro
+COLOR_TEXTO = (0, 0, 0)  # Color del texto (Negro)
 FUENTE = "Arial"
 TAMANO_FUENTE = 20
 
-# Función para dibujar el contador
+# Función para dibujar el contador de bloques en la ventana
 def dibujar_contador(ventana):
     x, y = ventana.get_size()
     contador_x = x - (ANCHO_CONTADOR + ESPACIO_ENTRE_BLOQUES)
@@ -68,12 +70,12 @@ pygame.display.set_caption("Contador de Bloques")
 steelblock = pygame.image.load("Assets/Blocks/SteelBlock.png")
 steelblock = pygame.transform.scale(steelblock, (50, 50))
 
-# Bucle principal
+# Bucle principal del juego
 reloj = pygame.time.Clock()
 ultimo_tiempo_acero = pygame.time.get_ticks()
 mensaje_tiempo_inicio = None  # Variable para almacenar el tiempo de inicio del mensaje
 
-bloques_acero = []  # Lista para almacenar los bloques de acero
+bloques_acero = []  # Lista para almacenar las posiciones de los bloques de acero en pantalla
 
 while True:
     for evento in pygame.event.get():
@@ -87,7 +89,7 @@ while True:
                 bloque_acero = (x - 25, y - 25)
                 bloques_acero.append(bloque_acero)
                 ultimo_tiempo_acero = pygame.time.get_ticks()
-                mensaje_tiempo_inicio = tiempo_ultima_recarga  # Establece el tiempo de inicio del mensaje para mostrarlo 3 segundos
+                mensaje_tiempo_inicio = tiempo_ultima_recarga  # Establece el tiempo de inicio del mensaje para mostrarlo durante 3 segundos
 
     tiempo_actual = pygame.time.get_ticks()
     if tiempo_actual - tiempo_ultima_recarga >= RECARGA_ACERO_TIEMPO:
@@ -95,10 +97,10 @@ while True:
         mensaje_tiempo_inicio = pygame.time.get_ticks()  # Inicia el tiempo del mensaje de recarga
 
     ventana.fill((255, 255, 255))  # Fondo blanco
-    dibujar_contador(ventana)  # Dibuja el contador en la ventana
+    dibujar_contador(ventana)  # Dibuja el contador de bloques en la ventana
 
     for bloque_acero in bloques_acero:
-        ventana.blit(steelblock, bloque_acero)  # Coloca los bloques de acero en la posición almacenada
+        ventana.blit(steelblock, bloque_acero)  # Coloca los bloques de acero en las posiciones almacenadas
 
     if mensaje_tiempo_inicio is not None and tiempo_actual - mensaje_tiempo_inicio < MENSAJE_TIEMPO:
         fuente_mensaje = pygame.font.SysFont(FUENTE, TAMANO_FUENTE)
@@ -107,4 +109,4 @@ while True:
         ventana.blit(texto_mensaje, texto_mensaje_rect)
 
     pygame.display.flip()
-    reloj.tick(60)  # 60 FPS
+    reloj.tick(60)  # Límite de 60 FPS para la animación
