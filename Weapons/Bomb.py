@@ -76,3 +76,16 @@ class Bomb(pygame.sprite.Sprite):
         """
         return Bomb.bomb_count > 0
 
+    # Getters to obtain positions of bomb image's sides
+    def get_left(self):
+        return self.rect.left
+
+    def get_right(self):
+        return self.rect.right
+
+    def get_top(self):
+        return self.rect.top
+
+    def get_bottom(self):
+        return self.rect.bottom
+

@@ -1,22 +1,46 @@
 import threading
 from random import randint
 import pygame, sys, Button, Entry, Label, FilesController, JsonController, Player, Aguila
+from ContadorBloquesTest import dibujar_contador, recargar_acero
 from pygame import *
 from pygame.sprite import Group
 from pygame.locals import *
-import Bomb
+from Weapons.Bomb import Bomb
 import Music
 import time
 
+anchoVentana, altoVentana =1200, 650
+
+anchoContador=180
+altoContador=60
+anchoBloque=50
+altoBloque=20
+espacioEntreBloques=5
+distanciaBorde=20
+recargaBloqueAcero=30000
+mensajeTiempo=3000
+mostrarMensajeEvento=pygame.USEREVENT +1
+
+tiempo_ultima_recarga = pygame.time.get_ticks()
+bloques_recargados=0
+
+cantidadBloques={'acero':5, 'madera':10, 'ladrillo':8}
+coloresBloques={'acero':(169, 169, 169), 'madera': (139,69,19), 'ladrillo': (255,0,0)}
+
+colorTexto=(0,0,0)
+fuente="Arial"
+tamanoFuente=20
+
 class Screens:
     def __init__(self):
+        
         pygame.init()
 
         self.icono = pygame.image.load("imagenes/logo.jpg")
         pygame.display.set_icon(self.icono)
         pygame.display.set_caption('Eagle Defender')
 
-        self.MainWindow = pygame.display.set_mode((1200, 650))
+        self.MainWindow = pygame.display.set_mode((anchoVentana, altoVentana))
         self.bg = pygame.image.load("imagenes/Background.png")
         self.buttonSignIn = Button.Button(650, 300, 150, 50, 'Sign In', (86, 140, 255), (2, 82, 253), (86, 140, 255), 30)
         self.buttonSignUp = Button.Button(850, 300, 150, 50, 'Sign Up', (86, 140, 255), (2, 82, 253), (86, 140, 255), 30)
@@ -51,6 +75,7 @@ class Screens:
 
         self.playerName = ""
         self.favoriteSong = ""
+
     def signInScreen(self):
 
         Atacante = True
@@ -213,7 +238,7 @@ class Screens:
         pygame.draw.rect(MainWindow, negro, (1200 - 150, 0, 150, 30))
         texto = font.render(f'Bombas: {contador}', True, blanco)
         MainWindow.blit(texto, (1200 - texto.get_width() - 10, 10))
-
+    
     def playScreen(self):
         fps = 60
         clock = pygame.time.Clock()
@@ -227,8 +252,6 @@ class Screens:
         SteelButtonClicked = False
         steelBlock = 10
 
-        blanco = (255, 255, 255)
-        negro = (0, 0, 0)
         font = pygame.font.Font(None, 36)
 
         self.fondosDisponibles=[pygame.transform.scale(pygame.image.load("imagenes/fondo2.jpg"),(1920,1920)),pygame.transform.scale(pygame.image.load("imagenes/fondo3.jpg"),(1920,1920)),pygame.transform.scale(pygame.image.load("imagenes/fondo4.jpg"),(1920,1920))]
@@ -249,6 +272,12 @@ class Screens:
 
         self.labelCharacterInScreen.update_text(self.playerName)
 
+        steelblock = pygame.image.load("Assets/Blocks/SteelBlock.png")
+        steelblock = pygame.transform.scale(steelblock,(50,50)) 
+
+        mensaje_tiempo_inicio= None
+        bloques_acero=[]
+
         running = True
         while(running):
             self.SteelButton.drawButton(self.MainWindow)
@@ -261,8 +290,8 @@ class Screens:
                 elif event.type == KEYDOWN and event.key == K_g:
                     self.fondo = self.fondosDisponibles[randint(0,len(self.fondosDisponibles)-1)]
                 elif event.type == MOUSEBUTTONDOWN and event.button == 1:
-                    if Bomb.Bomb.can_place_bomb():
-                        bomb = Bomb.Bomb()
+                    if Bomb.can_place_bomb():
+                        bomb = Bomb()
                         bomb.place_bomb(pygame.mouse.get_pos())
                         sprites.add(bomb)
                         bombs.append(bomb)
@@ -285,11 +314,37 @@ class Screens:
                     # Aquí puedes ejecutar el código que deseas cuando la canción termine
                     print("La canción ha terminado de reproducirse.")
                     running = False  # Puedes agregar tu propia lógica para continuar después de la canción
+                elif event.type == KEYDOWN and event.key == K_1 and cantidadBloques['acero']>0:
+                    cantidadBloques['acero']-=1
+                    x,y=pygame.mouse.get_pos()
+                    bloque_acero=(x-25,y-25)
+                    bloques_acero.append(bloque_acero)
+                    ultimo_tiempo_acero=pygame.time.get_ticks()
+                    mensaje_tiempo_inicio= tiempo_ultima_recarga
+                elif event.type == KEYDOWN and event.key == K_2 and cantidadBloques['madera']>0:
+                    cantidadBloques['madera']-=1
+                elif event.type == KEYDOWN and event.key == K_3 and cantidadBloques['ladrillo']>0:
+                    cantidadBloques['ladrillo']-=1
 
+            tiempo_actual= pygame.time.get_ticks()
 
-
+            if tiempo_actual-tiempo_ultima_recarga>=recargaBloqueAcero:
+                recargar_acero(cantidadBloques)
+                mensaje_tiempo_inicio=pygame.time.get_ticks()
+            
             self.MainWindow.blit(self.fondo,(0,0))
             clock.tick(fps)
+
+            dibujar_contador(self.MainWindow,cantidadBloques)
+
+            for bloque_acero in bloques_acero:
+                self.MainWindow.blit(steelblock,bloque_acero)
+
+            if mensaje_tiempo_inicio is not None and tiempo_actual-mensaje_tiempo_inicio<mensajeTiempo:
+                fuente_mensaje = pygame.font.SysFont(fuente, tamanoFuente)
+                texto_mensaje = fuente_mensaje.render("Bloque de acero recargado", True, colorTexto)
+                texto_mensaje_rect = texto_mensaje.get_rect(midbottom=(anchoVentana // 2, altoVentana - 20))
+                self.MainWindow.blit(texto_mensaje, texto_mensaje_rect)
 
             tanqueSprite.update(self.MainWindow)
             tanqueSprite.draw(self.MainWindow)
@@ -298,7 +353,7 @@ class Screens:
 
             sprites.update()
             sprites.draw(self.MainWindow)
-            self.mostrar_contador_bombas(Bomb.Bomb.bomb_count, self.MainWindow)
+            self.mostrar_contador_bombas(Bomb.bomb_count, self.MainWindow)
 
             self.labelCharacterInScreen.draw(self.MainWindow)
 
@@ -329,11 +384,12 @@ class Screens:
             bombs_to_remove = []
             for bomb in bombs:
                 if bomb.rect.bottom < 0:
-                    bombs_to_remove.append(bomb)
-                    bomb.bomb_count += 1
+                   bombs_to_remove.append(bomb)
+                   Bomb.bomb_count += 1
 
             for bomb in bombs_to_remove:
                 bombs.remove(bomb)
+    
     def winScreen(self):
         fps = 60
         clock = pygame.time.Clock()
@@ -398,5 +454,3 @@ class Screens:
                 self.buttonSignIn.seeActiveness(mouse.get_pos(), self.MainWindow)
 
                 pygame.display.update()
-
-
