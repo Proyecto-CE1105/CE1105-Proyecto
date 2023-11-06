@@ -5,6 +5,7 @@ from ContadorBloquesTest import dibujar_contador, recargar_acero
 from pygame import *
 from pygame.sprite import Group
 from pygame.locals import *
+from VentanaPausa import draw_pause
 from Weapons.Bomb import Bomb
 import Music
 import time
@@ -30,6 +31,9 @@ coloresBloques={'acero':(169, 169, 169), 'madera': (139,69,19), 'ladrillo': (255
 colorTexto=(0,0,0)
 fuente="Arial"
 tamanoFuente=20
+
+fuente2=pygame.font.Font('freesansbold.ttf',32)
+rect_surface=pygame.Surface((anchoVentana,altoVentana),pygame.SRCALPHA)
 
 
 class Screens:
@@ -239,7 +243,7 @@ class Screens:
         pygame.draw.rect(MainWindow, negro, (1200 - 150, 0, 150, 30))
         texto = font.render(f'Bombas: {contador}', True, blanco)
         MainWindow.blit(texto, (1200 - texto.get_width() - 10, 10))
-    
+
     def playScreen(self):
 
         pausa=False
@@ -296,6 +300,8 @@ class Screens:
                     pausa=True
                     music.pause()
                     #pauseTime=pause_time(musicStartTime)
+                    #draw_pause(self.MainWindow,anchoVentana,altoVentana,fuente2)
+                    self.MainWindow.blit(rect_surface,(0,0))
                     print("Juego Pausado")
                 elif not pausa:
                     if event.type == KEYDOWN and event.key == K_g:
@@ -338,9 +344,12 @@ class Screens:
                     pausa=False
                     music.unpause()
                     #musicStartTime=resume_time(pauseTime)
-                else: 
-                    print("Hola")
-
+            
+            if pausa:
+                pygame.draw.rect(rect_surface,(128,128,128,150),[0,0,anchoVentana,altoVentana])
+                pygame.draw.rect(rect_surface, 'dark gray', [200,150,600,50],0,10)
+                reset=pygame.draw.rect(rect_surface,'white',[200,220,280,50],0,10)
+                save=pygame.draw.rect(rect_surface,'white',[520,220,280,50],0,10)
             if not pausa:
                 tiempo_actual= pygame.time.get_ticks()
 
@@ -410,7 +419,7 @@ class Screens:
 
                 for bomb in bombs_to_remove:
                     bombs.remove(bomb)
-        
+            
         '''def pause_time(musicT):
             pauseTime=time.time()-musicT
             return pauseTime'''
