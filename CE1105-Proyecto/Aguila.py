@@ -10,17 +10,15 @@ class Aguila(pygame.sprite.Sprite):
     def __init__(self, MainWindow):
 
         super().__init__()
-        self.original_image = pygame.image.load("imagenes/aguila.png")
-        self.image = pygame.transform.scale(self.original_image, (70, 70))
+        self.original_image = pygame.image.load("imagenes/aguila.png").convert()
+        self.image = pygame.transform.scale(self.original_image, (50, 50))
 
         self.rect = self.image.get_rect()
-        self.rect.x = -self.rect.width
-        self.rect.y = -self.rect.height
+
 
     def update(self):
-        print("y: " + str(self.rect.y))
-        print("x: " + str(self.rect.x))
 
+        pass
     def set_position(self, x, y):
         self.rect.x = x
         self.rect.y = y
