@@ -289,12 +289,17 @@ class Screens:
                     sys.exit()
                 elif event.type == KEYDOWN and event.key == K_g:
                     self.fondo = self.fondosDisponibles[randint(0,len(self.fondosDisponibles)-1)]
-                elif event.type == MOUSEBUTTONDOWN and event.button == 1:
+                elif event.type == KEYDOWN and event.key == K_SPACE:
                     if Bomb.can_place_bomb():
-                        bomb = Bomb()
-                        bomb.place_bomb(pygame.mouse.get_pos())
+                        bombDir = mitanque.getDirection()
+                        tankRect=mitanque.getRect()
+                        bomb = Bomb(bombDir,tankRect,self.MainWindow)
+                        bomb.place_bomb()
                         sprites.add(bomb)
                         bombs.append(bomb)
+                elif event.type == MOUSEBUTTONDOWN and event.button == 1:
+                    if Bomb.can_place_bomb():
+                        pass
                 # elif event.type==KEYDOWN:
                 # interfaz_bloques.cambiar_bloque_seleccionado(event.key)
                     elif self.SteelButton.is_clicked(mouse.get_pos()):
@@ -383,7 +388,7 @@ class Screens:
             # Remove bombs that have gone off-screen
             bombs_to_remove = []
             for bomb in bombs:
-                if bomb.rect.bottom < 0:
+                if bomb.rect.bottom < 0 or bomb.rect.top> self.MainWindow.get_height() or bomb.rect.left > self.MainWindow.get_width() or bomb.rect.right < 0:
                    bombs_to_remove.append(bomb)
                    Bomb.bomb_count += 1
 
