@@ -295,7 +295,7 @@ class Screens:
                 if event.type == QUIT:
                     pygame.quit()
                     sys.exit()
-                elif not pausa and event.type == KEYDOWN and event.key == K_ESCAPE:
+                elif not pausa and event.type == KEYDOWN and event.key == K_p:
                     pausa=True
                     music.pause()
                     #pauseTime=pause_time(musicStartTime)
@@ -305,7 +305,7 @@ class Screens:
                 elif not pausa:
                     if event.type == KEYDOWN and event.key == K_g:
                         self.fondo = self.fondosDisponibles[randint(0,len(self.fondosDisponibles)-1)]
-                    elif event.type == MOUSEBUTTONDOWN and event.button == 1:
+                    elif event.type == KEYDOWN and event.key == K_SPACE:
                         if Bomb.can_place_bomb():
                             bomb = Bomb()
                             bomb.place_bomb(pygame.mouse.get_pos())
@@ -339,7 +339,7 @@ class Screens:
                         cantidadBloques['madera']-=1
                     elif event.type == KEYDOWN and event.key == K_3 and cantidadBloques['ladrillo']>0:
                         cantidadBloques['ladrillo']-=1
-                elif pausa and event.type==KEYDOWN and event.key == K_ESCAPE:
+                elif pausa and event.type==KEYDOWN and event.key == K_p:
                     pausa=False
                     music.unpause()
                     #musicStartTime=resume_time(pauseTime)
