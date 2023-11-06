@@ -1,3 +1,6 @@
+import i18n
+i18n.load_path.append('./translation/')
+i18n.set('locale', 'es') # Hello world !
 import threading
 from random import randint
 import pygame, sys, Button, Entry, Label, FilesController, JsonController, Player, Aguila
@@ -42,12 +45,12 @@ class Screens:
 
         self.MainWindow = pygame.display.set_mode((anchoVentana, altoVentana))
         self.bg = pygame.image.load("imagenes/Background.png")
-        self.buttonSignIn = Button.Button(650, 300, 150, 50, 'Sign In', (86, 140, 255), (2, 82, 253), (86, 140, 255), 30)
-        self.buttonSignUp = Button.Button(850, 300, 150, 50, 'Sign Up', (86, 140, 255), (2, 82, 253), (86, 140, 255), 30)
+        self.buttonSignIn = Button.Button(650, 300, 150, 50, i18n.t("foo.login"), (86, 140, 255), (2, 82, 253), (86, 140, 255), 30)
+        self.buttonSignUp = Button.Button(850, 300, 150, 50, i18n.t("foo.singup"), (86, 140, 255), (2, 82, 253), (86, 140, 255), 30)
 
-        self.buttonRegisterUser = Button.Button(740, 550, 150, 50, 'Register User', (111, 84, 247), (78, 42, 255), (111, 84, 247), 25)
-        self.buttonSelectSong = Button.Button(760, 450, 100, 25, 'Select Music', (86, 140, 255), (2, 82, 253), (86, 140, 255), 23)
-        self.buttonSelectPhoto = Button.Button(760, 500, 100, 25, 'Select Photo', (86, 140, 255), (2, 82, 253), (86, 140, 255), 23)
+        self.buttonRegisterUser = Button.Button(740, 550, 150, 50, i18n.t("foo.register"), (111, 84, 247), (78, 42, 255), (111, 84, 247), 25)
+        self.buttonSelectSong = Button.Button(760, 450, 100, 25, i18n.t("foo.selec_music"), (86, 140, 255), (2, 82, 253), (86, 140, 255), 23)
+        self.buttonSelectPhoto = Button.Button(760, 500, 100, 25, i18n.t("foo.select_picture"), (86, 140, 255), (2, 82, 253), (86, 140, 255), 23)
         self.buttonEnter = Button.Button(740, 350, 100, 50, 'Enter', (86, 140, 255), (2, 82, 253), (86, 140, 255), 20)
 
         self.user_entry = Entry.Entry(750, 250, (8, 42, 79), (12, 76, 143), (12, 76, 143), '', False)
@@ -57,16 +60,16 @@ class Screens:
         self.user_entry_signIn = Entry.Entry(750, 250, (8, 42, 79), (12, 76, 143), (12, 76, 143), '', False)
         self.password_entry_signIn = Entry.Entry(750, 300, (8, 42, 79), (12, 76, 143), (12, 76, 143), '', False)
 
-        self.labelUser = Label.Label('User:', 20, 675, 250, (0, 0, 0))
-        self.labelEmail = Label.Label('Email:', 20, 675, 300, (0, 0, 0))
-        self.labelPassword = Label.Label('Password:', 20, 675, 350, (0, 0, 0))
-        self.labelMusic = Label.Label('Music:', 20, 675, 450, (0, 0, 0))
-        self.labelPhoto = Label.Label('Photo:', 20, 675, 500, (0, 0, 0))
-        self.labelRol = Label.Label('Rol:', 20, 675, 400, (0, 0, 0))
-        self.labelUser_signIn = Label.Label('User:', 20, 675, 250, (0, 0, 0))
-        self.labelPassword_signIn = Label.Label('Password:', 20, 675, 300, (0, 0, 0))
-        self.labelCharacter_singIn = Label.Label('Atacante', 60, 700, 180, (0, 0, 0))
-        self.labelCharacterInScreen = Label.Label('Player', 30, 650, 20, (0, 0, 0))
+        self.labelUser = Label.Label(i18n.t('foo.user'), 20, 675, 250, (0, 0, 0))
+        self.labelEmail = Label.Label(i18n.t('foo.email'), 20, 675, 300, (0, 0, 0))
+        self.labelPassword = Label.Label(i18n.t('foo.password'), 20, 675, 350, (0, 0, 0))
+        self.labelMusic = Label.Label(i18n.t('foo.music'), 20, 675, 450, (0, 0, 0))
+        self.labelPhoto = Label.Label(i18n.t('foo.photo'), 20, 675, 500, (0, 0, 0))
+        self.labelRol = Label.Label(i18n.t('foo.rol'), 20, 675, 400, (0, 0, 0))
+        self.labelUser_signIn = Label.Label(i18n.t('foo.user'), 20, 675, 250, (0, 0, 0))
+        self.labelPassword_signIn = Label.Label(i18n.t("foo.password"), 20, 675, 300, (0, 0, 0))
+        self.labelCharacter_singIn = Label.Label(i18n.t("foo.attacker"), 60, 700, 180, (0, 0, 0))
+        self.labelCharacterInScreen = Label.Label(i18n.t("foo.player"), 30, 650, 20, (0, 0, 0))
 
         self.userFile = JsonController.JsonControllerUsers("users")
 
@@ -123,7 +126,7 @@ class Screens:
                         if self.userFile.verifyUser(self.user_entry_signIn.text, self.password_entry_signIn.text) and Defensor==False:
                             Atacante = False
                             Defensor = True
-                            self.labelCharacter_singIn.update_text("Defensor")
+                            self.labelCharacter_singIn.update_text(i18n.t("defender"))
                             self.playerName = self.user_entry_signIn.text
                             self.favoriteSong = str(self.userFile.selectSong(self.user_entry_signIn.text))
                             self.user_entry_signIn.text = ''
