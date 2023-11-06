@@ -304,8 +304,6 @@ class Screens:
                             bomb.place_bomb(pygame.mouse.get_pos())
                             sprites.add(bomb)
                             bombs.append(bomb)
-                    # elif event.type==KEYDOWN:
-                    # interfaz_bloques.cambiar_bloque_seleccionado(event.key)
                         elif self.SteelButton.is_clicked(mouse.get_pos()):
                             print("button steel clicked")
                             print(self.SteelButton.seeActiveness(mouse.get_pos(), self.MainWindow))
@@ -393,10 +391,11 @@ class Screens:
             self.MainWindow.blit(timerLabel, (20, 10))
             self.MainWindow.blit(desBlocksLabel, (120, 10))
             self.MainWindow.blit(pointsLabel, (400, 10))
-            
+
             self.SteelButton.drawButton(self.MainWindow)
 
-            pygame.display.update()
+            if not pausa:
+                pygame.display.update()
 
             if not pausa:
                 # Remove bombs that have gone off-screen
