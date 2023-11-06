@@ -31,6 +31,14 @@
             "music": "Maps.mp3",
             "photo": "logo.jpg",
             "rol": "4"
+        },
+        {
+            "user": "jorge",
+            "email": "jorge@gmail.com",
+            "password": "sdf",
+            "music": "FormaOnda.png",
+            "photo": "VoltajesFig10.4.png",
+            "rol": "sdf"
         }
     ]
 }

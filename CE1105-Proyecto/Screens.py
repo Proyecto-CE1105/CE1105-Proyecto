@@ -125,6 +125,9 @@ class Screens:
         userFile = JsonController.JsonControllerUsers
         FileDialog = FilesController.FileControllers("","")
 
+        def verifyEmail(email):
+            return "@gmail.com" in email
+
         running = True
         while (running):
             self.MainWindow.blit(self.bg, (0, 0))
@@ -145,9 +148,10 @@ class Screens:
                     if self.buttonSelectPhoto.is_clicked(mouse.get_pos()):
                         FileDialog.selectFile("photo")
                     if self.buttonRegisterUser.is_clicked(mouse.get_pos()):
-                        userFile.addUsers(0, self.user_entry.text, self.email_entry.text, self.password_entry.text, str(FileDialog.music), str(FileDialog.photo), self.rol_entry.text)
-                        running = False
-                        self.mainScreen()
+                        if verifyEmail(self.email_entry.text):
+                            userFile.addUsers(0, self.user_entry.text, self.email_entry.text, self.password_entry.text, str(FileDialog.music), str(FileDialog.photo), self.rol_entry.text)
+                            running = False
+                            self.mainScreen()
 
                 self.buttonSelectSong.seeActiveness(mouse.get_pos(), self.MainWindow)
                 self.buttonSelectPhoto.seeActiveness(mouse.get_pos(), self.MainWindow)
