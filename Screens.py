@@ -328,6 +328,7 @@ class Screens:
                         # Aquí puedes ejecutar el código que deseas cuando la canción termine
                         print("La canción ha terminado de reproducirse.")
                         running = False  # Puedes agregar tu propia lógica para continuar después de la canción
+                        self.winScreen(points)
                     elif event.type == KEYDOWN and event.key == K_1 and cantidadBloques['acero']>0:
                         cantidadBloques['acero']-=1
                         x,y=pygame.mouse.get_pos()
@@ -410,11 +411,6 @@ class Screens:
                     if bomb.rect.bottom < 0:
                         bombs_to_remove.append(bomb)
                         Bomb.bomb_count += 1
-
-                if bomb.rect.bottom < 0:
-                    bombs_to_remove.append(bomb)
-                    bomb.bomb_count += 1
-
             for bomb in bombs_to_remove:
                 bombs.remove(bomb)
 
