@@ -273,6 +273,7 @@ class Screens:
         music = Music.Music(self.MainWindow, self.favoriteSong)
         music.playSong()
         musicStartTime = time.time()
+        pauseTime=0
 
         self.labelCharacterInScreen.update_text(self.playerName)
 
@@ -294,6 +295,7 @@ class Screens:
                 elif not pausa and event.type == KEYDOWN and event.key == K_ESCAPE:
                     pausa=True
                     music.pause()
+                    #pauseTime=pause_time(musicStartTime)
                     print("Juego Pausado")
                 elif not pausa:
                     if event.type == KEYDOWN and event.key == K_g:
@@ -335,6 +337,7 @@ class Screens:
                 elif pausa and event.type==KEYDOWN and event.key == K_ESCAPE:
                     pausa=False
                     music.unpause()
+                    #musicStartTime=resume_time(pauseTime)
                 else: 
                     print("Hola")
 
@@ -407,6 +410,14 @@ class Screens:
 
                 for bomb in bombs_to_remove:
                     bombs.remove(bomb)
+        
+        '''def pause_time(musicT):
+            pauseTime=time.time()-musicT
+            return pauseTime'''
+        
+        '''def resume_time(pauseT):
+            musicStartTime=time.time()-pauseT
+            return musicStartTime'''
     
     def winScreen(self):
         fps = 60
