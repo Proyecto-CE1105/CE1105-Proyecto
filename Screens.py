@@ -36,7 +36,7 @@ tamanoFuente=20
 
 class Screens:
     def __init__(self):
-        
+
         pygame.init()
 
         self.icono = pygame.image.load("imagenes/logo.jpg")
@@ -241,7 +241,9 @@ class Screens:
         pygame.draw.rect(MainWindow, negro, (1200 - 150, 0, 150, 30))
         texto = font.render(f'Bombas: {contador}', True, blanco)
         MainWindow.blit(texto, (1200 - texto.get_width() - 10, 10))
-    
+
+
+    explosionsprite = pygame.sprite.Group()
     def playScreen(self):
         fps = 60
         clock = pygame.time.Clock()
@@ -276,10 +278,12 @@ class Screens:
         self.labelCharacterInScreen.update_text(self.playerName)
 
         steelblock = pygame.image.load("Assets/Blocks/SteelBlock.png")
-        steelblock = pygame.transform.scale(steelblock,(50,50)) 
+        steelblock = pygame.transform.scale(steelblock,(50,50))
 
         mensaje_tiempo_inicio= None
         bloques_acero=[]
+
+        image_change_time = pygame.time.get_ticks() + 1000
 
         running = True
         while(running):
@@ -300,6 +304,18 @@ class Screens:
                         bomb.place_bomb()
                         sprites.add(bomb)
                         bombs.append(bomb)
+
+                        #mitanque.disparar()
+                        current_time = pygame.time.get_ticks()
+                        if current_time >= image_change_time:
+                            if mitanque.image == mitanque.skins[1]:
+                                mitanque.image = mitanque.skins[0]
+                            else:
+                                mitanque.image = mitanque.skins[1]
+
+                            image_change_time = current_time + 1000
+
+                            print("cambia skin")
                 elif event.type == MOUSEBUTTONDOWN and event.button == 1:
                     if Bomb.can_place_bomb():
                         pass
@@ -335,11 +351,13 @@ class Screens:
                     cantidadBloques['ladrillo']-=1
 
             tiempo_actual= pygame.time.get_ticks()
+            #running = False  # Puedes agregar tu propia lógica para continuar después de la canción
+            self.winScreen(points)
 
             if tiempo_actual-tiempo_ultima_recarga>=recargaBloqueAcero:
                 recargar_acero(cantidadBloques)
                 mensaje_tiempo_inicio=pygame.time.get_ticks()
-            
+
             self.MainWindow.blit(self.fondo,(0,0))
             clock.tick(fps)
 
@@ -356,8 +374,6 @@ class Screens:
 
             tanqueSprite.update(self.MainWindow)
             tanqueSprite.draw(self.MainWindow)
-
-            aguilaSprite.draw(self.MainWindow)
 
             sprites.update()
             sprites.draw(self.MainWindow)
@@ -394,11 +410,19 @@ class Screens:
                 if bomb.rect.bottom < 0 or bomb.rect.top> self.MainWindow.get_height() or bomb.rect.left > self.MainWindow.get_width() or bomb.rect.right < 0:
                    bombs_to_remove.append(bomb)
                    Bomb.bomb_count += 1
+                # Saber si la bomba toca el aguila
+                if aguila.rect.colliderect(bomb.rect):
+                    self.gameoverScreen(points)
+                    print("collide")
+
+                if bomb.rect.bottom < 0:
+                    bombs_to_remove.append(bomb)
+                    bomb.bomb_count += 1
 
             for bomb in bombs_to_remove:
                 bombs.remove(bomb)
-    
-    def winScreen(self):
+
+    def winScreen(self, points):
         fps = 60
         clock = pygame.time.Clock()
 
@@ -420,9 +444,16 @@ class Screens:
 
             self.MainWindow.blit(background_image, (100, 0))
 
+            font = pygame.font.Font(None, 36)
+            pointsLabel = font.render("Points Obtained: " + str(points), 0, (0, 0, 0))
+            self.MainWindow.blit(pointsLabel, (600, 50))
+            #reproducir cancion elegida
+
+            #salon de la fama
+
             pygame.display.update()
 
-    def gameoverScreen(self):
+    def gameoverScreen(self, points):
         fps = 60
         clock = pygame.time.Clock()
 
@@ -434,6 +465,10 @@ class Screens:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
+
+            font = pygame.font.Font(None, 36)
+            pointsLabel = font.render("Points Obtained: " + str(points), 0, (0, 0, 0))
+            self.MainWindow.blit(pointsLabel, (600, 50))
 
             self.MainWindow.blit(background_image, (0, 0))
 
@@ -462,3 +497,5 @@ class Screens:
                 self.buttonSignIn.seeActiveness(mouse.get_pos(), self.MainWindow)
 
                 pygame.display.update()
+
+
