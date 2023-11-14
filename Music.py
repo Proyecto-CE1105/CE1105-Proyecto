@@ -17,4 +17,10 @@ class Music:
         pygame.mixer.music.set_endevent(self.songEnd)
         pygame.mixer.music.load(self.songPath)
         pygame.mixer.music.play()
+    
+    def pause(self):
+        pygame.mixer.music.pause()
+    
+    def unpause(self):
+        pygame.mixer.music.unpause()
 
