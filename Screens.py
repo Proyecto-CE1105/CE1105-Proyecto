@@ -8,7 +8,6 @@ from ContadorBloquesTest import dibujar_contador, recargar_acero
 from pygame import *
 from pygame.sprite import Group
 from pygame.locals import *
-from VentanaPausa import draw_pause
 from Weapons.Bomb import Bomb
 import Music
 import time
@@ -34,9 +33,6 @@ coloresBloques={'acero':(169, 169, 169), 'madera': (139,69,19), 'ladrillo': (255
 colorTexto=(0,0,0)
 fuente="Arial"
 tamanoFuente=20
-
-rect_surface=pygame.Surface((anchoVentana,altoVentana),pygame.SRCALPHA)
-
 
 class Screens:
     def __init__(self):
@@ -249,9 +245,6 @@ class Screens:
 
     explosionsprite = pygame.sprite.Group()
     def playScreen(self):
-
-        pausa=False
-
         fps = 60
         clock = pygame.time.Clock()
         tiempo_inicial = pygame.time.get_ticks()
@@ -281,7 +274,6 @@ class Screens:
         music = Music.Music(self.MainWindow, self.favoriteSong)
         music.playSong()
         musicStartTime = time.time()
-        pauseTime=0
 
         self.labelCharacterInScreen.update_text(self.playerName)
 
@@ -302,57 +294,61 @@ class Screens:
                 if event.type == QUIT:
                     pygame.quit()
                     sys.exit()
-                elif not pausa and event.type == KEYDOWN and event.key == K_p:
-                    pausa=True
-                    music.pause()
-                    #pauseTime=pause_time(musicStartTime)
-                    draw_pause(self.MainWindow,anchoVentana,altoVentana)
-                    self.MainWindow.blit(rect_surface,(0,0))
-                    print("Juego Pausado")
-                elif not pausa:
-                    if event.type == KEYDOWN and event.key == K_g:
-                        self.fondo = self.fondosDisponibles[randint(0,len(self.fondosDisponibles)-1)]
-                    elif event.type == KEYDOWN and event.key == K_SPACE:
-                        if Bomb.can_place_bomb():
-                            bomb = Bomb()
-                            bomb.place_bomb(pygame.mouse.get_pos())
-                            sprites.add(bomb)
-                            bombs.append(bomb)
-                        elif self.SteelButton.is_clicked(mouse.get_pos()):
-                            print("button steel clicked")
-                            print(self.SteelButton.seeActiveness(mouse.get_pos(), self.MainWindow))
+                elif event.type == KEYDOWN and event.key == K_g:
+                    self.fondo = self.fondosDisponibles[randint(0,len(self.fondosDisponibles)-1)]
+                elif event.type == KEYDOWN and event.key == K_SPACE:
+                    if Bomb.can_place_bomb():
+                        bombDir = mitanque.getDirection()
+                        tankRect=mitanque.getRect()
+                        bomb = Bomb(bombDir,tankRect,self.MainWindow)
+                        bomb.place_bomb()
+                        sprites.add(bomb)
+                        bombs.append(bomb)
 
-                            self.SteelButton.seeActiveness(mouse.get_pos(), self.MainWindow)
-                            '''
-                            if self.SteelButton.seeActiveness(mouse.get_pos(), self.MainWindow)) == False:
-                                self.SteelButton.color = self.steel_selection.colorActive
-                                self.SteelButton.activeness = True
+                        #mitanque.disparar()
+                        current_time = pygame.time.get_ticks()
+                        if current_time >= image_change_time:
+                            if mitanque.image == mitanque.skins[1]:
+                                mitanque.image = mitanque.skins[0]
                             else:
-                                self.SteelButton.color = self.steel_selection.colorPassive
-                                self.SteelButton.activeness = False
-                                '''
-                    elif event.type == music.songEnd:
-                        # Aquí puedes ejecutar el código que deseas cuando la canción termine
-                        print("La canción ha terminado de reproducirse.")
-                        running = False  # Puedes agregar tu propia lógica para continuar después de la canción
-                    elif event.type == KEYDOWN and event.key == K_1 and cantidadBloques['acero']>0:
-                        cantidadBloques['acero']-=1
-                        x,y=pygame.mouse.get_pos()
-                        bloque_acero=(x-25,y-25)
-                        bloques_acero.append(bloque_acero)
-                        ultimo_tiempo_acero=pygame.time.get_ticks()
-                        mensaje_tiempo_inicio= tiempo_ultima_recarga
-                    elif event.type == KEYDOWN and event.key == K_2 and cantidadBloques['madera']>0:
-                        cantidadBloques['madera']-=1
-                    elif event.type == KEYDOWN and event.key == K_3 and cantidadBloques['ladrillo']>0:
-                        cantidadBloques['ladrillo']-=1
-                elif pausa and event.type==KEYDOWN and event.key == K_p:
-                    pausa=False
-                    music.unpause()
-                    #musicStartTime=resume_time(pauseTime)
-                
-            if not pausa:
-                tiempo_actual= pygame.time.get_ticks()
+                                mitanque.image = mitanque.skins[1]
+
+                            image_change_time = current_time + 1000
+
+                            print("cambia skin")
+                elif event.type == MOUSEBUTTONDOWN and event.button == 1:
+                    if Bomb.can_place_bomb():
+                        pass
+                # elif event.type==KEYDOWN:
+                # interfaz_bloques.cambiar_bloque_seleccionado(event.key)
+                    elif self.SteelButton.is_clicked(mouse.get_pos()):
+                        print("button steel clicked")
+                        print(self.SteelButton.seeActiveness(mouse.get_pos(), self.MainWindow))
+
+                        self.SteelButton.seeActiveness(mouse.get_pos(), self.MainWindow)
+                        '''
+                        if self.SteelButton.seeActiveness(mouse.get_pos(), self.MainWindow)) == False:
+                            self.SteelButton.color = self.steel_selection.colorActive
+                            self.SteelButton.activeness = True
+                        else:
+                            self.SteelButton.color = self.steel_selection.colorPassive
+                            self.SteelButton.activeness = False
+                            '''
+                elif event.type == music.songEnd:
+                    # Aquí puedes ejecutar el código que deseas cuando la canción termine
+                    print("La canción ha terminado de reproducirse.")
+                    running = False  # Puedes agregar tu propia lógica para continuar después de la canción
+                elif event.type == KEYDOWN and event.key == K_1 and cantidadBloques['acero']>0:
+                    cantidadBloques['acero']-=1
+                    x,y=pygame.mouse.get_pos()
+                    bloque_acero=(x-25,y-25)
+                    bloques_acero.append(bloque_acero)
+                    ultimo_tiempo_acero=pygame.time.get_ticks()
+                    mensaje_tiempo_inicio= tiempo_ultima_recarga
+                elif event.type == KEYDOWN and event.key == K_2 and cantidadBloques['madera']>0:
+                    cantidadBloques['madera']-=1
+                elif event.type == KEYDOWN and event.key == K_3 and cantidadBloques['ladrillo']>0:
+                    cantidadBloques['ladrillo']-=1
 
             tiempo_actual= pygame.time.get_ticks()
             #running = False  # Puedes agregar tu propia lógica para continuar después de la canción
@@ -370,12 +366,11 @@ class Screens:
             for bloque_acero in bloques_acero:
                 self.MainWindow.blit(steelblock,bloque_acero)
 
-            if not pausa:
-                if mensaje_tiempo_inicio is not None and tiempo_actual-mensaje_tiempo_inicio<mensajeTiempo:
-                    fuente_mensaje = pygame.font.SysFont(fuente, tamanoFuente)
-                    texto_mensaje = fuente_mensaje.render("Bloque de acero recargado", True, colorTexto)
-                    texto_mensaje_rect = texto_mensaje.get_rect(midbottom=(anchoVentana // 2, altoVentana - 20))
-                    self.MainWindow.blit(texto_mensaje, texto_mensaje_rect)
+            if mensaje_tiempo_inicio is not None and tiempo_actual-mensaje_tiempo_inicio<mensajeTiempo:
+                fuente_mensaje = pygame.font.SysFont(fuente, tamanoFuente)
+                texto_mensaje = fuente_mensaje.render("Bloque de acero recargado", True, colorTexto)
+                texto_mensaje_rect = texto_mensaje.get_rect(midbottom=(anchoVentana // 2, altoVentana - 20))
+                self.MainWindow.blit(texto_mensaje, texto_mensaje_rect)
 
             tanqueSprite.update(self.MainWindow)
             tanqueSprite.draw(self.MainWindow)
@@ -386,52 +381,48 @@ class Screens:
 
             self.labelCharacterInScreen.draw(self.MainWindow)
 
-            if not pausa:
-                elapsed_time = time.time() - musicStartTime
+            elapsed_time = time.time() - musicStartTime
 
-                # Actualiza la pantalla
-                text = font.render(f'Tiempo: {int(elapsed_time)} / {int(music.duration)} segundos', True, (0, 0, 0))
-                #pygame.display.flip()
-                # Timer
-                tiempo_transcurrido = (pygame.time.get_ticks() - tiempo_inicial) // 1000
-                timerLabel = font.render("Time: " + str(tiempo_transcurrido), True, (63, 176, 224))
-
-                # Showing the destroyed blocks
-                desBlocksLabel = font.render("Destroyed blocks: " + str(destroyedBlocks), 0, (63, 176, 224))
-
-                # Points
-                pointsLabel = font.render("Points: " + str(points), 0, (63, 176, 224))
-
+            # Actualiza la pantalla
+            text = font.render(f'Tiempo: {int(elapsed_time)} / {int(music.duration)} segundos', True, (0, 0, 0))
             self.MainWindow.blit(text, (100, 100))
+            #pygame.display.flip()
+            # Timer
+            tiempo_transcurrido = (pygame.time.get_ticks() - tiempo_inicial) // 1000
+            timerLabel = font.render("Time: " + str(tiempo_transcurrido), True, (63, 176, 224))
             self.MainWindow.blit(timerLabel, (20, 10))
+
+            # Showing the destroyed blocks
+            desBlocksLabel = font.render("Destroyed blocks: " + str(destroyedBlocks), 0, (63, 176, 224))
             self.MainWindow.blit(desBlocksLabel, (120, 10))
+
+            # Points
+            pointsLabel = font.render("Points: " + str(points), 0, (63, 176, 224))
             self.MainWindow.blit(pointsLabel, (400, 10))
 
             self.SteelButton.drawButton(self.MainWindow)
 
-            if not pausa:
-                pygame.display.update()
+            pygame.display.update()
 
-            if not pausa:
-                # Remove bombs that have gone off-screen
-                bombs_to_remove = []
-                for bomb in bombs:
-                    if bomb.rect.bottom < 0:
-                        bombs_to_remove.append(bomb)
-                        Bomb.bomb_count += 1
+            # Remove bombs that have gone off-screen
+            bombs_to_remove = []
+            for bomb in bombs:
+                if bomb.rect.bottom < 0 or bomb.rect.top> self.MainWindow.get_height() or bomb.rect.left > self.MainWindow.get_width() or bomb.rect.right < 0:
+                   bombs_to_remove.append(bomb)
+                   Bomb.bomb_count += 1
+                # Saber si la bomba toca el aguila
+                if aguila.rect.colliderect(bomb.rect):
+                    self.gameoverScreen(points)
+                    print("collide")
 
-                for bomb in bombs_to_remove:
-                    bombs.remove(bomb)
-            
-        '''def pause_time(musicT):
-            pauseTime=time.time()-musicT
-            return pauseTime'''
-        
-        '''def resume_time(pauseT):
-            musicStartTime=time.time()-pauseT
-            return musicStartTime'''
-    
-    def winScreen(self):
+                if bomb.rect.bottom < 0:
+                    bombs_to_remove.append(bomb)
+                    bomb.bomb_count += 1
+
+            for bomb in bombs_to_remove:
+                bombs.remove(bomb)
+
+    def winScreen(self, points):
         fps = 60
         clock = pygame.time.Clock()
 
