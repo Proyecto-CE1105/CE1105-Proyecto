@@ -3,7 +3,6 @@ from pygame import *
 from pygame.locals import *
 
 rect_surface=pygame.Surface((1200,650),pygame.SRCALPHA)
-wKey=pygame.image.load("Assets/Keys/W-Key.png")
 
 def draw_pause(ventana,width,height):
     pygame.draw.rect(rect_surface,(128,128,128,150),[0,0,width,height])
