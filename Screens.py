@@ -411,14 +411,18 @@ class Screens:
                         bombs_to_remove.append(bomb)
                         Bomb.bomb_count += 1
 
-                if bomb.rect.bottom < 0:
-                    bombs_to_remove.append(bomb)
-                    bomb.bomb_count += 1
-
-            for bomb in bombs_to_remove:
-                bombs.remove(bomb)
-
-    def winScreen(self, points):
+                for bomb in bombs_to_remove:
+                    bombs.remove(bomb)
+            
+        '''def pause_time(musicT):
+            pauseTime=time.time()-musicT
+            return pauseTime'''
+        
+        '''def resume_time(pauseT):
+            musicStartTime=time.time()-pauseT
+            return musicStartTime'''
+    
+    def winScreen(self):
         fps = 60
         clock = pygame.time.Clock()
 
