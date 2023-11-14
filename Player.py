@@ -10,7 +10,10 @@ class Player(pygame.sprite.Sprite):
         super().__init__()
         self.direccion="left"
         self.time = 0
-        self.skins=[pygame.transform.scale(pygame.image.load("imagenes/tankVerde.png"), (75, 75)),pygame.transform.scale(pygame.image.load("imagenes/explosion.png"),(100, 100)), pygame.transform.scale(pygame.image.load("imagenes/tankRojo.png"), (75, 75),pygame.transform.scale(pygame.image.load("imagenes/tankAzul.png"), (75, 75)))]
+        self.skins = [pygame.transform.scale(pygame.image.load("imagenes/tankVerde.png"), (75, 75)),
+                      pygame.transform.scale(pygame.image.load("imagenes/explosion.png"), (100, 100)),
+                      pygame.transform.scale(pygame.image.load("imagenes/tankRojo.png"), (75, 75),
+                        pygame.transform.scale(pygame.image.load("imagenes/tankAzul.png"),(75, 75)))]
         self.icon = self.skins[0]
         self.rotaciones = [pygame.transform.rotate(self.icon,0),pygame.transform.rotate(self.icon,270),pygame.transform.rotate(self.icon,180),pygame.transform.rotate(self.icon,90)]
         self.image=self.rotaciones[0]
