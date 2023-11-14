@@ -35,6 +35,7 @@ colorTexto=(0,0,0)
 fuente="Arial"
 tamanoFuente=20
 
+fuente2=pygame.font.Font('freesansbold.ttf',32)
 rect_surface=pygame.Surface((anchoVentana,altoVentana),pygame.SRCALPHA)
 
 
@@ -306,7 +307,7 @@ class Screens:
                     pausa=True
                     music.pause()
                     #pauseTime=pause_time(musicStartTime)
-                    draw_pause(self.MainWindow,anchoVentana,altoVentana)
+                    #draw_pause(self.MainWindow,anchoVentana,altoVentana,fuente2)
                     self.MainWindow.blit(rect_surface,(0,0))
                     print("Juego Pausado")
                 elif not pausa:
@@ -350,7 +351,12 @@ class Screens:
                     pausa=False
                     music.unpause()
                     #musicStartTime=resume_time(pauseTime)
-                
+            
+            if pausa:
+                pygame.draw.rect(rect_surface,(128,128,128,150),[0,0,anchoVentana,altoVentana])
+                pygame.draw.rect(rect_surface, 'dark gray', [200,150,600,50],0,10)
+                reset=pygame.draw.rect(rect_surface,'white',[200,220,280,50],0,10)
+                save=pygame.draw.rect(rect_surface,'white',[520,220,280,50],0,10)
             if not pausa:
                 tiempo_actual= pygame.time.get_ticks()
 
