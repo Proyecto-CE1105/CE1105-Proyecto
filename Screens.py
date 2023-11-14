@@ -129,11 +129,12 @@ class Screens:
 
                 if event.type == MOUSEBUTTONDOWN and event.button == 1:
                     if self.buttonEnter.is_clicked(mouse.get_pos()):
-                        #Screens.playScreen(self)
-                        if self.userFile.verifyUser(self.user_entry_signIn.text, self.password_entry_signIn.text) and Defensor==False:
+                        # Screens.playScreen(self)
+                        if self.userFile.verifyUser(self.user_entry_signIn.text,
+                                                    self.password_entry_signIn.text) and Defensor == False:
                             Atacante = False
                             Defensor = True
-                            self.labelCharacter_singIn.update_text(i18n.t("defender"))
+                            self.labelCharacter_singIn.update_text("Defensor")
                             self.playerName = self.user_entry_signIn.text
                             self.favoriteSong = str(self.userFile.selectSong(self.user_entry_signIn.text))
                             self.user_entry_signIn.text = ''
@@ -291,6 +292,8 @@ class Screens:
         mensaje_tiempo_inicio= None
         bloques_acero=[]
 
+        image_change_time = pygame.time.get_ticks() + 1000
+
         running = True
         while(running):
             self.SteelButton.drawButton(self.MainWindow)
@@ -425,9 +428,9 @@ class Screens:
                                 bombs_to_remove.append(bomb)
                                 Bomb.bomb_count += 1
 
-                        if aguila.rect.colliderect(bomb.rect):
-                            self.gameoverScreen(points)
-                            print("collide")
+                            if aguila.rect.colliderect(bomb.rect):
+                                self.gameoverScreen(points)
+                                print("collide")
 
                     for bomb in bombs_to_remove:
                         bombs.remove(bomb)
