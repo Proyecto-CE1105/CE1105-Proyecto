@@ -1,6 +1,3 @@
-import i18n
-i18n.load_path.append('./translation/')
-i18n.set('locale', 'es') # Hello world !
 import threading
 from random import randint
 import pygame, sys, Button, Entry, Label, FilesController, JsonController, Player, Aguila
@@ -8,7 +5,6 @@ from ContadorBloquesTest import dibujar_contador, recargar_acero
 from pygame import *
 from pygame.sprite import Group
 from pygame.locals import *
-from VentanaPausa import draw_pause
 from Weapons.Bomb import Bomb
 import Music
 import time
@@ -35,13 +31,10 @@ colorTexto=(0,0,0)
 fuente="Arial"
 tamanoFuente=20
 
-fuente2=pygame.font.Font('freesansbold.ttf',32)
-rect_surface=pygame.Surface((anchoVentana,altoVentana),pygame.SRCALPHA)
-
 
 class Screens:
     def __init__(self):
-
+        
         pygame.init()
 
         self.icono = pygame.image.load("imagenes/logo.jpg")
@@ -65,16 +58,16 @@ class Screens:
         self.user_entry_signIn = Entry.Entry(750, 250, (8, 42, 79), (12, 76, 143), (12, 76, 143), '', False)
         self.password_entry_signIn = Entry.Entry(750, 300, (8, 42, 79), (12, 76, 143), (12, 76, 143), '', False)
 
-        self.labelUser = Label.Label(i18n.t('foo.user'), 20, 675, 250, (0, 0, 0))
-        self.labelEmail = Label.Label(i18n.t('foo.email'), 20, 675, 300, (0, 0, 0))
-        self.labelPassword = Label.Label(i18n.t('foo.password'), 20, 675, 350, (0, 0, 0))
-        self.labelMusic = Label.Label(i18n.t('foo.music'), 20, 675, 450, (0, 0, 0))
-        self.labelPhoto = Label.Label(i18n.t('foo.photo'), 20, 675, 500, (0, 0, 0))
-        self.labelRol = Label.Label(i18n.t('foo.rol'), 20, 675, 400, (0, 0, 0))
-        self.labelUser_signIn = Label.Label(i18n.t('foo.user'), 20, 675, 250, (0, 0, 0))
-        self.labelPassword_signIn = Label.Label(i18n.t("foo.password"), 20, 675, 300, (0, 0, 0))
-        self.labelCharacter_singIn = Label.Label(i18n.t("foo.attacker"), 60, 700, 180, (0, 0, 0))
-        self.labelCharacterInScreen = Label.Label(i18n.t("foo.player"), 30, 650, 20, (0, 0, 0))
+        self.labelUser = Label.Label('User:', 20, 675, 250, (0, 0, 0))
+        self.labelEmail = Label.Label('Email:', 20, 675, 300, (0, 0, 0))
+        self.labelPassword = Label.Label('Password:', 20, 675, 350, (0, 0, 0))
+        self.labelMusic = Label.Label('Music:', 20, 675, 450, (0, 0, 0))
+        self.labelPhoto = Label.Label('Photo:', 20, 675, 500, (0, 0, 0))
+        self.labelRol = Label.Label('Rol:', 20, 675, 400, (0, 0, 0))
+        self.labelUser_signIn = Label.Label('User:', 20, 675, 250, (0, 0, 0))
+        self.labelPassword_signIn = Label.Label('Password:', 20, 675, 300, (0, 0, 0))
+        self.labelCharacter_singIn = Label.Label('Atacante', 60, 700, 180, (0, 0, 0))
+        self.labelCharacterInScreen = Label.Label('Player', 30, 650, 20, (0, 0, 0))
 
         self.userFile = JsonController.JsonControllerUsers("users")
 
@@ -247,8 +240,6 @@ class Screens:
         texto = font.render(f'Bombas: {contador}', True, blanco)
         MainWindow.blit(texto, (1200 - texto.get_width() - 10, 10))
 
-
-    explosionsprite = pygame.sprite.Group()
     def playScreen(self):
 
         pausa=False
@@ -287,12 +278,10 @@ class Screens:
         self.labelCharacterInScreen.update_text(self.playerName)
 
         steelblock = pygame.image.load("Assets/Blocks/SteelBlock.png")
-        steelblock = pygame.transform.scale(steelblock,(50,50))
+        steelblock = pygame.transform.scale(steelblock,(50,50)) 
 
         mensaje_tiempo_inicio= None
         bloques_acero=[]
-
-        image_change_time = pygame.time.get_ticks() + 1000
 
         running = True
         while(running):
@@ -303,7 +292,7 @@ class Screens:
                 if event.type == QUIT:
                     pygame.quit()
                     sys.exit()
-                elif not pausa and event.type == KEYDOWN and event.key == K_p:
+                elif not pausa and event.type == KEYDOWN and event.key == K_ESCAPE:
                     pausa=True
                     music.pause()
                     #pauseTime=pause_time(musicStartTime)
@@ -313,7 +302,7 @@ class Screens:
                 elif not pausa:
                     if event.type == KEYDOWN and event.key == K_g:
                         self.fondo = self.fondosDisponibles[randint(0,len(self.fondosDisponibles)-1)]
-                    elif event.type == KEYDOWN and event.key == K_SPACE:
+                    elif event.type == MOUSEBUTTONDOWN and event.button == 1:
                         if Bomb.can_place_bomb():
                             bomb = Bomb()
                             bomb.place_bomb(pygame.mouse.get_pos())
@@ -347,7 +336,7 @@ class Screens:
                         cantidadBloques['madera']-=1
                     elif event.type == KEYDOWN and event.key == K_3 and cantidadBloques['ladrillo']>0:
                         cantidadBloques['ladrillo']-=1
-                elif pausa and event.type==KEYDOWN and event.key == K_p:
+                elif pausa and event.type==KEYDOWN and event.key == K_ESCAPE:
                     pausa=False
                     music.unpause()
                     #musicStartTime=resume_time(pauseTime)
@@ -360,14 +349,10 @@ class Screens:
             if not pausa:
                 tiempo_actual= pygame.time.get_ticks()
 
-            tiempo_actual= pygame.time.get_ticks()
-            #running = False  # Puedes agregar tu propia lógica para continuar después de la canción
-            self.winScreen(points)
-
-            if tiempo_actual-tiempo_ultima_recarga>=recargaBloqueAcero:
-                recargar_acero(cantidadBloques)
-                mensaje_tiempo_inicio=pygame.time.get_ticks()
-
+                if tiempo_actual-tiempo_ultima_recarga>=recargaBloqueAcero:
+                    recargar_acero(cantidadBloques)
+                    mensaje_tiempo_inicio=pygame.time.get_ticks()
+            
             self.MainWindow.blit(self.fondo,(0,0))
             clock.tick(fps)
 
@@ -385,6 +370,8 @@ class Screens:
 
             tanqueSprite.update(self.MainWindow)
             tanqueSprite.draw(self.MainWindow)
+
+            aguilaSprite.draw(self.MainWindow)
 
             sprites.update()
             sprites.draw(self.MainWindow)
@@ -459,16 +446,9 @@ class Screens:
 
             self.MainWindow.blit(background_image, (100, 0))
 
-            font = pygame.font.Font(None, 36)
-            pointsLabel = font.render("Points Obtained: " + str(points), 0, (0, 0, 0))
-            self.MainWindow.blit(pointsLabel, (600, 50))
-            #reproducir cancion elegida
-
-            #salon de la fama
-
             pygame.display.update()
 
-    def gameoverScreen(self, points):
+    def gameoverScreen(self):
         fps = 60
         clock = pygame.time.Clock()
 
@@ -480,10 +460,6 @@ class Screens:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
-
-            font = pygame.font.Font(None, 36)
-            pointsLabel = font.render("Points Obtained: " + str(points), 0, (0, 0, 0))
-            self.MainWindow.blit(pointsLabel, (600, 50))
 
             self.MainWindow.blit(background_image, (0, 0))
 
@@ -512,5 +488,3 @@ class Screens:
                 self.buttonSignIn.seeActiveness(mouse.get_pos(), self.MainWindow)
 
                 pygame.display.update()
-
-
