@@ -12,4 +12,3 @@ def draw_pause(ventana,width,height):
     '''rect_surface.blit(fuente.render('Juego en Pausa: Presione Escape para continuar',True,'black'),(220,160))
     rect_surface.blit(fuente.render('Salir',True,'black'),(220,230))
     rect_surface.blit(fuente.render('Guardar',True,'black'),(540,230))'''
-    ventana.blit(rect_surface,(0,0))
