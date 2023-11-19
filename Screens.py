@@ -86,6 +86,8 @@ class Screens:
         self.playerName = ""
         self.favoriteSong = ""
 
+        self.music = Music.Music(self.MainWindow, "Environment.ogg")
+
     def signInScreen(self):
 
         Atacante = True
@@ -489,6 +491,7 @@ class Screens:
 
     def mainScreen(self):
         running = True
+        self.music.playSong()
         while (running):
 
             self.MainWindow.blit(self.bg, (0,0))
