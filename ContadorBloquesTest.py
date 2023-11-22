@@ -11,6 +11,8 @@ ALTO_BLOQUE = 20
 ESPACIO_ENTRE_BLOQUES = 5
 DISTANCIA_AL_BORDE = 20
 RECARGA_ACERO_TIEMPO = 30000  # 30 segundos en milisegundos
+RECARGA_MADERA_TIEMPO = 30000  # 30 segundos en milisegundos
+RECARGA_LADRILLO_TIEMPO = 30000  # 30 segundos en milisegundos
 MENSAJE_TIEMPO = 3000  # 3 segundos en milisegundos
 MOSTRAR_MENSAJE_EVENTO = pygame.USEREVENT + 1
 
@@ -51,6 +53,25 @@ def recargar_acero(cantidad):
     tiempo_actual = pygame.time.get_ticks()
     if cantidad['acero'] < 5 and tiempo_actual - tiempo_ultima_recarga >= RECARGA_ACERO_TIEMPO:
         cantidad['acero'] += 1
+        bloques_recargados += 1
+        tiempo_ultima_recarga = tiempo_actual
+        mensaje_tiempo_inicio = tiempo_actual  # Establece el tiempo de inicio del mensaje
+
+# Función para recargar bloques de madera y mostrar un mensaje
+def recargar_madera(cantidad):
+    global bloques_recargados, tiempo_ultima_recarga, mensaje_tiempo_inicio
+    tiempo_actual = pygame.time.get_ticks()
+    if cantidad['madera'] < 5 and tiempo_actual - tiempo_ultima_recarga >= RECARGA_MADERA_TIEMPO:
+        cantidad['madera'] += 1
+        bloques_recargados += 1
+        tiempo_ultima_recarga = tiempo_actual
+        mensaje_tiempo_inicio = tiempo_actual  # Establece el tiempo de inicio del mensaje
+# Función para recargar bloques de ladrillo y mostrar un mensaje
+def recargar_ladrillo(cantidad):
+    global bloques_recargados, tiempo_ultima_recarga, mensaje_tiempo_inicio
+    tiempo_actual = pygame.time.get_ticks()
+    if cantidad['ladrillo'] < 5 and tiempo_actual - tiempo_ultima_recarga >= RECARGA_LADRILLO_TIEMPO:
+        cantidad['ladrillo'] += 1
         bloques_recargados += 1
         tiempo_ultima_recarga = tiempo_actual
         mensaje_tiempo_inicio = tiempo_actual  # Establece el tiempo de inicio del mensaje

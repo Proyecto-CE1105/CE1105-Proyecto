@@ -7,7 +7,7 @@ i18n.set('filename_format', '{locale}.{format}')
 import threading
 from random import randint
 import pygame, sys, Button, Entry, Label, FilesController, JsonController, Player, Aguila
-from ContadorBloquesTest import dibujar_contador, recargar_acero
+from ContadorBloquesTest import dibujar_contador, recargar_acero, recargar_madera, recargar_ladrillo
 from pygame import *
 from pygame.sprite import Group
 from pygame.locals import *
@@ -25,10 +25,14 @@ altoBloque=20
 espacioEntreBloques=5
 distanciaBorde=20
 recargaBloqueAcero=30000
+recargaBloqueMadera=30000
+recargaBloqueLadrillo=30000
 mensajeTiempo=3000
 mostrarMensajeEvento=pygame.USEREVENT +1
 
-tiempo_ultima_recarga = pygame.time.get_ticks()
+tiempo_ultima_recarga_Acero = pygame.time.get_ticks()
+tiempo_ultima_recarga_Madera = pygame.time.get_ticks()
+tiempo_ultima_recarga_Ladrillo = pygame.time.get_ticks()
 bloques_recargados=0
 
 cantidadBloques={'acero':5, 'madera':10, 'ladrillo':8}
@@ -79,9 +83,6 @@ class Screens:
         self.labelCharacterInScreen = Label.Label(i18n.t("player"), 30, 650, 20, (0, 0, 0))
 
         self.userFile = JsonController.JsonControllerUsers("users")
-
-        self.SteelButton = Button.Button(915, 0, 150, 50, 'Steel', (111, 84, 247), (78, 42, 255), (111, 84, 247), 25)
-        self.steel_selection = Entry.Entry(750, 300, (8, 42, 79), (12, 76, 143), (12, 76, 143), '', False)
 
         self.playerName = ""
         self.favoriteSong = ""
@@ -252,6 +253,20 @@ class Screens:
         pygame.draw.rect(MainWindow, negro, (1200 - 150, 0, 150, 30))
         texto = font.render(f'Bombas: {contador}', True, blanco)
         MainWindow.blit(texto, (1200 - texto.get_width() - 10, 10))
+    def mostrar_contador_agua(self, contador, MainWindow):
+        blanco = (255, 255, 255)
+        negro = (0, 0, 0)
+        font = pygame.font.Font(None, 36)
+        pygame.draw.rect(MainWindow, negro, (1200 - 150, 0, 150, 30))
+        texto = font.render(f'Bolas de Agua: {contador}', True, blanco)
+        MainWindow.blit(texto, (1200 - texto.get_width() - 10, 50))
+    def mostrar_contador_fuego(self, contador, MainWindow):
+        blanco = (255, 255, 255)
+        negro = (0, 0, 0)
+        font = pygame.font.Font(None, 36)
+        pygame.draw.rect(MainWindow, negro, (1200 - 150, 0, 150, 30))
+        texto = font.render(f'Bolas de Fuego: {contador}', True, blanco)
+        MainWindow.blit(texto, (1200 - texto.get_width() - 10, 100))
 
     def playScreen(self):
         pausa = False
@@ -264,9 +279,6 @@ class Screens:
         bombs = []  # List to store bombs
         destroyedBlocks = 0
         points = 0
-
-        SteelButtonClicked = False
-        steelBlock = 10
 
         font = pygame.font.Font(None, 36)
 
@@ -291,15 +303,22 @@ class Screens:
 
         steelblock = pygame.image.load("Assets/Blocks/SteelBlock.png")
         steelblock = pygame.transform.scale(steelblock,(50,50))
+        woodblock = pygame.image.load("Assets/Blocks/woodblock.jpg")
+        woodblock = pygame.transform.scale(woodblock, (50, 50))
+        brickblock = pygame.image.load("Assets/Blocks/brickblock.jpg")
+        brickblock = pygame.transform.scale(brickblock, (50, 50))
 
-        mensaje_tiempo_inicio= None
+        mensaje_tiempo_inicio_Acero= None
+        mensaje_tiempo_inicio_Madera = None
+        mensaje_tiempo_inicio_Ladrillo = None
         bloques_acero=[]
+        bloques_madera = []
+        bloques_ladrillo = []
 
         image_change_time = pygame.time.get_ticks() + 1000
 
         running = True
         while(running):
-            self.SteelButton.drawButton(self.MainWindow)
             self.MainWindow.blit(self.bg, (0, 0))
 
             for event in pygame.event.get():
@@ -331,20 +350,6 @@ class Screens:
                                 else:
                                     mitanque.image = mitanque.skins[1]
                             print("cambia skin")
-
-                        elif self.SteelButton.is_clicked(mouse.get_pos()):
-                            print("button steel clicked")
-                            print(self.SteelButton.seeActiveness(mouse.get_pos(), self.MainWindow))
-
-                            self.SteelButton.seeActiveness(mouse.get_pos(), self.MainWindow)
-                            '''
-                            if self.SteelButton.seeActiveness(mouse.get_pos(), self.MainWindow)) == False:
-                                self.SteelButton.color = self.steel_selection.colorActive
-                                self.SteelButton.activeness = True
-                            else:
-                                self.SteelButton.color = self.steel_selection.colorPassive
-                                self.SteelButton.activeness = False
-                                '''
                         elif event.type == music.songEnd:
                             # Aquí puedes ejecutar el código que deseas cuando la canción termine
                             print("La canción ha terminado de reproducirse.")
@@ -356,11 +361,21 @@ class Screens:
                             bloque_acero = (x - 25, y - 25)
                             bloques_acero.append(bloque_acero)
                             ultimo_tiempo_acero = pygame.time.get_ticks()
-                            mensaje_tiempo_inicio = tiempo_ultima_recarga
+                            mensaje_tiempo_inicio_Acero = tiempo_ultima_recarga_Acero
                         elif event.type == KEYDOWN and event.key == K_2 and cantidadBloques['madera'] > 0:
                             cantidadBloques['madera'] -= 1
+                            x, y = pygame.mouse.get_pos()
+                            bloque_madera = (x - 25, y - 25)
+                            bloques_madera.append(bloque_madera)
+                            ultimo_tiempo_madera = pygame.time.get_ticks()
+                            mensaje_tiempo_inicio_Madera = tiempo_ultima_recarga_Madera
                         elif event.type == KEYDOWN and event.key == K_3 and cantidadBloques['ladrillo'] > 0:
                             cantidadBloques['ladrillo'] -= 1
+                            x, y = pygame.mouse.get_pos()
+                            bloque_ladrillo = (x - 25, y - 25)
+                            bloques_ladrillo.append(bloque_ladrillo)
+                            ultimo_tiempo_ladrillo = pygame.time.get_ticks()
+                            mensaje_tiempo_inicio_Ladrillo = tiempo_ultima_recarga_Ladrillo
                     elif pausa and event.type == KEYDOWN and event.key == K_p:
                         pausa = False
                         music.unpause()
@@ -368,9 +383,15 @@ class Screens:
                 if not pausa:
                     tiempo_actual = pygame.time.get_ticks()
 
-                    if tiempo_actual - tiempo_ultima_recarga >= recargaBloqueAcero:
+                    if tiempo_actual - tiempo_ultima_recarga_Acero >= recargaBloqueAcero:
                         recargar_acero(cantidadBloques)
-                        mensaje_tiempo_inicio = pygame.time.get_ticks()
+                        mensaje_tiempo_inicio_Acero = pygame.time.get_ticks()
+                    if tiempo_actual - tiempo_ultima_recarga_Madera >= recargaBloqueMadera:
+                        recargar_madera(cantidadBloques)
+                        mensaje_tiempo_inicio_Madera = pygame.time.get_ticks()
+                    if tiempo_actual - tiempo_ultima_recarga_Ladrillo >= recargaBloqueLadrillo:
+                        recargar_ladrillo(cantidadBloques)
+                        mensaje_tiempo_inicio_Ladrillo = pygame.time.get_ticks()
 
                 self.MainWindow.blit(self.fondo, (0, 0))
                 clock.tick(fps)
@@ -378,11 +399,27 @@ class Screens:
 
                 for bloque_acero in bloques_acero:
                     self.MainWindow.blit(steelblock, bloque_acero)
+                for bloque_madera in bloques_madera:
+                    self.MainWindow.blit(woodblock, bloque_madera)
+                for bloque_ladrillo in bloques_ladrillo:
+                    self.MainWindow.blit(brickblock, bloques_ladrillo)
 
                 if not pausa:
-                    if mensaje_tiempo_inicio is not None and tiempo_actual - mensaje_tiempo_inicio < mensajeTiempo:
+                    if mensaje_tiempo_inicio_Acero is not None and tiempo_actual - mensaje_tiempo_inicio_Acero < mensajeTiempo:
                         fuente_mensaje = pygame.font.SysFont(fuente, tamanoFuente)
                         texto_mensaje = fuente_mensaje.render("Bloque de acero recargado", True, colorTexto)
+                        texto_mensaje_rect = texto_mensaje.get_rect(midbottom=(anchoVentana // 2, altoVentana - 20))
+                        self.MainWindow.blit(texto_mensaje, texto_mensaje_rect)
+                if not pausa:
+                    if mensaje_tiempo_inicio_Madera is not None and tiempo_actual - mensaje_tiempo_inicio_Madera < mensajeTiempo:
+                        fuente_mensaje = pygame.font.SysFont(fuente, tamanoFuente)
+                        texto_mensaje = fuente_mensaje.render("Bloque de madera recargado", True, colorTexto)
+                        texto_mensaje_rect = texto_mensaje.get_rect(midbottom=(anchoVentana // 2, altoVentana - 20))
+                        self.MainWindow.blit(texto_mensaje, texto_mensaje_rect)
+                if not pausa:
+                    if mensaje_tiempo_inicio_Ladrillo is not None and tiempo_actual - mensaje_tiempo_inicio_Ladrillo < mensajeTiempo:
+                        fuente_mensaje = pygame.font.SysFont(fuente, tamanoFuente)
+                        texto_mensaje = fuente_mensaje.render("Bloque de ladrillo recargado", True, colorTexto)
                         texto_mensaje_rect = texto_mensaje.get_rect(midbottom=(anchoVentana // 2, altoVentana - 20))
                         self.MainWindow.blit(texto_mensaje, texto_mensaje_rect)
 
@@ -394,6 +431,8 @@ class Screens:
                 sprites.update()
                 sprites.draw(self.MainWindow)
                 self.mostrar_contador_bombas(Bomb.bomb_count, self.MainWindow)
+                self.mostrar_contador_agua(Bomb.bomb_count, self.MainWindow)
+                self.mostrar_contador_fuego(Bomb.bomb_count, self.MainWindow)
 
                 self.labelCharacterInScreen.draw(self.MainWindow)
 
@@ -418,7 +457,6 @@ class Screens:
                 self.MainWindow.blit(desBlocksLabel, (120, 10))
                 self.MainWindow.blit(pointsLabel, (400, 10))
 
-                self.SteelButton.drawButton(self.MainWindow)
 
                 if not pausa:
                     pygame.display.update()
