@@ -252,23 +252,20 @@ class Screens:
         negro = (0, 0, 0)
         # Clear the counter area
         font = pygame.font.Font(None, 36)
-        pygame.draw.rect(MainWindow, negro, (1200 - 150, 0, 150, 30))
         texto = font.render(f'Bombas: {contador}', True, blanco)
-        MainWindow.blit(texto, (1200 - texto.get_width() - 10, 15))
+        MainWindow.blit(texto, (1200 - texto.get_width() - 10, 0))
     def mostrar_contador_agua(self, contador, MainWindow):
         blanco = (255, 255, 255)
         negro = (0, 0, 0)
         font = pygame.font.Font(None, 36)
-        pygame.draw.rect(MainWindow, negro, (1200 - 150, 0, 150, 30))
         texto = font.render(f'Bolas de Agua: {contador}', True, blanco)
-        MainWindow.blit(texto, (1200 - texto.get_width() - 10, 50))
+        MainWindow.blit(texto, (1200 - texto.get_width() - 10, 30))
     def mostrar_contador_fuego(self, contador, MainWindow):
         blanco = (255, 255, 255)
         negro = (0, 0, 0)
         font = pygame.font.Font(None, 36)
-        pygame.draw.rect(MainWindow, negro, (1200 - 150, 0, 150, 30))
         texto = font.render(f'Bolas de Fuego: {contador}', True, blanco)
-        MainWindow.blit(texto, (1200 - texto.get_width() - 10, 100))
+        MainWindow.blit(texto, (1200 - texto.get_width() - 10, 60))
 
     def playScreen(self):
         pausa = False
@@ -379,153 +376,152 @@ class Screens:
                                     mitanque.image = mitanque.skins[1]
                             print("cambia skin")
 
-                        elif event.type == music.songEnd:
-                            # Aquí puedes ejecutar el código que deseas cuando la canción termine
-                            print("La canción ha terminado de reproducirse.")
-                            running = False  # Puedes agregar tu propia lógica para continuar después de la canción
-                            self.winScreen(points)
-                        elif event.type == KEYDOWN and event.key == K_1 and cantidadBloques['acero'] > 0:
-                            cantidadBloques['acero'] -= 1
-                            x, y = pygame.mouse.get_pos()
-                            bloque_acero = (x - 25, y - 25)
-                            bloques_acero.append(bloque_acero)
-                            ultimo_tiempo_acero = pygame.time.get_ticks()
-                            mensaje_tiempo_inicio_Acero = tiempo_ultima_recarga_Acero
-                        elif event.type == KEYDOWN and event.key == K_2 and cantidadBloques['madera'] > 0:
-                            cantidadBloques['madera'] -= 1
-                            x, y = pygame.mouse.get_pos()
-                            bloque_madera = (x - 25, y - 25)
-                            bloques_madera.append(bloque_madera)
-                            ultimo_tiempo_madera = pygame.time.get_ticks()
-                            mensaje_tiempo_inicio_Madera = tiempo_ultima_recarga_Madera
-                        elif event.type == KEYDOWN and event.key == K_3 and cantidadBloques['ladrillo'] > 0:
-                            cantidadBloques['ladrillo'] -= 1
-                            x, y = pygame.mouse.get_pos()
-                            bloque_ladrillo = (x - 25, y - 25)
-                            bloques_ladrillo.append(bloque_ladrillo)
-                            ultimo_tiempo_ladrillo = pygame.time.get_ticks()
-                            mensaje_tiempo_inicio_Ladrillo = tiempo_ultima_recarga_Ladrillo
-                    elif pausa and event.type == KEYDOWN and event.key == K_p:
-                        pausa = False
-                        music.unpause()
-                        # musicStartTime=resume_time(pauseTime)
+                    elif event.type == music.songEnd:
+                        # Aquí puedes ejecutar el código que deseas cuando la canción termine
+                        print("La canción ha terminado de reproducirse.")
+                        running = False  # Puedes agregar tu propia lógica para continuar después de la canción
+                        self.winScreen(points)
+                    elif event.type == KEYDOWN and event.key == K_1 and cantidadBloques['acero'] > 0:
+                        cantidadBloques['acero'] -= 1
+                        x, y = pygame.mouse.get_pos()
+                        bloque_acero = (x - 25, y - 25)
+                        bloques_acero.append(bloque_acero)
+                        ultimo_tiempo_acero = pygame.time.get_ticks()
+                        mensaje_tiempo_inicio_Acero = tiempo_ultima_recarga_Acero
+                    elif event.type == KEYDOWN and event.key == K_2 and cantidadBloques['madera'] > 0:
+                        cantidadBloques['madera'] -= 1
+                        x, y = pygame.mouse.get_pos()
+                        bloque_madera = (x - 25, y - 25)
+                        bloques_madera.append(bloque_madera)
+                        ultimo_tiempo_madera = pygame.time.get_ticks()
+                        mensaje_tiempo_inicio_Madera = tiempo_ultima_recarga_Madera
+                    elif event.type == KEYDOWN and event.key == K_3 and cantidadBloques['ladrillo'] > 0:
+                        cantidadBloques['ladrillo'] -= 1
+                        x, y = pygame.mouse.get_pos()
+                        bloque_ladrillo = (x - 25, y - 25)
+                        bloques_ladrillo.append(bloque_ladrillo)
+                        ultimo_tiempo_ladrillo = pygame.time.get_ticks()
+                        mensaje_tiempo_inicio_Ladrillo = tiempo_ultima_recarga_Ladrillo
+                elif pausa and event.type == KEYDOWN and event.key == K_p:
+                    pausa = False
+                    music.unpause()
+                    # musicStartTime=resume_time(pauseTime)
+            if not pausa:
+                tiempo_actual = pygame.time.get_ticks()
+
+                if tiempo_actual - tiempo_ultima_recarga_Acero >= recargaBloqueAcero:
+                    recargar_acero(cantidadBloques)
+                    mensaje_tiempo_inicio_Acero = pygame.time.get_ticks()
+                if tiempo_actual - tiempo_ultima_recarga_Madera >= recargaBloqueMadera:
+                    recargar_madera(cantidadBloques)
+                    mensaje_tiempo_inicio_Madera = pygame.time.get_ticks()
+                if tiempo_actual - tiempo_ultima_recarga_Ladrillo >= recargaBloqueLadrillo:
+                    recargar_ladrillo(cantidadBloques)
+                    mensaje_tiempo_inicio_Ladrillo = pygame.time.get_ticks()
+
+            self.MainWindow.blit(self.fondo, (0, 0))
+            clock.tick(fps)
+            dibujar_contador(self.MainWindow, cantidadBloques)
+
+            for bloque_acero in bloques_acero:
+                self.MainWindow.blit(steelblock, bloque_acero)
+            for bloque_madera in bloques_madera:
+                self.MainWindow.blit(woodblock, bloque_madera)
+            for bloque_ladrillo in bloques_ladrillo:
+                self.MainWindow.blit(brickblock, bloque_ladrillo)
+
+            if not pausa:
+                if mensaje_tiempo_inicio_Acero is not None and tiempo_actual - mensaje_tiempo_inicio_Acero < mensajeTiempo:
+                    fuente_mensaje = pygame.font.SysFont(fuente, tamanoFuente)
+                    texto_mensaje = fuente_mensaje.render("Bloque de acero recargado", True, colorTexto)
+                    texto_mensaje_rect = texto_mensaje.get_rect(midbottom=(anchoVentana // 2, altoVentana - 20))
+                    self.MainWindow.blit(texto_mensaje, texto_mensaje_rect)
+            if not pausa:
+                if mensaje_tiempo_inicio_Madera is not None and tiempo_actual - mensaje_tiempo_inicio_Madera < mensajeTiempo:
+                    fuente_mensaje = pygame.font.SysFont(fuente, tamanoFuente)
+                    texto_mensaje = fuente_mensaje.render("Bloque de madera recargado", True, colorTexto)
+                    texto_mensaje_rect = texto_mensaje.get_rect(midbottom=(anchoVentana // 2, altoVentana - 20))
+                    self.MainWindow.blit(texto_mensaje, texto_mensaje_rect)
+            if not pausa:
+                if mensaje_tiempo_inicio_Ladrillo is not None and tiempo_actual - mensaje_tiempo_inicio_Ladrillo < mensajeTiempo:
+                    fuente_mensaje = pygame.font.SysFont(fuente, tamanoFuente)
+                    texto_mensaje = fuente_mensaje.render("Bloque de ladrillo recargado", True, colorTexto)
+                    texto_mensaje_rect = texto_mensaje.get_rect(midbottom=(anchoVentana // 2, altoVentana - 20))
+                    self.MainWindow.blit(texto_mensaje, texto_mensaje_rect)
+
+            tanqueSprite.update(self.MainWindow)
+            tanqueSprite.draw(self.MainWindow)
+
+            aguilaSprite.draw(self.MainWindow)
+
+            sprites.update()
+            sprites.draw(self.MainWindow)
+            self.mostrar_contador_bombas(Bomb.bomb_count, self.MainWindow)
+            self.mostrar_contador_agua(Water.water_count, self.MainWindow)
+            self.mostrar_contador_fuego(Fire.fire_count, self.MainWindow)
+
+            self.labelCharacterInScreen.draw(self.MainWindow)
+
+            if not pausa:
+                elapsed_time = time.time() - musicStartTime
+
+                # Actualiza la pantalla
+                text = font.render(f'Tiempo: {int(elapsed_time)} / {int(music.duration)} segundos', True, (0, 0, 0))
+                # pygame.display.flip()
+                # Timer
+                tiempo_transcurrido = (pygame.time.get_ticks() - tiempo_inicial) // 1000
+                timerLabel = font.render("Time: " + str(tiempo_transcurrido), True, (63, 176, 224))
+
+                # Showing the destroyed blocks
+                desBlocksLabel = font.render("Destroyed blocks: " + str(destroyedBlocks), 0, (63, 176, 224))
+
+                # Points
+                pointsLabel = font.render("Points: " + str(points), 0, (63, 176, 224))
+            self.MainWindow.blit(text, (100, 100))
+            self.MainWindow.blit(timerLabel, (20, 10))
+            self.MainWindow.blit(desBlocksLabel, (120, 10))
+            self.MainWindow.blit(pointsLabel, (400, 10))
+
+
+            if not pausa:
+                pygame.display.update()
+
                 if not pausa:
-                    tiempo_actual = pygame.time.get_ticks()
-
-                    if tiempo_actual - tiempo_ultima_recarga_Acero >= recargaBloqueAcero:
-                        recargar_acero(cantidadBloques)
-                        mensaje_tiempo_inicio_Acero = pygame.time.get_ticks()
-                    if tiempo_actual - tiempo_ultima_recarga_Madera >= recargaBloqueMadera:
-                        recargar_madera(cantidadBloques)
-                        mensaje_tiempo_inicio_Madera = pygame.time.get_ticks()
-                    if tiempo_actual - tiempo_ultima_recarga_Ladrillo >= recargaBloqueLadrillo:
-                        recargar_ladrillo(cantidadBloques)
-                        mensaje_tiempo_inicio_Ladrillo = pygame.time.get_ticks()
-
-                self.MainWindow.blit(self.fondo, (0, 0))
-                clock.tick(fps)
-                dibujar_contador(self.MainWindow, cantidadBloques)
-
-                for bloque_acero in bloques_acero:
-                    self.MainWindow.blit(steelblock, bloque_acero)
-                for bloque_madera in bloques_madera:
-                    self.MainWindow.blit(woodblock, bloque_madera)
-                for bloque_ladrillo in bloques_ladrillo:
-                    self.MainWindow.blit(brickblock, bloques_ladrillo)
+                    # Remove bombs that have gone off-screen
+                    bombs_to_remove = []
+                    for bomb in bombs:
+                        if bomb.rect.bottom < 0:
+                            bombs_to_remove.append(bomb)
+                            Bomb.bomb_count += 1
+                        if aguila.rect.colliderect(bomb.rect):
+                            self.gameoverScreen(points)
+                for bomb in bombs_to_remove:
+                    bombs.remove(bomb)
 
                 if not pausa:
-                    if mensaje_tiempo_inicio_Acero is not None and tiempo_actual - mensaje_tiempo_inicio_Acero < mensajeTiempo:
-                        fuente_mensaje = pygame.font.SysFont(fuente, tamanoFuente)
-                        texto_mensaje = fuente_mensaje.render("Bloque de acero recargado", True, colorTexto)
-                        texto_mensaje_rect = texto_mensaje.get_rect(midbottom=(anchoVentana // 2, altoVentana - 20))
-                        self.MainWindow.blit(texto_mensaje, texto_mensaje_rect)
-                if not pausa:
-                    if mensaje_tiempo_inicio_Madera is not None and tiempo_actual - mensaje_tiempo_inicio_Madera < mensajeTiempo:
-                        fuente_mensaje = pygame.font.SysFont(fuente, tamanoFuente)
-                        texto_mensaje = fuente_mensaje.render("Bloque de madera recargado", True, colorTexto)
-                        texto_mensaje_rect = texto_mensaje.get_rect(midbottom=(anchoVentana // 2, altoVentana - 20))
-                        self.MainWindow.blit(texto_mensaje, texto_mensaje_rect)
-                if not pausa:
-                    if mensaje_tiempo_inicio_Ladrillo is not None and tiempo_actual - mensaje_tiempo_inicio_Ladrillo < mensajeTiempo:
-                        fuente_mensaje = pygame.font.SysFont(fuente, tamanoFuente)
-                        texto_mensaje = fuente_mensaje.render("Bloque de ladrillo recargado", True, colorTexto)
-                        texto_mensaje_rect = texto_mensaje.get_rect(midbottom=(anchoVentana // 2, altoVentana - 20))
-                        self.MainWindow.blit(texto_mensaje, texto_mensaje_rect)
-
-                tanqueSprite.update(self.MainWindow)
-                tanqueSprite.draw(self.MainWindow)
-
-                aguilaSprite.draw(self.MainWindow)
-
-                sprites.update()
-                sprites.draw(self.MainWindow)
-                self.mostrar_contador_bombas(Bomb.bomb_count, self.MainWindow)
-                self.mostrar_contador_agua(Water.water_count, self.MainWindow)
-                self.mostrar_contador_fuego(Fire.fire_count, self.MainWindow)
-
-                self.labelCharacterInScreen.draw(self.MainWindow)
+                    # Remove water balls that have gone off-screen
+                    waters_to_remove = []
+                    for water in waters:
+                        if water.rect.bottom < 0:
+                            waters_to_remove.append(water)
+                            Water.water_count += 1
+                        if aguila.rect.colliderect(water.rect):
+                            self.gameoverScreen(points)
+                for water in waters_to_remove:
+                    waters.remove(water)
 
                 if not pausa:
-                    elapsed_time = time.time() - musicStartTime
-
-                    # Actualiza la pantalla
-                    text = font.render(f'Tiempo: {int(elapsed_time)} / {int(music.duration)} segundos', True, (0, 0, 0))
-                    # pygame.display.flip()
-                    # Timer
-                    tiempo_transcurrido = (pygame.time.get_ticks() - tiempo_inicial) // 1000
-                    timerLabel = font.render("Time: " + str(tiempo_transcurrido), True, (63, 176, 224))
-
-                    # Showing the destroyed blocks
-                    desBlocksLabel = font.render("Destroyed blocks: " + str(destroyedBlocks), 0, (63, 176, 224))
-
-                    # Points
-                    pointsLabel = font.render("Points: " + str(points), 0, (63, 176, 224))
-
-                self.MainWindow.blit(text, (100, 100))
-                self.MainWindow.blit(timerLabel, (20, 10))
-                self.MainWindow.blit(desBlocksLabel, (120, 10))
-                self.MainWindow.blit(pointsLabel, (400, 10))
-
-
-                if not pausa:
-                    pygame.display.update()
-
-                    if not pausa:
-                        # Remove bombs that have gone off-screen
-                        bombs_to_remove = []
-                        for bomb in bombs:
-                            if bomb.rect.bottom < 0:
-                                bombs_to_remove.append(bomb)
-                                Bomb.bomb_count += 1
-                            if aguila.rect.colliderect(bomb.rect):
-                                self.gameoverScreen(points)
-                    for bomb in bombs_to_remove:
-                        bombs.remove(bomb)
-
-                    if not pausa:
-                        # Remove water balls that have gone off-screen
-                        waters_to_remove = []
-                        for water in waters:
-                            if water.rect.bottom < 0:
-                                waters_to_remove.append(water)
-                                Water.water_count += 1
-                            if aguila.rect.colliderect(water.rect):
-                                self.gameoverScreen(points)
-                    for water in waters_to_remove:
-                        waters.remove(water)
-
-                    if not pausa:
-                        # Remove fire balls that have gone off-screen
-                        fires_to_remove = []
-                        for fire in fires:
-                            if fire.rect.bottom < 0:
-                                fires_to_remove.append(fire)
-                                Fire.fire_count += 1
-                            if aguila.rect.colliderect(fire.rect):
-                                self.gameoverScreen(points)
-                                print("collide")
-                    for fire in fires_to_remove:
-                        fires.remove(fire)
+                    # Remove fire balls that have gone off-screen
+                    fires_to_remove = []
+                    for fire in fires:
+                        if fire.rect.bottom < 0:
+                            fires_to_remove.append(fire)
+                            Fire.fire_count += 1
+                        if aguila.rect.colliderect(fire.rect):
+                            self.gameoverScreen(points)
+                            print("collide")
+                for fire in fires_to_remove:
+                    fires.remove(fire)
     def winScreen(self, points):
         fps = 60
         clock = pygame.time.Clock()
