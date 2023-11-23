@@ -5,8 +5,11 @@ from pygame.locals import *
 width, height = 500, 400
 class Fire(pygame.sprite.Sprite):
     fire_count = 5
-    def __init__(self):
+    def __init__(self,fireDir,tankRect,MainWindow):
         super().__init__()
+        self.direccion = fireDir
+        self.tankPos = tankRect
+        self.pantalla =MainWindow
         self.original_image = pygame.image.load("imagenes/fireball.jpg")
         self.image = pygame.transform.scale(self.original_image, (50, 50))
         self.rect = self.image.get_rect()
@@ -14,13 +17,26 @@ class Fire(pygame.sprite.Sprite):
         self.rect.y = -self.rect.height
 
     def update(self):
-        self.rect.y -= 1
-        if self.rect.bottom < 0:
-            self.kill()
+        if self.direccion == "up":
+            self.rect.y -= 1
+            if self.rect.bottom < 0:
+                self.kill()
+        elif self.direccion == "down":
+            self.rect.y += 1
+            if self.rect.top > self.pantalla.get_height():
+                self.kill()
+        elif self.direccion == "left":
+            self.rect.x -= 1
+            if self.rect.right < 0:
+                self.kill()
+        elif self.direccion == "right":
+            self.rect.x += 1
+            if self.rect.left > self.pantalla.get_width():
+                self.kill()
 
-    def place_fire(self, mouse_position):
+    def place_fire(self):
         if Fire.can_place_fire():
-            self.rect.center = mouse_position
+            self.rect.center = self.tankPos.center
             Fire.fire_count -= 1
     @staticmethod
     def can_place_fire():

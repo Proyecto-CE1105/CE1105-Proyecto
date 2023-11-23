@@ -338,8 +338,10 @@ class Screens:
                         self.fondo = self.fondosDisponibles[randint(0, len(self.fondosDisponibles) - 1)]
                     elif event.type == KEYDOWN and event.key == K_SPACE:
                         if Bomb.can_place_bomb():
-                            bomb = Bomb()
-                            bomb.place_bomb(pygame.mouse.get_pos())
+                            bombDir = mitanque.getDirection()
+                            tankRect = mitanque.getRect()
+                            bomb = Bomb(bombDir, tankRect, self.MainWindow)
+                            bomb.place_bomb()
                             sprites.add(bomb)
                             bombs.append(bomb)
                             current_time = pygame.time.get_ticks()
@@ -351,8 +353,10 @@ class Screens:
                             print("cambia skin")
                     elif event.type == KEYDOWN and event.key == K_m:
                         if Water.can_place_water():
-                            water = Water()
-                            water.place_water(pygame.mouse.get_pos())
+                            waterDir = mitanque.getDirection()
+                            tankRect = mitanque.getRect()
+                            water = Water(waterDir, tankRect, self.MainWindow)
+                            water.place_water()
                             sprites.add(water)
                             waters.append(water)
                             current_time = pygame.time.get_ticks()
@@ -364,8 +368,10 @@ class Screens:
                             print("cambia skin")
                     elif event.type == KEYDOWN and event.key == K_n:
                         if Fire.can_place_fire():
-                            fire = Fire()
-                            fire.place_fire(pygame.mouse.get_pos())
+                            fireDir = mitanque.getDirection()
+                            tankRect = mitanque.getRect()
+                            fire = Fire(fireDir, tankRect, self.MainWindow)
+                            fire.place_fire()
                             sprites.add(fire)
                             fires.append(fire)
                             current_time = pygame.time.get_ticks()
@@ -490,7 +496,7 @@ class Screens:
                     # Remove bombs that have gone off-screen
                     bombs_to_remove = []
                     for bomb in bombs:
-                        if bomb.rect.bottom < 0:
+                        if bomb.rect.bottom < 0 or bomb.rect.top> self.MainWindow.get_height() or bomb.rect.left > self.MainWindow.get_width() or bomb.rect.right < 0:
                             bombs_to_remove.append(bomb)
                             Bomb.bomb_count += 1
                         if aguila.rect.colliderect(bomb.rect):
