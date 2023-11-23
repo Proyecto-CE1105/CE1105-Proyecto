@@ -3,11 +3,11 @@ import sys
 from pygame.locals import *
 
 width, height = 500, 400
-class Water(pygame.sprite.Sprite):
-    water_count = 5
+class Fire(pygame.sprite.Sprite):
+    fire_count = 5
     def __init__(self):
         super().__init__()
-        self.original_image = pygame.image.load("imagenes/wwaterball.png")
+        self.original_image = pygame.image.load("imagenes/fireball.jpg")
         self.image = pygame.transform.scale(self.original_image, (50, 50))
         self.rect = self.image.get_rect()
         self.rect.x = -self.rect.width
@@ -18,13 +18,13 @@ class Water(pygame.sprite.Sprite):
         if self.rect.bottom < 0:
             self.kill()
 
-    def place_water(self, mouse_position):
-        if Water.can_place_water():
+    def place_fire(self, mouse_position):
+        if Fire.can_place_fire():
             self.rect.center = mouse_position
-            Water.water_count -= 1
+            Fire.fire_count -= 1
     @staticmethod
-    def can_place_water():
-        return Water.water_count > 0
+    def can_place_fire():
+        return Fire.fire_count > 0
     def get_left(self):
         return self.rect.left
     def get_right(self):

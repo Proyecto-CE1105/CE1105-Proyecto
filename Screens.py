@@ -13,6 +13,8 @@ from pygame.sprite import Group
 from pygame.locals import *
 from VentanaPausa import draw_pause
 from Weapons.Bomb import Bomb
+from Weapons.Water import Water
+from Weapons.Fire import Fire
 import Music
 import time
 
@@ -252,7 +254,7 @@ class Screens:
         font = pygame.font.Font(None, 36)
         pygame.draw.rect(MainWindow, negro, (1200 - 150, 0, 150, 30))
         texto = font.render(f'Bombas: {contador}', True, blanco)
-        MainWindow.blit(texto, (1200 - texto.get_width() - 10, 10))
+        MainWindow.blit(texto, (1200 - texto.get_width() - 10, 15))
     def mostrar_contador_agua(self, contador, MainWindow):
         blanco = (255, 255, 255)
         negro = (0, 0, 0)
@@ -277,6 +279,8 @@ class Screens:
         tanque = pygame.image.load("imagenes/Tank_Image.png")
         sprites = Group()
         bombs = []  # List to store bombs
+        waters = []
+        fires = []
         destroyedBlocks = 0
         points = 0
 
@@ -341,8 +345,6 @@ class Screens:
                             bomb.place_bomb(pygame.mouse.get_pos())
                             sprites.add(bomb)
                             bombs.append(bomb)
-
-                            # mitanque.disparar()
                             current_time = pygame.time.get_ticks()
                             if current_time >= image_change_time:
                                 if mitanque.image == mitanque.skins[1]:
@@ -350,6 +352,33 @@ class Screens:
                                 else:
                                     mitanque.image = mitanque.skins[1]
                             print("cambia skin")
+                    elif event.type == KEYDOWN and event.key == K_m:
+                        if Water.can_place_water():
+                            water = Water()
+                            water.place_water(pygame.mouse.get_pos())
+                            sprites.add(water)
+                            waters.append(water)
+                            current_time = pygame.time.get_ticks()
+                            if current_time >= image_change_time:
+                                if mitanque.image == mitanque.skins[1]:
+                                    mitanque.image = mitanque.skins[0]
+                                else:
+                                    mitanque.image = mitanque.skins[1]
+                            print("cambia skin")
+                    elif event.type == KEYDOWN and event.key == K_n:
+                        if Fire.can_place_fire():
+                            fire = Fire()
+                            fire.place_fire(pygame.mouse.get_pos())
+                            sprites.add(fire)
+                            fires.append(fire)
+                            current_time = pygame.time.get_ticks()
+                            if current_time >= image_change_time:
+                                if mitanque.image == mitanque.skins[1]:
+                                    mitanque.image = mitanque.skins[0]
+                                else:
+                                    mitanque.image = mitanque.skins[1]
+                            print("cambia skin")
+
                         elif event.type == music.songEnd:
                             # Aquí puedes ejecutar el código que deseas cuando la canción termine
                             print("La canción ha terminado de reproducirse.")
@@ -431,8 +460,8 @@ class Screens:
                 sprites.update()
                 sprites.draw(self.MainWindow)
                 self.mostrar_contador_bombas(Bomb.bomb_count, self.MainWindow)
-                self.mostrar_contador_agua(Bomb.bomb_count, self.MainWindow)
-                self.mostrar_contador_fuego(Bomb.bomb_count, self.MainWindow)
+                self.mostrar_contador_agua(Water.water_count, self.MainWindow)
+                self.mostrar_contador_fuego(Fire.fire_count, self.MainWindow)
 
                 self.labelCharacterInScreen.draw(self.MainWindow)
 
@@ -468,13 +497,35 @@ class Screens:
                             if bomb.rect.bottom < 0:
                                 bombs_to_remove.append(bomb)
                                 Bomb.bomb_count += 1
-
                             if aguila.rect.colliderect(bomb.rect):
                                 self.gameoverScreen(points)
-                                print("collide")
-
                     for bomb in bombs_to_remove:
                         bombs.remove(bomb)
+
+                    if not pausa:
+                        # Remove water balls that have gone off-screen
+                        waters_to_remove = []
+                        for water in waters:
+                            if water.rect.bottom < 0:
+                                waters_to_remove.append(water)
+                                Water.water_count += 1
+                            if aguila.rect.colliderect(water.rect):
+                                self.gameoverScreen(points)
+                    for water in waters_to_remove:
+                        waters.remove(water)
+
+                    if not pausa:
+                        # Remove fire balls that have gone off-screen
+                        fires_to_remove = []
+                        for fire in fires:
+                            if fire.rect.bottom < 0:
+                                fires_to_remove.append(fire)
+                                Fire.fire_count += 1
+                            if aguila.rect.colliderect(fire.rect):
+                                self.gameoverScreen(points)
+                                print("collide")
+                    for fire in fires_to_remove:
+                        fires.remove(fire)
     def winScreen(self, points):
         fps = 60
         clock = pygame.time.Clock()
