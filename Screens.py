@@ -289,7 +289,6 @@ class Screens:
         music = Music.Music(self.MainWindow, self.favoriteSong)
         music.playSong()
         musicStartTime = time.time()
-        pauseTime = 0
 
         self.labelCharacterInScreen.update_text(self.playerName)
 
@@ -386,22 +385,17 @@ class Screens:
                         self.winScreen(points)
                     elif event.type == KEYDOWN and event.key == K_1 and cantidadBloques['acero'] > 0:
                         cantidadBloques['acero'] -= 1
-                        x, y = pygame.mouse.get_pos()
-                        bloque_acero = (x - 25, y - 25)
+                        bloque_acero = (cursor_x, cursor_y)
                         bloques_acero.append(bloque_acero)
-                        ultimo_tiempo_acero = pygame.time.get_ticks()
                         mensaje_tiempo_inicio_Acero = tiempo_ultima_recarga_Acero
                     elif event.type == KEYDOWN and event.key == K_2 and cantidadBloques['madera'] > 0:
                         cantidadBloques['madera'] -= 1
-                        x, y = pygame.mouse.get_pos()
-                        bloque_madera = (x - 25, y - 25)
+                        bloque_madera = (cursor_x, cursor_y)
                         bloques_madera.append(bloque_madera)
-                        ultimo_tiempo_madera = pygame.time.get_ticks()
                         mensaje_tiempo_inicio_Madera = tiempo_ultima_recarga_Madera
                     elif event.type == KEYDOWN and event.key == K_3 and cantidadBloques['ladrillo'] > 0:
                         cantidadBloques['ladrillo'] -= 1
-                        x, y = pygame.mouse.get_pos()
-                        bloque_ladrillo = (x - 25, y - 25)
+                        bloque_ladrillo = (cursor_x, cursor_y)
                         bloques_ladrillo.append(bloque_ladrillo)
                         mensaje_tiempo_inicio_Ladrillo = tiempo_ultima_recarga_Ladrillo
                     elif event.type == KEYDOWN:
