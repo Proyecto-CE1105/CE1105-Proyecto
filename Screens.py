@@ -239,15 +239,6 @@ class Screens:
                 pygame.display.update()
 
     def mostrar_contador_bombas(self, contador, MainWindow):
-        """
-        Display the bomb counter on the screen.
-
-        Args:
-            contador (int): The bomb count.
-
-        Returns:
-            None
-        """
         blanco = (255, 255, 255)
         negro = (0, 0, 0)
         # Clear the counter area
@@ -275,7 +266,7 @@ class Screens:
         tiempo_inicial = pygame.time.get_ticks()
         tanque = pygame.image.load("imagenes/Tank_Image.png")
         sprites = Group()
-        bombs = []  # List to store bombs
+        bombs = []
         waters = []
         fires = []
         destroyedBlocks = 0
@@ -308,6 +299,12 @@ class Screens:
         woodblock = pygame.transform.scale(woodblock, (50, 50))
         brickblock = pygame.image.load("Assets/Blocks/brickblock.jpg")
         brickblock = pygame.transform.scale(brickblock, (50, 50))
+
+        blockcursor=pygame.image.load("Assets/Cursor/Blocks_Cursor.png")
+        blockcursor= pygame.transform.scale(blockcursor,(50,50))
+        cursor_x=0
+        cursor_y=0
+        blockcursor_position=(cursor_x,cursor_y)
 
         mensaje_tiempo_inicio_Acero= None
         mensaje_tiempo_inicio_Madera = None
@@ -406,8 +403,23 @@ class Screens:
                         x, y = pygame.mouse.get_pos()
                         bloque_ladrillo = (x - 25, y - 25)
                         bloques_ladrillo.append(bloque_ladrillo)
-                        ultimo_tiempo_ladrillo = pygame.time.get_ticks()
                         mensaje_tiempo_inicio_Ladrillo = tiempo_ultima_recarga_Ladrillo
+                    elif event.type == KEYDOWN:
+                        if event.key == K_UP and cursor_y - 50 >= 0:
+                            cursor_y -= 50
+                            blockcursor_position = (cursor_x, cursor_y)
+                        elif event.key == K_DOWN and cursor_y + 100 <= altoVentana:
+                            cursor_y += 50
+                            blockcursor_position = (cursor_x, cursor_y)
+                        elif event.key == K_RIGHT and cursor_x + 100 <= anchoVentana:
+                            cursor_x += 50
+                            blockcursor_position = (cursor_x, cursor_y)
+                        elif event.key == K_LEFT and cursor_x - 50 >= 0:
+                            cursor_x -= 50
+                            blockcursor_position = (cursor_x, cursor_y)
+                        else:
+                            blockcursor_position = blockcursor_position
+
                 elif pausa and event.type == KEYDOWN and event.key == K_p:
                     pausa = False
                     music.unpause()
@@ -428,6 +440,8 @@ class Screens:
             self.MainWindow.blit(self.fondo, (0, 0))
             clock.tick(fps)
             dibujar_contador(self.MainWindow, cantidadBloques)
+
+            self.MainWindow.blit(blockcursor,blockcursor_position)
 
             for bloque_acero in bloques_acero:
                 self.MainWindow.blit(steelblock, bloque_acero)
@@ -528,6 +542,7 @@ class Screens:
                             print("collide")
                 for fire in fires_to_remove:
                     fires.remove(fire)
+
     def winScreen(self, points):
         fps = 60
         clock = pygame.time.Clock()
