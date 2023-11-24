@@ -35,6 +35,8 @@ mostrarMensajeEvento=pygame.USEREVENT +1
 tiempo_ultima_recarga_Acero = pygame.time.get_ticks()
 tiempo_ultima_recarga_Madera = pygame.time.get_ticks()
 tiempo_ultima_recarga_Ladrillo = pygame.time.get_ticks()
+tiempo_actual = pygame.time.get_ticks()
+
 bloques_recargados=0
 
 cantidadBloques={'acero':10, 'madera':10, 'ladrillo':10}
@@ -308,7 +310,7 @@ class Screens:
         bloques_ladrillo = []
 
         image_change_time = pygame.time.get_ticks() + 1000
-
+        
         running = True
         while(running):
             self.MainWindow.blit(self.bg, (0, 0))
@@ -383,29 +385,24 @@ class Screens:
                         x, y = pygame.mouse.get_pos()
                         bloque_acero = (x - 25, y - 25)
                         bloques_acero.append(bloque_acero)
-                        ultimo_tiempo_acero = pygame.time.get_ticks()
                         mensaje_tiempo_inicio_Acero = tiempo_ultima_recarga_Acero
                     elif event.type == KEYDOWN and event.key == K_2 and cantidadBloques['madera'] > 0:
                         cantidadBloques['madera'] -= 1
                         x, y = pygame.mouse.get_pos()
                         bloque_madera = (x - 25, y - 25)
                         bloques_madera.append(bloque_madera)
-                        ultimo_tiempo_madera = pygame.time.get_ticks()
                         mensaje_tiempo_inicio_Madera = tiempo_ultima_recarga_Madera
                     elif event.type == KEYDOWN and event.key == K_3 and cantidadBloques['ladrillo'] > 0:
                         cantidadBloques['ladrillo'] -= 1
                         x, y = pygame.mouse.get_pos()
                         bloque_ladrillo = (x - 25, y - 25)
                         bloques_ladrillo.append(bloque_ladrillo)
-                        ultimo_tiempo_ladrillo = pygame.time.get_ticks()
                         mensaje_tiempo_inicio_Ladrillo = tiempo_ultima_recarga_Ladrillo
                 elif pausa and event.type == KEYDOWN and event.key == K_p:
                     pausa = False
                     music.unpause()
-                    # musicStartTime=resume_time(pauseTime)
+            
             if not pausa:
-                tiempo_actual = pygame.time.get_ticks()
-
                 if tiempo_actual - tiempo_ultima_recarga_Acero >= recargaBloqueAcero:
                     recargar_acero(cantidadBloques)
                     mensaje_tiempo_inicio_Acero = pygame.time.get_ticks()
@@ -434,19 +431,22 @@ class Screens:
                     texto_mensaje = fuente_mensaje.render("Bloque de acero recargado", True, colorTexto)
                     texto_mensaje_rect = texto_mensaje.get_rect(midbottom=(anchoVentana // 2, altoVentana - 20))
                     self.MainWindow.blit(texto_mensaje, texto_mensaje_rect)
+                    mensaje_tiempo_inicio_Acero=None
                 
                 if mensaje_tiempo_inicio_Madera is not None and tiempo_actual - mensaje_tiempo_inicio_Madera < mensajeTiempo:
                     fuente_mensaje = pygame.font.SysFont(fuente, tamanoFuente)
                     texto_mensaje = fuente_mensaje.render("Bloque de madera recargado", True, colorTexto)
                     texto_mensaje_rect = texto_mensaje.get_rect(midbottom=(anchoVentana // 2, altoVentana - 20))
                     self.MainWindow.blit(texto_mensaje, texto_mensaje_rect)
+                    mensaje_tiempo_inicio_Madera=None
 
                 if mensaje_tiempo_inicio_Ladrillo is not None and tiempo_actual - mensaje_tiempo_inicio_Ladrillo < mensajeTiempo:
                     fuente_mensaje = pygame.font.SysFont(fuente, tamanoFuente)
                     texto_mensaje = fuente_mensaje.render("Bloque de ladrillo recargado", True, colorTexto)
                     texto_mensaje_rect = texto_mensaje.get_rect(midbottom=(anchoVentana // 2, altoVentana - 20))
                     self.MainWindow.blit(texto_mensaje, texto_mensaje_rect)
-
+                    mensaje_tiempo_inicio_Ladrillo=None
+                
             tanqueSprite.update(self.MainWindow)
             tanqueSprite.draw(self.MainWindow)
 
