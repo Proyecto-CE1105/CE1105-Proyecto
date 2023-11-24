@@ -37,7 +37,7 @@ tiempo_ultima_recarga_Madera = pygame.time.get_ticks()
 tiempo_ultima_recarga_Ladrillo = pygame.time.get_ticks()
 bloques_recargados=0
 
-cantidadBloques={'acero':5, 'madera':10, 'ladrillo':8}
+cantidadBloques={'acero':10, 'madera':10, 'ladrillo':10}
 coloresBloques={'acero':(169, 169, 169), 'madera': (139,69,19), 'ladrillo': (255,0,0)}
 
 colorTexto=(0,0,0)
@@ -239,15 +239,6 @@ class Screens:
                 pygame.display.update()
 
     def mostrar_contador_bombas(self, contador, MainWindow):
-        """
-        Display the bomb counter on the screen.
-
-        Args:
-            contador (int): The bomb count.
-
-        Returns:
-            None
-        """
         blanco = (255, 255, 255)
         negro = (0, 0, 0)
         # Clear the counter area
@@ -442,13 +433,13 @@ class Screens:
                     texto_mensaje = fuente_mensaje.render("Bloque de acero recargado", True, colorTexto)
                     texto_mensaje_rect = texto_mensaje.get_rect(midbottom=(anchoVentana // 2, altoVentana - 20))
                     self.MainWindow.blit(texto_mensaje, texto_mensaje_rect)
-            if not pausa:
+
                 if mensaje_tiempo_inicio_Madera is not None and tiempo_actual - mensaje_tiempo_inicio_Madera < mensajeTiempo:
                     fuente_mensaje = pygame.font.SysFont(fuente, tamanoFuente)
                     texto_mensaje = fuente_mensaje.render("Bloque de madera recargado", True, colorTexto)
                     texto_mensaje_rect = texto_mensaje.get_rect(midbottom=(anchoVentana // 2, altoVentana - 20))
                     self.MainWindow.blit(texto_mensaje, texto_mensaje_rect)
-            if not pausa:
+                    
                 if mensaje_tiempo_inicio_Ladrillo is not None and tiempo_actual - mensaje_tiempo_inicio_Ladrillo < mensajeTiempo:
                     fuente_mensaje = pygame.font.SysFont(fuente, tamanoFuente)
                     texto_mensaje = fuente_mensaje.render("Bloque de ladrillo recargado", True, colorTexto)
@@ -528,6 +519,7 @@ class Screens:
                             print("collide")
                 for fire in fires_to_remove:
                     fires.remove(fire)
+
     def winScreen(self, points):
         fps = 60
         clock = pygame.time.Clock()
