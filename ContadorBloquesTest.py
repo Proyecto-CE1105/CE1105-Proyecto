@@ -49,28 +49,28 @@ def dibujar_contador(ventana,cantidad):
 def recargar_acero(cantidad):
     global bloques_recargados, tiempo_ultima_recarga, mensaje_tiempo_inicio
     tiempo_actual = pygame.time.get_ticks()
-    if cantidad['acero'] < 5 and tiempo_actual - tiempo_ultima_recarga >= TIEMPO_RECARGA:
+    if cantidad['acero'] < 10 and tiempo_actual - tiempo_ultima_recarga >= TIEMPO_RECARGA:
         cantidad['acero'] += 1
         bloques_recargados += 1
         tiempo_ultima_recarga = tiempo_actual
-        mensaje_tiempo_inicio = tiempo_actual  # Establece el tiempo de inicio del mensaje
+        mensaje_tiempo_inicio = tiempo_actual
 
 # Función para recargar bloques de madera y mostrar un mensaje
 def recargar_madera(cantidad):
     global bloques_recargados, tiempo_ultima_recarga, mensaje_tiempo_inicio
     tiempo_actual = pygame.time.get_ticks()
-    if cantidad['madera'] < 5 and tiempo_actual - tiempo_ultima_recarga >= TIEMPO_RECARGA:
+    if cantidad['madera'] < 10 and tiempo_actual - tiempo_ultima_recarga >= TIEMPO_RECARGA:
         cantidad['madera'] += 1
         bloques_recargados += 1
         tiempo_ultima_recarga = tiempo_actual
-        mensaje_tiempo_inicio = tiempo_actual  # Establece el tiempo de inicio del mensaje
+        mensaje_tiempo_inicio = tiempo_actual
 
 # Función para recargar bloques de ladrillo y mostrar un mensaje
 def recargar_ladrillo(cantidad):
     global bloques_recargados, tiempo_ultima_recarga, mensaje_tiempo_inicio
     tiempo_actual = pygame.time.get_ticks()
-    if cantidad['ladrillo'] < 5 and tiempo_actual - tiempo_ultima_recarga >= TIEMPO_RECARGA:
+    if cantidad['ladrillo'] < 10 and tiempo_actual - tiempo_ultima_recarga >= TIEMPO_RECARGA:
         cantidad['ladrillo'] += 1
         bloques_recargados += 1
         tiempo_ultima_recarga = tiempo_actual
-        mensaje_tiempo_inicio = tiempo_actual  # Establece el tiempo de inicio del mensaje
+        mensaje_tiempo_inicio = tiempo_actual  

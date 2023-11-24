@@ -428,23 +428,35 @@ class Screens:
                 self.MainWindow.blit(brickblock, bloque_ladrillo)
 
             if not pausa:
+                if mensaje_tiempo_inicio_Acero is not None and tiempo_actual - mensaje_tiempo_inicio_Acero >= mensajeTiempo:
+                    mensaje_tiempo_inicio_Acero = None
+                
+                if mensaje_tiempo_inicio_Madera is not None and tiempo_actual - mensaje_tiempo_inicio_Madera >= mensajeTiempo:
+                    mensaje_tiempo_inicio_Madera = None
+                
+                if mensaje_tiempo_inicio_Ladrillo is not None and tiempo_actual - mensaje_tiempo_inicio_Ladrillo >= mensajeTiempo:
+                    mensaje_tiempo_inicio_Ladrillo = None
+
                 if mensaje_tiempo_inicio_Acero is not None and tiempo_actual - mensaje_tiempo_inicio_Acero < mensajeTiempo:
                     fuente_mensaje = pygame.font.SysFont(fuente, tamanoFuente)
                     texto_mensaje = fuente_mensaje.render("Bloque de acero recargado", True, colorTexto)
                     texto_mensaje_rect = texto_mensaje.get_rect(midbottom=(anchoVentana // 2, altoVentana - 20))
                     self.MainWindow.blit(texto_mensaje, texto_mensaje_rect)
-
+                    mensaje_tiempo_inicio_Acero=pygame.time.get_ticks()
+                
                 if mensaje_tiempo_inicio_Madera is not None and tiempo_actual - mensaje_tiempo_inicio_Madera < mensajeTiempo:
                     fuente_mensaje = pygame.font.SysFont(fuente, tamanoFuente)
                     texto_mensaje = fuente_mensaje.render("Bloque de madera recargado", True, colorTexto)
                     texto_mensaje_rect = texto_mensaje.get_rect(midbottom=(anchoVentana // 2, altoVentana - 20))
                     self.MainWindow.blit(texto_mensaje, texto_mensaje_rect)
-                    
+                    mensaje_tiempo_inicio_Madera=pygame.time.get_ticks()
+
                 if mensaje_tiempo_inicio_Ladrillo is not None and tiempo_actual - mensaje_tiempo_inicio_Ladrillo < mensajeTiempo:
                     fuente_mensaje = pygame.font.SysFont(fuente, tamanoFuente)
                     texto_mensaje = fuente_mensaje.render("Bloque de ladrillo recargado", True, colorTexto)
                     texto_mensaje_rect = texto_mensaje.get_rect(midbottom=(anchoVentana // 2, altoVentana - 20))
                     self.MainWindow.blit(texto_mensaje, texto_mensaje_rect)
+                    mensaje_tiempo_inicio_Ladrillo=pygame.time.get_ticks()
 
             tanqueSprite.update(self.MainWindow)
             tanqueSprite.draw(self.MainWindow)
@@ -474,6 +486,7 @@ class Screens:
 
                 # Points
                 pointsLabel = font.render("Points: " + str(points), 0, (63, 176, 224))
+            
             self.MainWindow.blit(text, (100, 100))
             self.MainWindow.blit(timerLabel, (20, 10))
             self.MainWindow.blit(desBlocksLabel, (120, 10))
