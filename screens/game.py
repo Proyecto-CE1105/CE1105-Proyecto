@@ -225,7 +225,28 @@ class GameScreen(Pantallas):
                     print("La canción ha terminado de reproducirse.")
                     running = False  # Puedes agregar tu propia lógica para continuar después de la canción
                     ##################################################################################
-                    #self.winScreen(self.points)
+
+                elif event.type == KEYDOWN and event.key == K_1 and self.cantidadBloques['acero'] > 0:
+                    self.cantidadBloques['acero'] -= 1
+                    x, y = pygame.mouse.get_pos()
+                    bloque_acero = (x - 25, y - 25)
+                    self.bloques_acero.append(bloque_acero)
+                    ultimo_tiempo_acero = pygame.time.get_ticks()
+                    self.mensaje_tiempo_inicio_Acero = self.tiempo_ultima_recarga_Acero
+                elif event.type == KEYDOWN and event.key == K_2 and self.cantidadBloques['madera'] > 0:
+                    self.cantidadBloques['madera'] -= 1
+                    x, y = pygame.mouse.get_pos()
+                    bloque_madera = (x - 25, y - 25)
+                    self.bloques_madera.append(bloque_madera)
+                    self.ultimo_tiempo_madera = pygame.time.get_ticks()
+                    self.mensaje_tiempo_inicio_Madera = self.tiempo_ultima_recarga_Madera
+                elif event.type == KEYDOWN and event.key == K_3 and self.cantidadBloques['ladrillo'] > 0:
+                    self.cantidadBloques['ladrillo'] -= 1
+                    x, y = pygame.mouse.get_pos()
+                    bloque_ladrillo = (x - 25, y - 25)
+                    self.bloques_ladrillo.append(bloque_ladrillo)
+                    ultimo_tiempo_ladrillo = pygame.time.get_ticks()
+                    self.mensaje_tiempo_inicio_Ladrillo = self.tiempo_ultima_recarga_Ladrillo
 
             elif self.pausa and event.type == KEYDOWN and event.key == K_p:
                 self.pausa = False
@@ -377,6 +398,8 @@ class GameScreen(Pantallas):
 
 
         if not self.pausa:
+            if tiempo_transcurrido>=self.music.duration:
+                self.change("win")
             pygame.display.update()
 
             if not self.pausa:
@@ -386,9 +409,11 @@ class GameScreen(Pantallas):
                         bombs_to_remove.append(bomb)
                         Bomb.bomb_count += 1
                     if self.aguila.rect.colliderect(bomb.rect):
-                        self.gameoverScreen(self.points)
-                for bomb in bombs_to_remove:
-                    self.bombs.remove(bomb)
+
+                        self.change("gameOver",tiempo_transcurrido)
+            for bomb in bombs_to_remove:
+                self.bombs.remove(bomb)
+
 
                 waters_to_remove = []
                 for water in self.waters:
@@ -396,9 +421,11 @@ class GameScreen(Pantallas):
                         waters_to_remove.append(water)
                         Water.water_count += 1
                     if self.aguila.rect.colliderect(water.rect):
-                        self.gameoverScreen(self.points)
-                for water in waters_to_remove:
-                    self.waters.remove(water)
+
+                        self.change("gameOver",tiempo_transcurrido)
+            for water in waters_to_remove:
+                self.waters.remove(water)
+
 
                 fires_to_remove = []
                 for fire in self.fires:
@@ -406,7 +433,7 @@ class GameScreen(Pantallas):
                         fires_to_remove.append(fire)
                         Fire.fire_count += 1
                     if self.aguila.rect.colliderect(fire.rect):
-                        self.gameoverScreen(self.points)
+                        self.change("gameOver",tiempo_transcurrido)
                         print("collide")
                 for fire in fires_to_remove:
                     self.fires.remove(fire)
@@ -415,5 +442,10 @@ class GameScreen(Pantallas):
                     
 
     
-    def change(self,newPantalla):
-         self.controlador.cambio(newPantalla)
+    def change(self,newPantalla,tiempo):
+        if newPantalla=="gameOver":
+            self.music.stop()
+            self.controlador.gameOver(tiempo)
+        elif newPantalla=="win":
+            self.music.stop()
+            self.controlador.winGame(tiempo)

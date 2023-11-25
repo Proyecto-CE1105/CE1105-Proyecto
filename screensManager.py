@@ -1,6 +1,6 @@
 from interfaces.intPantallas import Pantallas
 from pantallas import pantalla1,secundaria
-from screens import menu,singUp,login,game
+from screens import menu,singUp,login,game,loose,win
 from pygame import *
 from pygame.sprite import Group
 from pygame.locals import *
@@ -50,9 +50,22 @@ class Main:
         del temp
     
     def empezarPartida(self,jugador1,jugador2,musica1,musica2):
-        self.status="partidad"
+        self.status="partida"
         self.music.stop()
         self.pantalla=game.GameScreen(self,jugador1,jugador2,musica1,musica2)
+    
+    def gameOver(self,puntaje):
+        self.status="gameOver"
+        self.pantalla=loose.GameOver(self,puntaje)
+    
+    def winGame(self,puntaje,player):
+        self.status="Ganado"
+        self.pantalla=win.winScreen(self,puntaje,player)
+    
+    def backMenu(self):
+        self.status="menu"
+        self.pantalla=menu.menuPrincipal(self)
+        self.music.playSong()
 
     def run(self):
         self.music.playSong()
