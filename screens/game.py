@@ -31,10 +31,6 @@ class GameScreen(Pantallas):
         self.clock = pygame.time.Clock()
         self.tiempo_inicial = pygame.time.get_ticks()
         self.tanque = pygame.image.load("imagenes/Tank_Image.png")
-        self.sprites = Group()
-        self.bombs = [] 
-        self.waters = []
-        self.fires = []
         self.destroyedBlocks = 0
         self.points = 0
 
@@ -70,6 +66,13 @@ class GameScreen(Pantallas):
         self.wood=BloqueMadera.BloqueMadera(self.MainWindow)
         self.woodSprite.add(self.wood)
         self.bloques_madera=[]
+
+        self.bombSprite = Group()
+        self.fireSprite = Group()
+        self.waterSprite = Group()
+        self.bombs = [] 
+        self.fires = []
+        self.waters = []
 
         self.music = Music.Music(self.MainWindow, self.musica1)
         self.music.playSong()
@@ -160,7 +163,7 @@ class GameScreen(Pantallas):
                             tankRect = self.mitanque.getRect()
                             bomb = Bomb(bombDir, tankRect, self.MainWindow)
                             bomb.place_bomb()
-                            self.sprites.add(bomb)
+                            self.bombSprite.add(bomb)
                             self.bombs.append(bomb)
                             current_time = pygame.time.get_ticks()
                             if current_time >= self.image_change_time:
@@ -175,7 +178,7 @@ class GameScreen(Pantallas):
                             tankRect = self.mitanque.getRect()
                             water = Water(waterDir, tankRect, self.MainWindow)
                             water.place_water()
-                            self.sprites.add(water)
+                            self.waterSprite.add(water)
                             self.waters.append(water)
                             current_time = pygame.time.get_ticks()
                             if current_time >= self.image_change_time:
@@ -190,7 +193,7 @@ class GameScreen(Pantallas):
                             tankRect = self.mitanque.getRect()
                             fire = Fire(fireDir, tankRect, self.MainWindow)
                             fire.place_fire()
-                            self.sprites.add(fire)
+                            self.fireSprite.add(fire)
                             self.fires.append(fire)
                             current_time = pygame.time.get_ticks()
                             if current_time >= self.image_change_time:
