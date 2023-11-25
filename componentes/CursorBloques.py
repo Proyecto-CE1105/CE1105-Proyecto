@@ -1,13 +1,10 @@
-import random
 import pygame
-import sys
 from pygame.locals import *
-from pygame.sprite import Group
 
 class CursorBloques(pygame.sprite.Sprite):
     def __init__(self,mainWindow):
         super().__init__()
-        self.image=pygame.transform.scale(pygame.image.load("Assets/Cursor/block_cursor.png"),(50,50))
+        self.image=pygame.transform.scale(pygame.image.load("Assets/Cursor/BlockCursor.png"),(50,50))
         self.screen=mainWindow
         self.rect=self.image.get_rect()
         self.time_move=500
