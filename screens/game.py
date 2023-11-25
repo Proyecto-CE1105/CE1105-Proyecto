@@ -25,8 +25,6 @@ class GameScreen(Pantallas):
         pygame.display.set_caption('Pantalla1')
         self.buttonEnter = button.Button(740, 350, 100, 50, 'Enter', (86, 140, 255), (2, 82, 253), (86, 140, 255), 20)
 
-        self.pausa = False
-
         self.fps = 60
         self.clock = pygame.time.Clock()
         self.tiempo_inicial = pygame.time.get_ticks()
@@ -89,6 +87,10 @@ class GameScreen(Pantallas):
         self.cantidadBloques={'acero':10, 'madera':10, 'ladrillo':10}
 
         self.image_change_time = pygame.time.get_ticks() + 1000
+
+        self.pausa = False
+        self.paused_rect = pygame.Surface((self.anchoVentana, self.altoVentana), pygame.SRCALPHA)
+        self.paused_rect.fill((128, 128, 128, 128)) 
 
         
     def mostrar_contador_bombas(self, contador, MainWindow):
@@ -199,6 +201,11 @@ class GameScreen(Pantallas):
                 self.pausa = False
                 self.music.unpause()
                 # musicStartTime=resume_time(pauseTime)
+        
+        if self.pausa:
+            self.MainWindow.blit(self.paused_rect, (0, 0))
+            pygame.display.update()
+            return
 
         self.MainWindow.blit(self.fondo, (0, 0))
         self.clock.tick(self.fps)
