@@ -96,11 +96,13 @@ class GameScreen(Pantallas):
         font = pygame.font.Font(None, 36)
         texto = font.render(f'Bombas: {contador}', True, blanco)
         MainWindow.blit(texto, (1200 - texto.get_width() - 10, 0))
+        
     def mostrar_contador_agua(self, contador, MainWindow):
         blanco = (255, 255, 255)
         font = pygame.font.Font(None, 36)
         texto = font.render(f'Bolas de Agua: {contador}', True, blanco)
         MainWindow.blit(texto, (1200 - texto.get_width() - 10, 30))
+
     def mostrar_contador_fuego(self, contador, MainWindow):
         blanco = (255, 255, 255)
         font = pygame.font.Font(None, 36)
