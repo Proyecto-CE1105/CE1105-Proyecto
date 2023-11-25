@@ -1,9 +1,13 @@
-from componentes.Bloque import Bloque
+import pygame
 
-# Clase Bloque de Madera (clase hija de Bloque)
-class BloqueMadera(Bloque):
-    def __init__(self):
-        super().__init__((210, 105, 30), 50, 50)  # Color marrón
+class BloqueMadera(pygame.sprite.Sprite):
+    def __init__(self,mainWindow):
+        super().__init__()
+        self.image=pygame.transform.scale(pygame.image.load("Assets/Blocks/woodblock.png"),(50,50))
+        self.rect=self.image.get_rect()
+        self.screen=mainWindow
+        self.health=100
 
-    def metodo_especifico_madera(self):
-        print("Método específico de bloque de madera")
+
+    def update(self):
+        pass

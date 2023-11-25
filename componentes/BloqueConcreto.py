@@ -1,9 +1,12 @@
-from componentes.Bloque import Bloque
+import pygame
 
-# Clase Bloque de Concreto (clase hija de Bloque)
-class BloqueConcreto(Bloque):
-    def __init__(self):
-        super().__init__((169, 169, 169), 50, 50)  # Color gris claro
+class BloqueConcreto(pygame.sprite.Sprite):
+    def __init__(self,mainWindow):
+        super().__init__()
+        self.image=pygame.transform.scale(pygame.image.load("Assets/Blocks/brickblock.png"),(50,50))
+        self.rect=self.image.get_rect()
+        self.screen=mainWindow
+        self.health=100
 
-    def metodo_especifico_concreto(self):
-        print("Método específico de bloque de concreto")
+    def update(self):
+        pass
