@@ -92,6 +92,8 @@ class GameScreen(Pantallas):
         self.paused_rect = pygame.Surface((self.anchoVentana, self.altoVentana), pygame.SRCALPHA)
         self.paused_rect.fill((128, 128, 128, 128)) 
 
+        self.ayuda = False
+
         
     def mostrar_contador_bombas(self, contador, MainWindow):
         blanco = (255, 255, 255)
@@ -200,12 +202,18 @@ class GameScreen(Pantallas):
             elif self.pausa:
                 if event.type == KEYDOWN and event.key == K_p:
                     self.pausa = False
+                    self.ayuda = False
                     self.music.unpause()
                 elif event.type == MOUSEBUTTONDOWN and event.button == 1: 
                     mouse_x, mouse_y = pygame.mouse.get_pos()
                     if (500 <= mouse_x <= 600) and (200 <= mouse_y <= 250): 
                         self.pausa = False
+                        self.ayuda=False
                         self.music.unpause()
+                    elif (200 <= mouse_x <= 300) and (200 <= mouse_y <= 250):
+                        self.ayuda = True
+                    elif (self.anchoVentana - 150 <= mouse_x <= self.anchoVentana - 50) and (self.altoVentana - 50 <= mouse_y <= self.altoVentana):
+                        self.ayuda = False
         
         if self.pausa:
             self.MainWindow.blit(self.paused_rect, (0, 0))
@@ -235,6 +243,18 @@ class GameScreen(Pantallas):
             self.MainWindow.blit(ayuda_text, ayuda_rect.topleft)
             self.MainWindow.blit(podio_text, podio_rect.topleft)
             self.MainWindow.blit(salir_text, salir_rect.topleft)
+
+            if self.ayuda:
+                pygame.draw.rect(self.MainWindow, (0, 0, 0), (0, 0, self.anchoVentana, self.altoVentana))
+
+                salir_button = pygame.draw.rect(self.MainWindow, (255, 255, 255), (self.anchoVentana - 150, self.altoVentana - 50, 100, 50))
+                salir_text = self.font.render('Salir', True, (0, 0, 0))
+                salir_rect = salir_text.get_rect(center=salir_button.center)
+
+                salir_color = (150, 150, 150) if salir_button.collidepoint(mouse_x, mouse_y) else (255, 255, 255)
+                pygame.draw.rect(self.MainWindow, salir_color, (self.anchoVentana - 150, self.altoVentana - 50, 100, 50))
+
+                self.MainWindow.blit(salir_text, salir_rect.topleft)
 
             pygame.display.update()
             return
