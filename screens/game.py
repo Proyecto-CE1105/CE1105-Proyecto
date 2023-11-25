@@ -9,7 +9,7 @@ from interfaces.intPantallas import Pantallas
 from weapons.Bomb import Bomb 
 from weapons.Water import Water
 from weapons.Fire import Fire
-from componentes.ContadorBloquesTest import dibujar_contador, recargar_acero, recargar_madera, recargar_ladrillo
+from componentes.ContadorBloques import dibujar_contador, recargar_acero, recargar_madera, recargar_ladrillo
 
 class GameScreen(Pantallas):
     def __init__(self,controlador,jugador1,jugador2,musica1,musica2):
