@@ -205,24 +205,25 @@ class GameScreen(Pantallas):
                 elif event.type == KEYDOWN and event.key == K_1 and self.cantidadBloques['acero'] > 0:
                     self.cantidadBloques['acero'] -= 1
                     x, y = pygame.mouse.get_pos()
-                    bloque_acero = (x - 25, y - 25)
+                    bloque_acero = pygame.Rect(x - 25, y - 25, 50, 50)
                     self.bloques_acero.append(bloque_acero)
                     ultimo_tiempo_acero = pygame.time.get_ticks()
                     self.mensaje_tiempo_inicio_Acero = self.tiempo_ultima_recarga_Acero
                 elif event.type == KEYDOWN and event.key == K_2 and self.cantidadBloques['madera'] > 0:
                     self.cantidadBloques['madera'] -= 1
                     x, y = pygame.mouse.get_pos()
-                    bloque_madera = (x - 25, y - 25)
+                    bloque_madera = pygame.Rect(x - 25, y - 25, 50, 50)
                     self.bloques_madera.append(bloque_madera)
                     self.ultimo_tiempo_madera = pygame.time.get_ticks()
                     self.mensaje_tiempo_inicio_Madera = self.tiempo_ultima_recarga_Madera
                 elif event.type == KEYDOWN and event.key == K_3 and self.cantidadBloques['ladrillo'] > 0:
                     self.cantidadBloques['ladrillo'] -= 1
                     x, y = pygame.mouse.get_pos()
-                    bloque_ladrillo = (x - 25, y - 25)
+                    bloque_ladrillo = pygame.Rect(x - 25, y - 25, 50, 50)
                     self.bloques_ladrillo.append(bloque_ladrillo)
                     ultimo_tiempo_ladrillo = pygame.time.get_ticks()
                     self.mensaje_tiempo_inicio_Ladrillo = self.tiempo_ultima_recarga_Ladrillo
+
             elif self.pausa and event.type == KEYDOWN and event.key == K_p:
                 self.pausa = False
                 self.music.unpause()
@@ -250,6 +251,17 @@ class GameScreen(Pantallas):
             self.MainWindow.blit(self.woodblock, bloque_madera)
         for bloque_ladrillo in self.bloques_ladrillo:
             self.MainWindow.blit(self.brickblock, bloque_ladrillo)
+            bombs_to_remove = []
+            for bomb in self.bombs:
+                if bloque_ladrillo.colliderect(bomb.rect):
+                    print("pega al muro")
+                    bombs_to_remove.append(bomb)
+                    Bomb.bomb_count += 1
+
+            for bomb in bombs_to_remove:
+                self.bombs.remove(bomb)
+                bomb.kill
+
 
         if not self.pausa:
             if self.mensaje_tiempo_inicio_Acero is not None and tiempo_actual - self.mensaje_tiempo_inicio_Acero < self.mensajeTiempo:
@@ -316,8 +328,11 @@ class GameScreen(Pantallas):
                         Bomb.bomb_count += 1
                     if self.aguila.rect.colliderect(bomb.rect):
                         self.gameoverScreen(self.points)
+
             for bomb in bombs_to_remove:
                 self.bombs.remove(bomb)
+
+
 
             if not self.pausa:
                 # Remove water balls that have gone off-screen
@@ -342,6 +357,7 @@ class GameScreen(Pantallas):
                         self.gameoverScreen(self.points)
             for fire in fires_to_remove:
                 self.fires.remove(fire)
+
 
 
         
