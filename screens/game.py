@@ -316,7 +316,7 @@ class GameScreen(Pantallas):
                         bombs_to_remove.append(bomb)
                         Bomb.bomb_count += 1
                     if self.aguila.rect.colliderect(bomb.rect):
-                        self.gameoverScreen(self.points)
+                        self.change("gameOver")
             for bomb in bombs_to_remove:
                 self.bombs.remove(bomb)
 
@@ -328,7 +328,7 @@ class GameScreen(Pantallas):
                         waters_to_remove.append(water)
                         Water.water_count += 1
                     if self.aguila.rect.colliderect(water.rect):
-                        self.gameoverScreen(self.points)
+                        self.change("gameOver")
             for water in waters_to_remove:
                 self.waters.remove(water)
 
@@ -350,4 +350,6 @@ class GameScreen(Pantallas):
 
     
     def change(self,newPantalla):
-         self.controlador.cambio(newPantalla)
+         if newPantalla=="gameOver":
+            self.music.stop()
+            self.controlador.gameOver(self.points)
