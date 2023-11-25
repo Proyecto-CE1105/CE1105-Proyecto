@@ -25,28 +25,34 @@ class Player(pygame.sprite.Sprite):
     def getRect(this):
         return this.rect
 
-    def update(self, MainWindow):
+    def update(self, MainWindow, socket):
+        data = socket.data
+        print(data)
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_w]:
+        if keys[pygame.K_w] or data == "DD":
             if self.rect.top >= 0:
                 self.rect.y -= 5
                 self.direccion = "up"
                 self.image=self.rotaciones[1]
-        if keys[pygame.K_s]:
+                socket.data = ""
+        if keys[pygame.K_s] or data == "DU":
             if self.rect.bottom <= MainWindow.get_height():
                 self.rect.y += 5
                 self.direccion = "down"
                 self.image=self.rotaciones[3]
-        if keys[pygame.K_a]:
+                socket.data = ""
+        if keys[pygame.K_a] or data == "DL":
             if self.rect.left >= 0:
                 self.rect.x -= 5
                 self.direccion = "left"
                 self.image=self.rotaciones[0]
-        if keys[pygame.K_d]:
+                socket.data = ""
+        if keys[pygame.K_d] or data == "DR":
             if self.rect.right <= MainWindow.get_width():
                 self.rect.x += 5
                 self.direccion = "right"
                 self.image=self.rotaciones[2]
+                socket.data = ""
         if keys[pygame.K_q]:
             self.cambiarSkin()
 

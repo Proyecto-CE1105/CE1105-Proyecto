@@ -12,8 +12,8 @@ from weapons.Fire import Fire
 from componentes.ContadorBloques import dibujar_contador
 
 class GameScreen(Pantallas):
-    def __init__(self,controlador,jugador1,jugador2,musica1,musica2):
-
+    def __init__(self,controlador,jugador1,jugador2,musica1,musica2, socket):
+        self.socket = socket
         self.controlador=controlador
         self.pantalla=controlador.screen
         self.MainWindow=controlador.screen
@@ -378,7 +378,9 @@ class GameScreen(Pantallas):
 
                 self.MainWindow.blit(bloque_ladrillo.image, bloque_ladrillo.rect)
 
-            self.tanqueSprite.update(self.MainWindow)
+
+        self.tanqueSprite.update(self.MainWindow,self.socket)
+
         self.tanqueSprite.draw(self.MainWindow)
 
         if not self.pausa:
