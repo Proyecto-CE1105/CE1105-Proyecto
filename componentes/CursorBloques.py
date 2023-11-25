@@ -1,8 +1,5 @@
-import random
 import pygame
-import sys
 from pygame.locals import *
-from pygame.sprite import Group
 
 class CursorBloques(pygame.sprite.Sprite):
     def __init__(self,mainWindow):
