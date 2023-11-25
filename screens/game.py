@@ -197,10 +197,15 @@ class GameScreen(Pantallas):
                     ##################################################################################
                     #self.winScreen(self.points)
 
-            elif self.pausa and event.type == KEYDOWN and event.key == K_p:
-                self.pausa = False
-                self.music.unpause()
-                # musicStartTime=resume_time(pauseTime)
+            elif self.pausa:
+                if event.type == KEYDOWN and event.key == K_p:
+                    self.pausa = False
+                    self.music.unpause()
+                elif event.type == MOUSEBUTTONDOWN and event.button == 1: 
+                    mouse_x, mouse_y = pygame.mouse.get_pos()
+                    if (500 <= mouse_x <= 600) and (200 <= mouse_y <= 250): 
+                        self.pausa = False
+                        self.music.unpause()
         
         if self.pausa:
             self.MainWindow.blit(self.paused_rect, (0, 0))
