@@ -232,13 +232,13 @@ class GameScreen(Pantallas):
             tiempo_actual = pygame.time.get_ticks()
 
             if tiempo_actual - self.tiempo_ultima_recarga_Acero >= self.recargaBloqueAcero:
-                self.recargar_acero(self.cantidadBloques)
+                recargar_acero(self.cantidadBloques)
                 self.mensaje_tiempo_inicio_Acero = pygame.time.get_ticks()
             if tiempo_actual - self.tiempo_ultima_recarga_Madera >= self.recargaBloqueMadera:
-                self.recargar_madera(self.cantidadBloques)
+                recargar_madera(self.cantidadBloques)
                 self.mensaje_tiempo_inicio_Madera = pygame.time.get_ticks()
             if tiempo_actual - self.tiempo_ultima_recarga_Ladrillo >= self.recargaBloqueLadrillo:
-                self.recargar_ladrillo(self.cantidadBloques)
+                recargar_ladrillo(self.cantidadBloques)
                 self.mensaje_tiempo_inicio_Ladrillo = pygame.time.get_ticks()
 
         self.MainWindow.blit(self.fondo, (0, 0))
