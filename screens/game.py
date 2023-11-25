@@ -4,7 +4,7 @@ import pygame
 import time
 import sys
 from random import randint
-from componentes import button,Label,Music,Aguila,Bloque,BloqueAcero,BloqueConcreto,BloqueMadera,Player,CursorBloques
+from componentes import button,Label,Music,Aguila,BloqueAcero,BloqueLadrillo,BloqueMadera,Player,CursorBloques
 from interfaces.intPantallas import Pantallas
 from weapons.Bomb import Bomb 
 from weapons.Water import Water
@@ -13,6 +13,7 @@ from componentes.ContadorBloquesTest import dibujar_contador, recargar_acero, re
 
 class GameScreen(Pantallas):
     def __init__(self,controlador,jugador1,jugador2,musica1,musica2):
+
         self.controlador=controlador
         self.pantalla=controlador.screen
         self.MainWindow=controlador.screen
@@ -31,7 +32,7 @@ class GameScreen(Pantallas):
         self.tiempo_inicial = pygame.time.get_ticks()
         self.tanque = pygame.image.load("imagenes/Tank_Image.png")
         self.sprites = Group()
-        self.bombs = []  # List to store bombs
+        self.bombs = [] 
         self.waters = []
         self.fires = []
         self.destroyedBlocks = 0
@@ -55,6 +56,21 @@ class GameScreen(Pantallas):
         self.cursor=CursorBloques.CursorBloques(self.MainWindow)
         self.cursorSprite.add(self.cursor)
 
+        self.steelSprite=Group()
+        self.steel=BloqueAcero.BloqueAcero(self.MainWindow)
+        self.steelSprite.add(self.steel)
+        self.bloques_acero=[]
+
+        self.brickSprite=Group()
+        self.brick=BloqueLadrillo.BloqueLadrillo(self.MainWindow)
+        self.brickSprite.add(self.brick)
+        self.bloques_ladrillo=[]
+
+        self.woodSprite=Group()
+        self.wood=BloqueMadera.BloqueMadera(self.MainWindow)
+        self.woodSprite.add(self.wood)
+        self.bloques_madera=[]
+
         self.music = Music.Music(self.MainWindow, self.musica1)
         self.music.playSong()
         self.musicStartTime = time.time()
@@ -63,21 +79,10 @@ class GameScreen(Pantallas):
         self.labelCharacterInScreen = Label.Label(self.i18n.t("player"), 30, 650, 20, (0, 0, 0))
         self.labelCharacterInScreen.update_text(self.jugador1)
 
-        self.steelblock = pygame.image.load("Assets/Blocks/SteelBlock.png")
-        self.steelblock = pygame.transform.scale(self.steelblock,(50,50))
-        self.woodblock = pygame.image.load("Assets/Blocks/woodblock.jpg")
-        self.woodblock = pygame.transform.scale(self.woodblock, (50, 50))
-        self.brickblock = pygame.image.load("Assets/Blocks/brickblock.jpg")
-        self.brickblock = pygame.transform.scale(self.brickblock, (50, 50))
-
         self.mensaje_tiempo_inicio_Acero= None
         self.mensaje_tiempo_inicio_Madera = None
         self.mensaje_tiempo_inicio_Ladrillo = None
-        self.bloques_acero=[]
-        self.bloques_madera = []
-        self.bloques_ladrillo = []
-
-
+        
         self.anchoVentana=self.MainWindow.get_width()
         self.altoVentana=self.MainWindow.get_height()
         self.rect_surface=pygame.Surface((self.anchoVentana,self.altoVentana),pygame.SRCALPHA)
@@ -196,24 +201,21 @@ class GameScreen(Pantallas):
 
                     elif event.key == K_1 and self.cantidadBloques['acero'] > 0:
                         self.cantidadBloques['acero'] -= 1
-                        bloque_acero = self.cursor.get_pos()
+                        bloque_acero = BloqueAcero.BloqueAcero(self.MainWindow)
+                        bloque_acero.rect.topleft = self.cursor.get_pos()
                         self.bloques_acero.append(bloque_acero)
-                        ultimo_tiempo_acero = pygame.time.get_ticks()
-                        self.mensaje_tiempo_inicio_Acero = self.tiempo_ultima_recarga_Acero
 
                     elif event.key == K_2 and self.cantidadBloques['madera'] > 0:
                         self.cantidadBloques['madera'] -= 1
-                        bloque_madera = self.cursor.get_pos()
+                        bloque_madera = BloqueMadera.BloqueMadera(self.MainWindow)
+                        bloque_madera.rect.topleft=self.cursor.get_pos()
                         self.bloques_madera.append(bloque_madera)
-                        self.ultimo_tiempo_madera = pygame.time.get_ticks()
-                        self.mensaje_tiempo_inicio_Madera = self.tiempo_ultima_recarga_Madera
-
+                        
                     elif event.key == K_3 and self.cantidadBloques['ladrillo'] > 0:
                         self.cantidadBloques['ladrillo'] -= 1
-                        bloque_ladrillo = self.cursor.get_pos()
+                        bloque_ladrillo = BloqueLadrillo.BloqueLadrillo(self.MainWindow)
+                        bloque_ladrillo.rect.topleft=self.cursor.get_pos()
                         self.bloques_ladrillo.append(bloque_ladrillo)
-                        ultimo_tiempo_ladrillo = pygame.time.get_ticks()
-                        self.mensaje_tiempo_inicio_Ladrillo = self.tiempo_ultima_recarga_Ladrillo
 
                 elif event.type == self.music.songEnd:
                     # Aquí puedes ejecutar el código que deseas cuando la canción termine
@@ -245,11 +247,14 @@ class GameScreen(Pantallas):
         dibujar_contador(self.MainWindow, self.cantidadBloques)
 
         for bloque_acero in self.bloques_acero:
-            self.MainWindow.blit(self.steelblock, bloque_acero)
+            bloque_acero.update()
+            self.MainWindow.blit(bloque_acero.image, bloque_acero.rect)
         for bloque_madera in self.bloques_madera:
-            self.MainWindow.blit(self.woodblock, bloque_madera)
+            bloque_madera.update()
+            self.MainWindow.blit(bloque_madera.image, bloque_madera.rect)
         for bloque_ladrillo in self.bloques_ladrillo:
-            self.MainWindow.blit(self.brickblock, bloque_ladrillo)
+            bloque_ladrillo.update()
+            self.MainWindow.blit(bloque_ladrillo.image, bloque_ladrillo.rect)
 
         if not self.pausa:
             if self.mensaje_tiempo_inicio_Acero is not None and tiempo_actual - self.mensaje_tiempo_inicio_Acero < self.mensajeTiempo:
