@@ -70,7 +70,7 @@ class GameScreen(Pantallas):
         self.bombSprite = Group()
         self.fireSprite = Group()
         self.waterSprite = Group()
-        self.bombs = [] 
+        self.bombs = []
         self.fires = []
         self.waters = []
 
@@ -187,7 +187,7 @@ class GameScreen(Pantallas):
                                 else:
                                     self.mitanque.image = self.mitanque.skins[1]
                     
-                    elif event.type == K_n:
+                    elif event.key == K_n:
                         if Fire.can_place_fire():
                             fireDir = self.mitanque.getDirection()
                             tankRect = self.mitanque.getRect()
@@ -251,7 +251,24 @@ class GameScreen(Pantallas):
 
         for bloque_acero in self.bloques_acero:
             bloque_acero.update()
+
+            bombs_hit = pygame.sprite.spritecollide(bloque_acero, self.bombSprite, True)
+            for bomb in bombs_hit:
+                bloque_acero.health-=100
+
+            fires_hit = pygame.sprite.spritecollide(bloque_acero, self.fireSprite, True)
+            for fire in fires_hit:
+                bloque_acero.health-=100
+
+            waters_hit = pygame.sprite.spritecollide(bloque_acero, self.waterSprite, True)
+            for water in waters_hit:
+                bloque_acero.health-=50
+
+            if bloque_acero.health <= 0:
+                self.bloques_acero.remove(bloque_acero)
+
             self.MainWindow.blit(bloque_acero.image, bloque_acero.rect)
+
         for bloque_madera in self.bloques_madera:
             bloque_madera.update()
             self.MainWindow.blit(bloque_madera.image, bloque_madera.rect)
@@ -286,8 +303,13 @@ class GameScreen(Pantallas):
 
         self.aguilaSprite.draw(self.MainWindow)
 
-        self.sprites.update()
-        self.sprites.draw(self.MainWindow)
+        self.bombSprite.update()
+        self.bombSprite.draw(self.MainWindow)
+        self.fireSprite.update()
+        self.fireSprite.draw(self.MainWindow)
+        self.waterSprite.update()
+        self.waterSprite.draw(self.MainWindow)
+
         self.mostrar_contador_bombas(Bomb.bomb_count, self.MainWindow)
         self.mostrar_contador_agua(Water.water_count, self.MainWindow)
         self.mostrar_contador_fuego(Fire.fire_count, self.MainWindow)
