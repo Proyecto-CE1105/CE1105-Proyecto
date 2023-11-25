@@ -82,57 +82,27 @@ class GameScreen(Pantallas):
         self.labelCharacterInScreen = Label.Label(self.i18n.t("player"), 30, 650, 20, (0, 0, 0))
         self.labelCharacterInScreen.update_text(self.jugador1)
 
-        self.mensaje_tiempo_inicio_Acero= None
-        self.mensaje_tiempo_inicio_Madera = None
-        self.mensaje_tiempo_inicio_Ladrillo = None
-        
         self.anchoVentana=self.MainWindow.get_width()
         self.altoVentana=self.MainWindow.get_height()
         self.rect_surface=pygame.Surface((self.anchoVentana,self.altoVentana),pygame.SRCALPHA)
 
-
-        self.anchoContador=180
-        self.altoContador=60
-        self.anchoBloque=50
-        self.altoBloque=20
-        self.espacioEntreBloques=5
-        self.distanciaBorde=20
-        self.recargaBloqueAcero=30000
-        self.recargaBloqueMadera=30000
-        self.recargaBloqueLadrillo=30000
-        self.mensajeTiempo=3000
-        self.mostrarMensajeEvento=pygame.USEREVENT +1
-
-        self.tiempo_ultima_recarga_Acero = pygame.time.get_ticks()
-        self.tiempo_ultima_recarga_Madera = pygame.time.get_ticks()
-        self.tiempo_ultima_recarga_Ladrillo = pygame.time.get_ticks()
-        self.bloques_recargados=0
-
         self.cantidadBloques={'acero':10, 'madera':10, 'ladrillo':10}
-        self.coloresBloques={'acero':(169, 169, 169), 'madera': (139,69,19), 'ladrillo': (255,0,0)}
-
-        self.colorTexto=(0,0,0)
-        self.fuente="Arial"
-        self.tamanoFuente=20
 
         self.image_change_time = pygame.time.get_ticks() + 1000
 
         
     def mostrar_contador_bombas(self, contador, MainWindow):
         blanco = (255, 255, 255)
-        negro = (0, 0, 0)
         font = pygame.font.Font(None, 36)
         texto = font.render(f'Bombas: {contador}', True, blanco)
         MainWindow.blit(texto, (1200 - texto.get_width() - 10, 0))
     def mostrar_contador_agua(self, contador, MainWindow):
         blanco = (255, 255, 255)
-        negro = (0, 0, 0)
         font = pygame.font.Font(None, 36)
         texto = font.render(f'Bolas de Agua: {contador}', True, blanco)
         MainWindow.blit(texto, (1200 - texto.get_width() - 10, 30))
     def mostrar_contador_fuego(self, contador, MainWindow):
         blanco = (255, 255, 255)
-        negro = (0, 0, 0)
         font = pygame.font.Font(None, 36)
         texto = font.render(f'Bolas de Fuego: {contador}', True, blanco)
         MainWindow.blit(texto, (1200 - texto.get_width() - 10, 60))
