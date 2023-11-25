@@ -264,7 +264,6 @@ class Screens:
         fps = 60
         clock = pygame.time.Clock()
         tiempo_inicial = pygame.time.get_ticks()
-        tanque = pygame.image.load("imagenes/Tank_Image.png")
         sprites = Group()
         bombs = []
         waters = []
@@ -322,69 +321,16 @@ class Screens:
                 if event.type == QUIT:
                     pygame.quit()
                     sys.exit()
-                elif not pausa and event.type == KEYDOWN and event.key == K_p:
-                    pausa = True
-                    music.pause()
-                    # pauseTime=pause_time(musicStartTime)
-                    draw_pause(self.MainWindow, anchoVentana, altoVentana)
-                    self.MainWindow.blit(rect_surface, (0, 0))
-                    print("Juego Pausado")
                 elif not pausa:
-                    if event.type == KEYDOWN and event.key == K_g:
-                        self.fondo = self.fondosDisponibles[randint(0, len(self.fondosDisponibles) - 1)]
-                    elif event.type == KEYDOWN and event.key == K_SPACE:
-                        if Bomb.can_place_bomb():
-                            bombDir = mitanque.getDirection()
-                            tankRect = mitanque.getRect()
-                            bomb = Bomb(bombDir, tankRect, self.MainWindow)
-                            bomb.place_bomb()
-                            sprites.add(bomb)
-                            bombs.append(bomb)
-                            current_time = pygame.time.get_ticks()
-                            if current_time >= image_change_time:
-                                if mitanque.image == mitanque.skins[1]:
-                                    mitanque.image = mitanque.skins[0]
-                                else:
-                                    mitanque.image = mitanque.skins[1]
-                    elif event.type == KEYDOWN and event.key == K_m:
-                        if Water.can_place_water():
-                            waterDir = mitanque.getDirection()
-                            tankRect = mitanque.getRect()
-                            water = Water(waterDir, tankRect, self.MainWindow)
-                            water.place_water()
-                            sprites.add(water)
-                            waters.append(water)
-                            current_time = pygame.time.get_ticks()
-                            if current_time >= image_change_time:
-                                if mitanque.image == mitanque.skins[1]:
-                                    mitanque.image = mitanque.skins[0]
-                                else:
-                                    mitanque.image = mitanque.skins[1]
-                            print("cambia skin")
-                    elif event.type == KEYDOWN and event.key == K_n:
-                        if Fire.can_place_fire():
-                            fireDir = mitanque.getDirection()
-                            tankRect = mitanque.getRect()
-                            fire = Fire(fireDir, tankRect, self.MainWindow)
-                            fire.place_fire()
-                            sprites.add(fire)
-                            fires.append(fire)
-                            current_time = pygame.time.get_ticks()
-                            if current_time >= image_change_time:
-                                if mitanque.image == mitanque.skins[1]:
-                                    mitanque.image = mitanque.skins[0]
-                                else:
-                                    mitanque.image = mitanque.skins[1]
-                            print("cambia skin")
-
-                    elif event.type == music.songEnd:
-                        # Aquí puedes ejecutar el código que deseas cuando la canción termine
+                    if event.type == music.songEnd:
                         print("La canción ha terminado de reproducirse.")
-                        running = False  # Puedes agregar tu propia lógica para continuar después de la canción
+                        running = False 
                         self.winScreen(points)
                     elif event.type == KEYDOWN:
+                        if event.type == KEYDOWN and event.key == K_g:
+                            self.fondo = self.fondosDisponibles[randint(0, len(self.fondosDisponibles) - 1)]
 
-                        if event.key == K_1 and cantidadBloques['acero'] > 0:
+                        elif event.key == K_1 and cantidadBloques['acero'] > 0:
                             cantidadBloques['acero'] -= 1
                             bloque_acero = (cursor_x, cursor_y)
                             bloques_acero.append(bloque_acero)
@@ -418,10 +364,61 @@ class Screens:
                             cursor_x -= 50
                             blockcursor_position = (cursor_x, cursor_y)
 
-                elif pausa and event.type == KEYDOWN and event.key == K_p:
-                    pausa = False
-                    music.unpause()
-                    # musicStartTime=resume_time(pauseTime)
+                        elif event.key == K_n:
+                            if Fire.can_place_fire():
+                                fireDir = mitanque.getDirection()
+                                tankRect = mitanque.getRect()
+                                fire = Fire(fireDir, tankRect, self.MainWindow)
+                                fire.place_fire()
+                                sprites.add(fire)
+                                fires.append(fire)
+                                current_time = pygame.time.get_ticks()
+                                if current_time >= image_change_time:
+                                    if mitanque.image == mitanque.skins[1]:
+                                        mitanque.image = mitanque.skins[0]
+                                    else:
+                                        mitanque.image = mitanque.skins[1]
+                        
+                        elif event.key == K_m:
+                            if Water.can_place_water():
+                                waterDir = mitanque.getDirection()
+                                tankRect = mitanque.getRect()
+                                water = Water(waterDir, tankRect, self.MainWindow)
+                                water.place_water()
+                                sprites.add(water)
+                                waters.append(water)
+                                current_time = pygame.time.get_ticks()
+                                if current_time >= image_change_time:
+                                    if mitanque.image == mitanque.skins[1]:
+                                        mitanque.image = mitanque.skins[0]
+                                    else:
+                                        mitanque.image = mitanque.skins[1]
+                        
+                        elif event.key == K_SPACE:
+                            if Bomb.can_place_bomb():
+                                bombDir = mitanque.getDirection()
+                                tankRect = mitanque.getRect()
+                                bomb = Bomb(bombDir, tankRect, self.MainWindow)
+                                bomb.place_bomb()
+                                sprites.add(bomb)
+                                bombs.append(bomb)
+                                current_time = pygame.time.get_ticks()
+                                if current_time >= image_change_time:
+                                    if mitanque.image == mitanque.skins[1]:
+                                        mitanque.image = mitanque.skins[0]
+                                    else:
+                                        mitanque.image = mitanque.skins[1]
+                        
+                        elif event.key == K_p:
+                            pausa = True
+                            music.pause()
+                            draw_pause(self.MainWindow, anchoVentana, altoVentana)
+                            self.MainWindow.blit(rect_surface, (0, 0))
+                    
+                    elif pausa and event.key == K_p:
+                            pausa = False
+                            music.unpause()
+                    
             if not pausa:
                 tiempo_actual = pygame.time.get_ticks()
 
