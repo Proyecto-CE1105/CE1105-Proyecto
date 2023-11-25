@@ -14,6 +14,8 @@ class GameOver(Pantallas):
         self.background_image = pygame.image.load("imagenes/gameoverScreen.jpg")
         self.background_image = pygame.transform.scale(self.background_image, (1200, 650))
 
+        print("segundos: "+ str(points))
+
     def runner(self):
         if time.time()-self.initial_time>5:
             self.change()

@@ -202,7 +202,6 @@ class GameScreen(Pantallas):
                     print("La canción ha terminado de reproducirse.")
                     running = False  # Puedes agregar tu propia lógica para continuar después de la canción
                     ##################################################################################
-                    #self.winScreen(self.points)
                 elif event.type == KEYDOWN and event.key == K_1 and self.cantidadBloques['acero'] > 0:
                     self.cantidadBloques['acero'] -= 1
                     x, y = pygame.mouse.get_pos()
@@ -306,6 +305,8 @@ class GameScreen(Pantallas):
 
 
         if not self.pausa:
+            if tiempo_transcurrido>=self.music.duration:
+                self.change("win")
             pygame.display.update()
 
             if not self.pausa:
@@ -316,7 +317,7 @@ class GameScreen(Pantallas):
                         bombs_to_remove.append(bomb)
                         Bomb.bomb_count += 1
                     if self.aguila.rect.colliderect(bomb.rect):
-                        self.change("gameOver")
+                        self.change("gameOver",tiempo_transcurrido)
             for bomb in bombs_to_remove:
                 self.bombs.remove(bomb)
 
@@ -328,7 +329,7 @@ class GameScreen(Pantallas):
                         waters_to_remove.append(water)
                         Water.water_count += 1
                     if self.aguila.rect.colliderect(water.rect):
-                        self.change("gameOver")
+                        self.change("gameOver",tiempo_transcurrido)
             for water in waters_to_remove:
                 self.waters.remove(water)
 
@@ -340,7 +341,7 @@ class GameScreen(Pantallas):
                         fires_to_remove.append(fire)
                         Fire.fire_count += 1
                     if self.aguila.rect.colliderect(fire.rect):
-                        self.gameoverScreen(self.points)
+                        self.change("gameOver",tiempo_transcurrido)
                         print("collide")
             for fire in fires_to_remove:
                 self.fires.remove(fire)
@@ -349,7 +350,10 @@ class GameScreen(Pantallas):
                     
 
     
-    def change(self,newPantalla):
-         if newPantalla=="gameOver":
+    def change(self,newPantalla,tiempo):
+        if newPantalla=="gameOver":
             self.music.stop()
-            self.controlador.gameOver(self.points)
+            self.controlador.gameOver(tiempo)
+        elif newPantalla=="win":
+            self.music.stop()
+            self.controlador.winGame(tiempo)

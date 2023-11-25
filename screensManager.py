@@ -1,6 +1,6 @@
 from interfaces.intPantallas import Pantallas
 from pantallas import pantalla1,secundaria
-from screens import menu,singUp,login,game,loose
+from screens import menu,singUp,login,game,loose,win
 from pygame import *
 from pygame.sprite import Group
 from pygame.locals import *
@@ -57,6 +57,10 @@ class Main:
     def gameOver(self,puntaje):
         self.status="gameOver"
         self.pantalla=loose.GameOver(self,puntaje)
+    
+    def winGame(self,puntaje,player):
+        self.status="Ganado"
+        self.pantalla=win.winScreen(self,puntaje,player)
     
     def backMenu(self):
         self.status="menu"
