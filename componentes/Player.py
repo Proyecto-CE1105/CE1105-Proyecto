@@ -4,7 +4,6 @@ import sys
 from pygame.locals import *
 from pygame.sprite import Group
 
-
 class Player(pygame.sprite.Sprite):
     def __init__(self, MainWindow):
         super().__init__()

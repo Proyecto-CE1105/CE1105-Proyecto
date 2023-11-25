@@ -1,7 +1,6 @@
 import pygame
-from pygame.sprite import Sprite
 
-class CursorBloques(Sprite):
+class CursorBloques(pygame.sprite.Sprite):
     def __init__(self,mainWindow):
         self.image=pygame.transform.scale(pygame.image.load("Assets/Cursor/block_cursor.png"),(50,50))
         self.screen=mainWindow

@@ -4,7 +4,7 @@ import pygame
 import time
 import sys
 from random import randint
-from componentes import button,Label,Music,Aguila,Bloque,BloqueAcero,BloqueConcreto,BloqueMadera,Player,VentanaPausa, CursorBloques
+from componentes import button,Label,Music,Aguila,Bloque,BloqueAcero,BloqueConcreto,BloqueMadera,Player,CursorBloques
 from interfaces.intPantallas import Pantallas
 from weapons.Bomb import Bomb 
 from weapons.Water import Water
