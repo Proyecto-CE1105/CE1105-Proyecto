@@ -9,7 +9,7 @@ from interfaces.intPantallas import Pantallas
 from weapons.Bomb import Bomb 
 from weapons.Water import Water
 from weapons.Fire import Fire
-from componentes.ContadorBloques import dibujar_contador, recargar_acero, recargar_madera, recargar_ladrillo
+from componentes.ContadorBloques import dibujar_contador
 
 class GameScreen(Pantallas):
     def __init__(self,controlador,jugador1,jugador2,musica1,musica2, socket):
@@ -24,8 +24,6 @@ class GameScreen(Pantallas):
         self.musica2=musica2
         pygame.display.set_caption('Pantalla1')
         self.buttonEnter = button.Button(740, 350, 100, 50, 'Enter', (86, 140, 255), (2, 82, 253), (86, 140, 255), 20)
-
-        self.pausa = False
 
         self.fps = 60
         self.clock = pygame.time.Clock()
@@ -82,57 +80,35 @@ class GameScreen(Pantallas):
         self.labelCharacterInScreen = Label.Label(self.i18n.t("player"), 30, 650, 20, (0, 0, 0))
         self.labelCharacterInScreen.update_text(self.jugador1)
 
-        self.mensaje_tiempo_inicio_Acero= None
-        self.mensaje_tiempo_inicio_Madera = None
-        self.mensaje_tiempo_inicio_Ladrillo = None
-        
         self.anchoVentana=self.MainWindow.get_width()
         self.altoVentana=self.MainWindow.get_height()
         self.rect_surface=pygame.Surface((self.anchoVentana,self.altoVentana),pygame.SRCALPHA)
 
-
-        self.anchoContador=180
-        self.altoContador=60
-        self.anchoBloque=50
-        self.altoBloque=20
-        self.espacioEntreBloques=5
-        self.distanciaBorde=20
-        self.recargaBloqueAcero=30000
-        self.recargaBloqueMadera=30000
-        self.recargaBloqueLadrillo=30000
-        self.mensajeTiempo=3000
-        self.mostrarMensajeEvento=pygame.USEREVENT +1
-
-        self.tiempo_ultima_recarga_Acero = pygame.time.get_ticks()
-        self.tiempo_ultima_recarga_Madera = pygame.time.get_ticks()
-        self.tiempo_ultima_recarga_Ladrillo = pygame.time.get_ticks()
-        self.bloques_recargados=0
-
         self.cantidadBloques={'acero':10, 'madera':10, 'ladrillo':10}
-        self.coloresBloques={'acero':(169, 169, 169), 'madera': (139,69,19), 'ladrillo': (255,0,0)}
-
-        self.colorTexto=(0,0,0)
-        self.fuente="Arial"
-        self.tamanoFuente=20
 
         self.image_change_time = pygame.time.get_ticks() + 1000
+
+        self.pausa = False
+        self.paused_rect = pygame.Surface((self.anchoVentana, self.altoVentana), pygame.SRCALPHA)
+        self.paused_rect.fill((128, 128, 128, 128)) 
+
+        self.ayuda = False
 
         
     def mostrar_contador_bombas(self, contador, MainWindow):
         blanco = (255, 255, 255)
-        negro = (0, 0, 0)
         font = pygame.font.Font(None, 36)
         texto = font.render(f'Bombas: {contador}', True, blanco)
         MainWindow.blit(texto, (1200 - texto.get_width() - 10, 0))
+        
     def mostrar_contador_agua(self, contador, MainWindow):
         blanco = (255, 255, 255)
-        negro = (0, 0, 0)
         font = pygame.font.Font(None, 36)
         texto = font.render(f'Bolas de Agua: {contador}', True, blanco)
         MainWindow.blit(texto, (1200 - texto.get_width() - 10, 30))
+
     def mostrar_contador_fuego(self, contador, MainWindow):
         blanco = (255, 255, 255)
-        negro = (0, 0, 0)
         font = pygame.font.Font(None, 36)
         texto = font.render(f'Bolas de Fuego: {contador}', True, blanco)
         MainWindow.blit(texto, (1200 - texto.get_width() - 10, 60))
@@ -149,10 +125,6 @@ class GameScreen(Pantallas):
                     if event.key==K_p:
                         self.pausa = True
                         self.music.pause()
-                        # pauseTime=pause_time(musicStartTime)
-                        self.draw_pause(self.MainWindow, self.anchoVentana, self.altoVentana)
-                        self.MainWindow.blit(self.rect_surface, (0, 0))
-                        print("Juego Pausado")
 
                     elif event.key == K_g:
                         self.fondo = self.fondosDisponibles[randint(0, len(self.fondosDisponibles) - 1)]
@@ -225,131 +197,205 @@ class GameScreen(Pantallas):
                     print("La canción ha terminado de reproducirse.")
                     running = False  # Puedes agregar tu propia lógica para continuar después de la canción
                     ##################################################################################
-                    #self.winScreen(self.points)
 
-            elif self.pausa and event.type == KEYDOWN and event.key == K_p:
-                self.pausa = False
-                self.music.unpause()
-                # musicStartTime=resume_time(pauseTime)
+                elif event.type == KEYDOWN and event.key == K_1 and self.cantidadBloques['acero'] > 0:
+                    self.cantidadBloques['acero'] -= 1
+                    x, y = pygame.mouse.get_pos()
+                    bloque_acero = (x - 25, y - 25)
+                    self.bloques_acero.append(bloque_acero)
+                    ultimo_tiempo_acero = pygame.time.get_ticks()
+                    self.mensaje_tiempo_inicio_Acero = self.tiempo_ultima_recarga_Acero
+                elif event.type == KEYDOWN and event.key == K_2 and self.cantidadBloques['madera'] > 0:
+                    self.cantidadBloques['madera'] -= 1
+                    x, y = pygame.mouse.get_pos()
+                    bloque_madera = (x - 25, y - 25)
+                    self.bloques_madera.append(bloque_madera)
+                    self.ultimo_tiempo_madera = pygame.time.get_ticks()
+                    self.mensaje_tiempo_inicio_Madera = self.tiempo_ultima_recarga_Madera
+                elif event.type == KEYDOWN and event.key == K_3 and self.cantidadBloques['ladrillo'] > 0:
+                    self.cantidadBloques['ladrillo'] -= 1
+                    x, y = pygame.mouse.get_pos()
+                    bloque_ladrillo = (x - 25, y - 25)
+                    self.bloques_ladrillo.append(bloque_ladrillo)
+                    ultimo_tiempo_ladrillo = pygame.time.get_ticks()
+                    self.mensaje_tiempo_inicio_Ladrillo = self.tiempo_ultima_recarga_Ladrillo
+
+            elif self.pausa:
+                if event.type == KEYDOWN and event.key == K_p:
+                    self.pausa = False
+                    self.ayuda = False
+                    self.music.unpause()
+                elif event.type == MOUSEBUTTONDOWN and event.button == 1: 
+                    mouse_x, mouse_y = pygame.mouse.get_pos()
+                    if (500 <= mouse_x <= 600) and (200 <= mouse_y <= 250): 
+                        self.pausa = False
+                        self.ayuda=False
+                        self.music.unpause()
+                    elif (200 <= mouse_x <= 300) and (200 <= mouse_y <= 250):
+                        self.ayuda = True
+                    elif (self.anchoVentana - 150 <= mouse_x <= self.anchoVentana - 50) and (self.altoVentana - 50 <= mouse_y <= self.altoVentana):
+                        self.ayuda = False
         
-        if not self.pausa:
-            tiempo_actual = pygame.time.get_ticks()
+        if self.pausa:
+            self.MainWindow.blit(self.paused_rect, (0, 0))
 
-            if tiempo_actual - self.tiempo_ultima_recarga_Acero >= self.recargaBloqueAcero:
-                recargar_acero(self.cantidadBloques)
-                self.mensaje_tiempo_inicio_Acero = pygame.time.get_ticks()
-            if tiempo_actual - self.tiempo_ultima_recarga_Madera >= self.recargaBloqueMadera:
-                recargar_madera(self.cantidadBloques)
-                self.mensaje_tiempo_inicio_Madera = pygame.time.get_ticks()
-            if tiempo_actual - self.tiempo_ultima_recarga_Ladrillo >= self.recargaBloqueLadrillo:
-                recargar_ladrillo(self.cantidadBloques)
-                self.mensaje_tiempo_inicio_Ladrillo = pygame.time.get_ticks()
+            ayuda_button = pygame.draw.rect(self.MainWindow, (255, 255, 255), (200, 200, 100, 50))
+            podio_button = pygame.draw.rect(self.MainWindow, (255, 255, 255), (350, 200, 100, 50))
+            salir_button = pygame.draw.rect(self.MainWindow, (255, 255, 255), (500, 200, 100, 50))
+
+            mouse_x, mouse_y = pygame.mouse.get_pos()
+
+            ayuda_color = (150, 150, 150) if ayuda_button.collidepoint(mouse_x, mouse_y) else (255, 255, 255)
+            podio_color = (150, 150, 150) if podio_button.collidepoint(mouse_x, mouse_y) else (255, 255, 255)
+            salir_color = (150, 150, 150) if salir_button.collidepoint(mouse_x, mouse_y) else (255, 255, 255)
+
+            pygame.draw.rect(self.MainWindow, ayuda_color, (200, 200, 100, 50))
+            pygame.draw.rect(self.MainWindow, podio_color, (350, 200, 100, 50))
+            pygame.draw.rect(self.MainWindow, salir_color, (500, 200, 100, 50))
+
+            ayuda_text = self.font.render('Ayuda', True, (0, 0, 0))
+            podio_text = self.font.render('Podio', True, (0, 0, 0))
+            salir_text = self.font.render('Salir', True, (0, 0, 0))
+
+            ayuda_rect = ayuda_text.get_rect(center=ayuda_button.center)
+            podio_rect = podio_text.get_rect(center=podio_button.center)
+            salir_rect = salir_text.get_rect(center=salir_button.center)
+
+            self.MainWindow.blit(ayuda_text, ayuda_rect.topleft)
+            self.MainWindow.blit(podio_text, podio_rect.topleft)
+            self.MainWindow.blit(salir_text, salir_rect.topleft)
+
+            if self.ayuda:
+                pygame.draw.rect(self.MainWindow, (0, 0, 0), (0, 0, self.anchoVentana, self.altoVentana))
+
+                salir_button = pygame.draw.rect(self.MainWindow, (255, 255, 255), (self.anchoVentana - 150, self.altoVentana - 50, 100, 50))
+                salir_text = self.font.render('Salir', True, (0, 0, 0))
+                salir_rect = salir_text.get_rect(center=salir_button.center)
+
+                salir_color = (150, 150, 150) if salir_button.collidepoint(mouse_x, mouse_y) else (255, 255, 255)
+                pygame.draw.rect(self.MainWindow, salir_color, (self.anchoVentana - 150, self.altoVentana - 50, 100, 50))
+
+                joystick_up = pygame.transform.scale(pygame.image.load("Assets/Keys/JoystickUp.png"),(50,50))
+                joystick_down = pygame.transform.scale(pygame.image.load("Assets/Keys/JoystickDown.png"),(50,50))
+                joystick_right = pygame.transform.scale(pygame.image.load("Assets/Keys/JoystickRight.png"),(50,50))
+                joystick_left = pygame.transform.scale(pygame.image.load("Assets/Keys/JoystickLeft.png"),(50,50))
+
+                self.MainWindow.blit(joystick_up, (self.anchoVentana // 2 - 25, 100))
+                self.MainWindow.blit(joystick_down, (self.anchoVentana // 2 - 25, 200))
+                self.MainWindow.blit(joystick_right, (self.anchoVentana // 2 - 25, 300))
+                self.MainWindow.blit(joystick_left, (self.anchoVentana // 2 - 25, 400))
+
+                font = pygame.font.Font(None, 30)
+                text_up = font.render('Moverse Arriba (Atacante/Defensor)', True, (255, 255, 255))
+                text_down = font.render('Moverse Abajo (Atacante/Defensor)', True, (255, 255, 255))
+                text_right = font.render('Moverse Derecha (Atacante/Defensor)', True, (255, 255, 255))
+                text_left = font.render('Moverse Izquierda (Atacante/Defensor)', True, (255, 255, 255))
+
+                self.MainWindow.blit(text_up, (self.anchoVentana // 2 - text_up.get_width() // 2, 160))
+                self.MainWindow.blit(text_down, (self.anchoVentana // 2 - text_down.get_width() // 2, 260))
+                self.MainWindow.blit(text_right, (self.anchoVentana // 2 - text_right.get_width() // 2, 360))
+                self.MainWindow.blit(text_left, (self.anchoVentana // 2 - text_left.get_width() // 2, 460))
+
+                self.MainWindow.blit(salir_text, salir_rect.topleft)
+
+            pygame.display.update()
+            return
 
         self.MainWindow.blit(self.fondo, (0, 0))
         self.clock.tick(self.fps)
         dibujar_contador(self.MainWindow, self.cantidadBloques)
 
-        for bloque_acero in self.bloques_acero:
-            bloque_acero.update()
-
-            bombs_hit = pygame.sprite.spritecollide(bloque_acero, self.bombSprite, True)
-            for bomb in bombs_hit:
-                bloque_acero.health-=100
-                Bomb.bomb_count += 1
-
-            fires_hit = pygame.sprite.spritecollide(bloque_acero, self.fireSprite, True)
-            for fire in fires_hit:
-                bloque_acero.health-=100
-                Fire.fire_count += 1
-
-            waters_hit = pygame.sprite.spritecollide(bloque_acero, self.waterSprite, True)
-            for water in waters_hit:
-                bloque_acero.health-=50
-                Water.water_count += 1
-
-            if bloque_acero.health <= 0:
-                self.bloques_acero.remove(bloque_acero)
-
-            self.MainWindow.blit(bloque_acero.image, bloque_acero.rect)
-
-        for bloque_madera in self.bloques_madera:
-            bloque_madera.update()
-
-            bombs_hit = pygame.sprite.spritecollide(bloque_madera, self.bombSprite, True)
-            for bomb in bombs_hit:
-                bloque_madera.health-=100
-                Bomb.bomb_count += 1
-
-            fires_hit = pygame.sprite.spritecollide(bloque_madera, self.fireSprite, True)
-            for fire in fires_hit:
-                bloque_madera.health-=100
-                Fire.fire_count += 1
-
-            waters_hit = pygame.sprite.spritecollide(bloque_madera, self.waterSprite, True)
-            for water in waters_hit:
-                bloque_madera.health-=100
-                Water.water_count += 1
-
-            if bloque_madera.health <= 0:
-                self.bloques_madera.remove(bloque_madera)
-
-            self.MainWindow.blit(bloque_madera.image, bloque_madera.rect)
-
-        for bloque_ladrillo in self.bloques_ladrillo:
-            bloque_ladrillo.update()
-
-            bombs_hit = pygame.sprite.spritecollide(bloque_ladrillo, self.bombSprite, True)
-            for bomb in bombs_hit:
-                bloque_ladrillo.health-=100
-                Bomb.bomb_count += 1
-
-            fires_hit = pygame.sprite.spritecollide(bloque_ladrillo, self.fireSprite, True)
-            for fire in fires_hit:
-                bloque_ladrillo.health-=50
-                Fire.fire_count += 1
-
-            waters_hit = pygame.sprite.spritecollide(bloque_ladrillo, self.waterSprite, True)
-            for water in waters_hit:
-                bloque_ladrillo.health-=33.34
-                Water.water_count += 1
-
-            if bloque_ladrillo.health <= 0:
-                self.bloques_ladrillo.remove(bloque_ladrillo)
-
-            self.MainWindow.blit(bloque_ladrillo.image, bloque_ladrillo.rect)
-
         if not self.pausa:
-            if self.mensaje_tiempo_inicio_Acero is not None and tiempo_actual - self.mensaje_tiempo_inicio_Acero < self.mensajeTiempo:
-                fuente_mensaje = pygame.font.SysFont(self.fuente, self.tamanoFuente)
-                texto_mensaje = fuente_mensaje.render("Bloque de acero recargado", True, self.colorTexto)
-                texto_mensaje_rect = texto_mensaje.get_rect(midbottom=(self.anchoVentana // 2, self.altoVentana - 20))
-                self.MainWindow.blit(texto_mensaje, texto_mensaje_rect)
-        if not self.pausa:
-            if self.mensaje_tiempo_inicio_Madera is not None and tiempo_actual - self.mensaje_tiempo_inicio_Madera < self.mensajeTiempo:
-                fuente_mensaje = pygame.font.SysFont(self.fuente, self.tamanoFuente)
-                texto_mensaje = fuente_mensaje.render("Bloque de madera recargado", True, self.colorTexto)
-                texto_mensaje_rect = texto_mensaje.get_rect(midbottom=(self.anchoVentana // 2, self.altoVentana - 20))
-                self.MainWindow.blit(texto_mensaje, texto_mensaje_rect)
-        if not self.pausa:
-            if self.mensaje_tiempo_inicio_Ladrillo is not None and tiempo_actual - self.mensaje_tiempo_inicio_Ladrillo <self.mensajeTiempo:
-                fuente_mensaje = pygame.font.SysFont(self.fuente, self.tamanoFuente)
-                texto_mensaje = fuente_mensaje.render("Bloque de ladrillo recargado", True, self.colorTexto)
-                texto_mensaje_rect = texto_mensaje.get_rect(midbottom=(self.anchoVentana // 2, self.altoVentana - 20))
-                self.MainWindow.blit(texto_mensaje, texto_mensaje_rect)
+            for bloque_acero in self.bloques_acero:
+                bloque_acero.update()
+
+                bombs_hit = pygame.sprite.spritecollide(bloque_acero, self.bombSprite, True)
+                for bomb in bombs_hit:
+                    bloque_acero.health-=100
+                    Bomb.bomb_count += 1
+
+                fires_hit = pygame.sprite.spritecollide(bloque_acero, self.fireSprite, True)
+                for fire in fires_hit:
+                    bloque_acero.health-=100
+                    Fire.fire_count += 1
+
+                waters_hit = pygame.sprite.spritecollide(bloque_acero, self.waterSprite, True)
+                for water in waters_hit:
+                    bloque_acero.health-=50
+                    Water.water_count += 1
+
+                if bloque_acero.health <= 0:
+                    self.bloques_acero.remove(bloque_acero)
+
+                self.MainWindow.blit(bloque_acero.image, bloque_acero.rect)
+
+            for bloque_madera in self.bloques_madera:
+                bloque_madera.update()
+
+                bombs_hit = pygame.sprite.spritecollide(bloque_madera, self.bombSprite, True)
+                for bomb in bombs_hit:
+                    bloque_madera.health-=100
+                    Bomb.bomb_count += 1
+
+                fires_hit = pygame.sprite.spritecollide(bloque_madera, self.fireSprite, True)
+                for fire in fires_hit:
+                    bloque_madera.health-=100
+                    Fire.fire_count += 1
+
+                waters_hit = pygame.sprite.spritecollide(bloque_madera, self.waterSprite, True)
+                for water in waters_hit:
+                    bloque_madera.health-=100
+                    Water.water_count += 1
+
+                if bloque_madera.health <= 0:
+                    self.bloques_madera.remove(bloque_madera)
+
+                self.MainWindow.blit(bloque_madera.image, bloque_madera.rect)
+
+            for bloque_ladrillo in self.bloques_ladrillo:
+                bloque_ladrillo.update()
+
+                bombs_hit = pygame.sprite.spritecollide(bloque_ladrillo, self.bombSprite, True)
+                for bomb in bombs_hit:
+                    bloque_ladrillo.health-=100
+                    Bomb.bomb_count += 1
+                    self.points += 10
+
+                fires_hit = pygame.sprite.spritecollide(bloque_ladrillo, self.fireSprite, True)
+                for fire in fires_hit:
+                    bloque_ladrillo.health-=50
+                    Fire.fire_count += 1
+                    self.points += 10
+
+                waters_hit = pygame.sprite.spritecollide(bloque_ladrillo, self.waterSprite, True)
+                for water in waters_hit:
+                    bloque_ladrillo.health-=33.34
+                    Water.water_count += 1
+                    self.points += 10
+
+                if bloque_ladrillo.health <= 0:
+                    self.bloques_ladrillo.remove(bloque_ladrillo)
+
+                self.MainWindow.blit(bloque_ladrillo.image, bloque_ladrillo.rect)
+
 
         self.tanqueSprite.update(self.MainWindow,self.socket)
+
         self.tanqueSprite.draw(self.MainWindow)
 
-        self.cursorSprite.update(self.MainWindow)
+        if not self.pausa:
+            self.cursorSprite.update(self.MainWindow)
         self.cursorSprite.draw(self.MainWindow)
 
         self.aguilaSprite.draw(self.MainWindow)
-
-        self.bombSprite.update()
+        if not self.pausa:
+            self.bombSprite.update()
         self.bombSprite.draw(self.MainWindow)
-        self.fireSprite.update()
+        if not self.pausa:
+            self.fireSprite.update()
         self.fireSprite.draw(self.MainWindow)
-        self.waterSprite.update()
+        if not self.pausa:
+            self.waterSprite.update()
         self.waterSprite.draw(self.MainWindow)
 
         self.mostrar_contador_bombas(Bomb.bomb_count, self.MainWindow)
@@ -374,9 +420,12 @@ class GameScreen(Pantallas):
         self.MainWindow.blit(timerLabel, (20, 10))
         self.MainWindow.blit(desBlocksLabel, (120, 10))
         self.MainWindow.blit(pointsLabel, (400, 10))
+        print(self.points)
 
 
         if not self.pausa:
+            if tiempo_transcurrido>=self.music.duration:
+                self.change("win")
             pygame.display.update()
 
             if not self.pausa:
@@ -386,9 +435,11 @@ class GameScreen(Pantallas):
                         bombs_to_remove.append(bomb)
                         Bomb.bomb_count += 1
                     if self.aguila.rect.colliderect(bomb.rect):
-                        self.gameoverScreen(self.points)
-                for bomb in bombs_to_remove:
-                    self.bombs.remove(bomb)
+
+                        self.change("gameOver",tiempo_transcurrido)
+            for bomb in bombs_to_remove:
+                self.bombs.remove(bomb)
+
 
                 waters_to_remove = []
                 for water in self.waters:
@@ -396,9 +447,11 @@ class GameScreen(Pantallas):
                         waters_to_remove.append(water)
                         Water.water_count += 1
                     if self.aguila.rect.colliderect(water.rect):
-                        self.gameoverScreen(self.points)
+
+                        self.change("gameOver",tiempo_transcurrido)
                 for water in waters_to_remove:
                     self.waters.remove(water)
+
 
                 fires_to_remove = []
                 for fire in self.fires:
@@ -406,7 +459,7 @@ class GameScreen(Pantallas):
                         fires_to_remove.append(fire)
                         Fire.fire_count += 1
                     if self.aguila.rect.colliderect(fire.rect):
-                        self.gameoverScreen(self.points)
+                        self.change("gameOver",tiempo_transcurrido)
                         print("collide")
                 for fire in fires_to_remove:
                     self.fires.remove(fire)
@@ -415,5 +468,10 @@ class GameScreen(Pantallas):
                     
 
     
-    def change(self,newPantalla):
-         self.controlador.cambio(newPantalla)
+    def change(self,newPantalla,tiempo):
+        if newPantalla=="gameOver":
+            self.music.stop()
+            self.controlador.gameOver(tiempo,self.jugador1)
+        elif newPantalla=="win":
+            self.music.stop()
+            self.controlador.winGame(tiempo)

@@ -1,7 +1,7 @@
 import Socket
 from interfaces.intPantallas import Pantallas
 from pantallas import pantalla1,secundaria
-from screens import menu,singUp,login,game
+from screens import menu,singUp,login,game,loose,win,podio
 from pygame import *
 from pygame.sprite import Group
 from pygame.locals import *
@@ -49,14 +49,28 @@ class Main:
             self.pantalla=singUp.signUpScreen(self)
         elif newPantalla=="SignIn":
             self.pantalla=login.signInScreen(self)
+        elif newPantalla=="podio":
+            self.pantalla=podio.Podio(self)
         del temp
     
     def empezarPartida(self,jugador1,jugador2,musica1,musica2):
 
-        self.status="partidad"
+        self.status="partida"
         self.music.stop()
-        self.socket.setup_socket_and_thread()
-        self.pantalla=game.GameScreen(self,jugador1,jugador2,musica1,musica2, self.socket)
+        self.pantalla=game.GameScreen(self,jugador1,jugador2,musica1,musica2)
+    
+    def gameOver(self,puntaje,jugadorNombre):
+        self.status="gameOver"
+        self.pantalla=loose.GameOver(self,jugadorNombre,puntaje)
+    
+    def winGame(self,puntaje,player):
+        self.status="Ganado"
+        self.pantalla=win.winScreen(self,puntaje,player)
+    
+    def backMenu(self):
+        self.status="menu"
+        self.pantalla=menu.menuPrincipal(self)
+        self.music.playSong()
 
 
     def run(self):
