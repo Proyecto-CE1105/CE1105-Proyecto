@@ -254,6 +254,27 @@ class GameScreen(Pantallas):
                 salir_color = (150, 150, 150) if salir_button.collidepoint(mouse_x, mouse_y) else (255, 255, 255)
                 pygame.draw.rect(self.MainWindow, salir_color, (self.anchoVentana - 150, self.altoVentana - 50, 100, 50))
 
+                joystick_up = pygame.transform.scale(pygame.image.load("Assets/Keys/JoystickUp.png"),(50,50))
+                joystick_down = pygame.transform.scale(pygame.image.load("Assets/Keys/JoystickDown.png"),(50,50))
+                joystick_right = pygame.transform.scale(pygame.image.load("Assets/Keys/JoystickRight.png"),(50,50))
+                joystick_left = pygame.transform.scale(pygame.image.load("Assets/Keys/JoystickLeft.png"),(50,50))
+
+                self.MainWindow.blit(joystick_up, (self.anchoVentana // 2 - 25, 100))
+                self.MainWindow.blit(joystick_down, (self.anchoVentana // 2 - 25, 200))
+                self.MainWindow.blit(joystick_right, (self.anchoVentana // 2 - 25, 300))
+                self.MainWindow.blit(joystick_left, (self.anchoVentana // 2 - 25, 400))
+
+                font = pygame.font.Font(None, 30)
+                text_up = font.render('Moverse Arriba (Atacante/Defensor)', True, (255, 255, 255))
+                text_down = font.render('Moverse Abajo (Atacante/Defensor)', True, (255, 255, 255))
+                text_right = font.render('Moverse Derecha (Atacante/Defensor)', True, (255, 255, 255))
+                text_left = font.render('Moverse Izquierda (Atacante/Defensor)', True, (255, 255, 255))
+
+                self.MainWindow.blit(text_up, (self.anchoVentana // 2 - text_up.get_width() // 2, 160))
+                self.MainWindow.blit(text_down, (self.anchoVentana // 2 - text_down.get_width() // 2, 260))
+                self.MainWindow.blit(text_right, (self.anchoVentana // 2 - text_right.get_width() // 2, 360))
+                self.MainWindow.blit(text_left, (self.anchoVentana // 2 - text_left.get_width() // 2, 460))
+
                 self.MainWindow.blit(salir_text, salir_rect.topleft)
 
             pygame.display.update()
