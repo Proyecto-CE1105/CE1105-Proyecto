@@ -204,6 +204,33 @@ class GameScreen(Pantallas):
         
         if self.pausa:
             self.MainWindow.blit(self.paused_rect, (0, 0))
+
+            ayuda_button = pygame.draw.rect(self.MainWindow, (255, 255, 255), (200, 200, 100, 50))
+            podio_button = pygame.draw.rect(self.MainWindow, (255, 255, 255), (350, 200, 100, 50))
+            salir_button = pygame.draw.rect(self.MainWindow, (255, 255, 255), (500, 200, 100, 50))
+
+            mouse_x, mouse_y = pygame.mouse.get_pos()
+
+            ayuda_color = (150, 150, 150) if ayuda_button.collidepoint(mouse_x, mouse_y) else (255, 255, 255)
+            podio_color = (150, 150, 150) if podio_button.collidepoint(mouse_x, mouse_y) else (255, 255, 255)
+            salir_color = (150, 150, 150) if salir_button.collidepoint(mouse_x, mouse_y) else (255, 255, 255)
+
+            pygame.draw.rect(self.MainWindow, ayuda_color, (200, 200, 100, 50))
+            pygame.draw.rect(self.MainWindow, podio_color, (350, 200, 100, 50))
+            pygame.draw.rect(self.MainWindow, salir_color, (500, 200, 100, 50))
+
+            ayuda_text = self.font.render('Ayuda', True, (0, 0, 0))
+            podio_text = self.font.render('Podio', True, (0, 0, 0))
+            salir_text = self.font.render('Salir', True, (0, 0, 0))
+
+            ayuda_rect = ayuda_text.get_rect(center=ayuda_button.center)
+            podio_rect = podio_text.get_rect(center=podio_button.center)
+            salir_rect = salir_text.get_rect(center=salir_button.center)
+
+            self.MainWindow.blit(ayuda_text, ayuda_rect.topleft)
+            self.MainWindow.blit(podio_text, podio_rect.topleft)
+            self.MainWindow.blit(salir_text, salir_rect.topleft)
+
             pygame.display.update()
             return
 
