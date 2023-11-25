@@ -4,7 +4,7 @@ import pygame
 import time
 import sys
 from random import randint
-from componentes import button, Entry,Label,Music,Aguila,Bloque,BloqueAcero,BloqueConcreto,BloqueMadera,Player,VentanaPausa,ContadorBloquesTest
+from componentes import button, Entry,Label,Music,Aguila,Bloque,BloqueAcero,BloqueConcreto,BloqueMadera,Player,VentanaPausa
 from interfaces.intPantallas import Pantallas
 from services import JsonController,FilesController
 from weapons.Bomb import Bomb 
