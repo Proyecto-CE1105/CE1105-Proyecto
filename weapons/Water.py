@@ -10,7 +10,7 @@ class Water(pygame.sprite.Sprite):
         self.direccion = waterDir
         self.tankPos = tankRect
         self.pantalla =MainWindow
-        self.original_image = pygame.image.load("Assets/Weapons/WaterBall.png")
+        self.original_image = pygame.image.load("Assets/Weapons/waterball.png")
         self.image = pygame.transform.scale(self.original_image, (50, 50))
         self.rect = self.image.get_rect()
         self.rect.x = -self.rect.width

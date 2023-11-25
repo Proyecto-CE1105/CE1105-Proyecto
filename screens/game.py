@@ -359,16 +359,19 @@ class GameScreen(Pantallas):
                 for bomb in bombs_hit:
                     bloque_ladrillo.health-=100
                     Bomb.bomb_count += 1
+                    self.points += 10
 
                 fires_hit = pygame.sprite.spritecollide(bloque_ladrillo, self.fireSprite, True)
                 for fire in fires_hit:
                     bloque_ladrillo.health-=50
                     Fire.fire_count += 1
+                    self.points += 10
 
                 waters_hit = pygame.sprite.spritecollide(bloque_ladrillo, self.waterSprite, True)
                 for water in waters_hit:
                     bloque_ladrillo.health-=33.34
                     Water.water_count += 1
+                    self.points += 10
 
                 if bloque_ladrillo.health <= 0:
                     self.bloques_ladrillo.remove(bloque_ladrillo)
@@ -415,6 +418,7 @@ class GameScreen(Pantallas):
         self.MainWindow.blit(timerLabel, (20, 10))
         self.MainWindow.blit(desBlocksLabel, (120, 10))
         self.MainWindow.blit(pointsLabel, (400, 10))
+        print(self.points)
 
 
         if not self.pausa:
@@ -443,8 +447,8 @@ class GameScreen(Pantallas):
                     if self.aguila.rect.colliderect(water.rect):
 
                         self.change("gameOver",tiempo_transcurrido)
-            for water in waters_to_remove:
-                self.waters.remove(water)
+                for water in waters_to_remove:
+                    self.waters.remove(water)
 
 
                 fires_to_remove = []
