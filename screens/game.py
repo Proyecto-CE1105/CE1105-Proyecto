@@ -445,7 +445,7 @@ class GameScreen(Pantallas):
     def change(self,newPantalla,tiempo):
         if newPantalla=="gameOver":
             self.music.stop()
-            self.controlador.gameOver(tiempo)
+            self.controlador.gameOver(tiempo,self.jugador1)
         elif newPantalla=="win":
             self.music.stop()
             self.controlador.winGame(tiempo)

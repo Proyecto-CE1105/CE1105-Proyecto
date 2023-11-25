@@ -3,7 +3,7 @@ import pygame
 import sys
 from componentes import button as Button, Entry,Label
 from interfaces.intPantallas import Pantallas
-from services import JsonController,FilesController
+import JsonController,FilesController
 
 class signInScreen(Pantallas):
 
