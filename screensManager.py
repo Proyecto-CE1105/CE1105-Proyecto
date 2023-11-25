@@ -17,7 +17,6 @@ class Main:
         self.i18n.set('file_format', 'json')
         self.i18n.set('filename_format', '{locale}.{format}')
 
-
         #inicializadores
         pygame.init()
         pygame.font.init()

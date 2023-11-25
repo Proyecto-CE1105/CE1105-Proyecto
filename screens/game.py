@@ -165,7 +165,7 @@ class GameScreen(Pantallas):
                                 self.mitanque.image =self.mitanque.skins[0]
                             else:
                                 self.mitanque.image = self.mitanque.skins[1]
-                        print("cambia skin")
+
                 elif event.type == KEYDOWN and event.key == K_m:
                     if Water.can_place_water():
                         waterDir = self.mitanque.getDirection()
@@ -180,7 +180,7 @@ class GameScreen(Pantallas):
                                 self.mitanque.image = self.mitanque.skins[0]
                             else:
                                 self.mitanque.image = self.mitanque.skins[1]
-                        print("cambia skin")
+
                 elif event.type == KEYDOWN and event.key == K_n:
                     if Fire.can_place_fire():
                         fireDir = self.mitanque.getDirection()
@@ -195,7 +195,6 @@ class GameScreen(Pantallas):
                                 self.mitanque.image = self.mitanque.skins[0]
                             else:
                                 self.mitanque.image = self.mitanque.skins[1]
-                        print("cambia skin")
 
                 elif event.type == self.music.songEnd:
                     # Aquí puedes ejecutar el código que deseas cuando la canción termine
@@ -324,7 +323,7 @@ class GameScreen(Pantallas):
                 # Remove water balls that have gone off-screen
                 waters_to_remove = []
                 for water in self.waters:
-                    if water.rect.bottom < 0:
+                    if water.rect.bottom < 0 or water.rect.top> self.MainWindow.get_height() or water.rect.left > self.MainWindow.get_width() or water.rect.right < 0:
                         waters_to_remove.append(water)
                         Water.water_count += 1
                     if self.aguila.rect.colliderect(water.rect):
@@ -336,15 +335,15 @@ class GameScreen(Pantallas):
                 # Remove fire balls that have gone off-screen
                 fires_to_remove = []
                 for fire in self.fires:
-                    if fire.rect.bottom < 0:
+                    if fire.rect.bottom < 0 or fire.rect.top> self.MainWindow.get_height() or fire.rect.left > self.MainWindow.get_width() or fire.rect.right < 0:
                         fires_to_remove.append(fire)
                         Fire.fire_count += 1
                     if self.aguila.rect.colliderect(fire.rect):
                         self.gameoverScreen(self.points)
-                        print("collide")
             for fire in fires_to_remove:
                 self.fires.remove(fire)
-                     
+
+
         
                     
 
