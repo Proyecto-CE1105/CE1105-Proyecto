@@ -8,6 +8,7 @@ import threading
 from random import randint
 import pygame, sys, Button, Entry, Label, FilesController, JsonController, Player, Aguila
 from ContadorBloquesTest import dibujar_contador, recargar_acero, recargar_madera, recargar_ladrillo
+from ContadorArmas import dibujar_contador, recargar_bomba, recargar_agua, recargar_fuego
 from pygame import *
 from pygame.sprite import Group
 from pygame.locals import *
@@ -36,9 +37,16 @@ tiempo_ultima_recarga_Acero = pygame.time.get_ticks()
 tiempo_ultima_recarga_Madera = pygame.time.get_ticks()
 tiempo_ultima_recarga_Ladrillo = pygame.time.get_ticks()
 bloques_recargados=0
+tiempo_ultima_recarga_Bomba = pygame.time.get_ticks()
+tiempo_ultima_recarga_agua = pygame.time.get_ticks()
+tiempo_ultima_recarga_fuego = pygame.time.get_ticks()
+ultimo_tiempo_bomba = 1
+recargaArma = 30000
 
 cantidadBloques={'acero':5, 'madera':10, 'ladrillo':8}
 coloresBloques={'acero':(169, 169, 169), 'madera': (139,69,19), 'ladrillo': (255,0,0)}
+cantidadArmas={'bomba':5, 'agua':5, 'fuego':5}
+coloresArmas = {'bomba': (0, 0, 0), 'agua': (0, 0, 255),'fuego': (255, 165, 0)}
 
 colorTexto=(0,0,0)
 fuente="Arial"
@@ -281,6 +289,8 @@ class Screens:
         destroyedBlocks = 0
         points = 0
 
+        tiempo_inicio_bomba = 0
+
         font = pygame.font.Font(None, 36)
 
         self.fondosDisponibles=[pygame.transform.scale(pygame.image.load("imagenes/fondo2.jpg"),(1920,1920)),pygame.transform.scale(pygame.image.load("imagenes/fondo3.jpg"),(1920,1920)),pygame.transform.scale(pygame.image.load("imagenes/fondo4.jpg"),(1920,1920))]
@@ -312,6 +322,7 @@ class Screens:
         mensaje_tiempo_inicio_Acero= None
         mensaje_tiempo_inicio_Madera = None
         mensaje_tiempo_inicio_Ladrillo = None
+        mensaje_tiempo_inicio_Bomba = None
         bloques_acero=[]
         bloques_madera = []
         bloques_ladrillo = []
@@ -344,6 +355,10 @@ class Screens:
                             bomb.place_bomb()
                             sprites.add(bomb)
                             bombs.append(bomb)
+                            cantidadArmas['bomba'] -= 1
+                            ultimo_tiempo_bomba = pygame.time.get_ticks()
+                            mensaje_tiempo_inicio_Bomba = tiempo_ultima_recarga_Bomba
+
                             current_time = pygame.time.get_ticks()
                             if current_time >= image_change_time:
                                 if mitanque.image == mitanque.skins[1]:
@@ -424,6 +439,9 @@ class Screens:
                 if tiempo_actual - tiempo_ultima_recarga_Ladrillo >= recargaBloqueLadrillo:
                     recargar_ladrillo(cantidadBloques)
                     mensaje_tiempo_inicio_Ladrillo = pygame.time.get_ticks()
+                if tiempo_actual - tiempo_ultima_recarga_Bomba >= recargaArma:
+                    recargar_bomba(cantidadArmas)
+                    mensaje_tiempo_inicio_Bomba = pygame.time.get_ticks()
 
             self.MainWindow.blit(self.fondo, (0, 0))
             clock.tick(fps)
@@ -498,7 +516,7 @@ class Screens:
                     for bomb in bombs:
                         if bomb.rect.bottom < 0 or bomb.rect.top> self.MainWindow.get_height() or bomb.rect.left > self.MainWindow.get_width() or bomb.rect.right < 0:
                             bombs_to_remove.append(bomb)
-                            Bomb.bomb_count += 1
+                            #Bomb.bomb_count += 1
                         if aguila.rect.colliderect(bomb.rect):
                             self.gameoverScreen(points)
                 for bomb in bombs_to_remove:
