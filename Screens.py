@@ -346,7 +346,6 @@ class Screens:
                                     mitanque.image = mitanque.skins[0]
                                 else:
                                     mitanque.image = mitanque.skins[1]
-                            print("cambia skin")
                     elif event.type == KEYDOWN and event.key == K_m:
                         if Water.can_place_water():
                             waterDir = mitanque.getDirection()
@@ -383,36 +382,41 @@ class Screens:
                         print("La canción ha terminado de reproducirse.")
                         running = False  # Puedes agregar tu propia lógica para continuar después de la canción
                         self.winScreen(points)
-                    elif event.type == KEYDOWN and event.key == K_1 and cantidadBloques['acero'] > 0:
-                        cantidadBloques['acero'] -= 1
-                        bloque_acero = (cursor_x, cursor_y)
-                        bloques_acero.append(bloque_acero)
-                        mensaje_tiempo_inicio_Acero = tiempo_ultima_recarga_Acero
-                    elif event.type == KEYDOWN and event.key == K_2 and cantidadBloques['madera'] > 0:
-                        cantidadBloques['madera'] -= 1
-                        bloque_madera = (cursor_x, cursor_y)
-                        bloques_madera.append(bloque_madera)
-                        mensaje_tiempo_inicio_Madera = tiempo_ultima_recarga_Madera
-                    elif event.type == KEYDOWN and event.key == K_3 and cantidadBloques['ladrillo'] > 0:
-                        cantidadBloques['ladrillo'] -= 1
-                        bloque_ladrillo = (cursor_x, cursor_y)
-                        bloques_ladrillo.append(bloque_ladrillo)
-                        mensaje_tiempo_inicio_Ladrillo = tiempo_ultima_recarga_Ladrillo
                     elif event.type == KEYDOWN:
-                        if event.key == K_UP and cursor_y - 50 >= 0:
+
+                        if event.key == K_1 and cantidadBloques['acero'] > 0:
+                            cantidadBloques['acero'] -= 1
+                            bloque_acero = (cursor_x, cursor_y)
+                            bloques_acero.append(bloque_acero)
+                            mensaje_tiempo_inicio_Acero = tiempo_ultima_recarga_Acero
+
+                        elif event.key == K_2 and cantidadBloques['madera'] > 0:
+                            cantidadBloques['madera'] -= 1
+                            bloque_madera = (cursor_x, cursor_y)
+                            bloques_madera.append(bloque_madera)
+                            mensaje_tiempo_inicio_Madera = tiempo_ultima_recarga_Madera
+
+                        elif event.key == K_3 and cantidadBloques['ladrillo'] > 0:
+                            cantidadBloques['ladrillo'] -= 1
+                            bloque_ladrillo = (cursor_x, cursor_y)
+                            bloques_ladrillo.append(bloque_ladrillo)
+                            mensaje_tiempo_inicio_Ladrillo = tiempo_ultima_recarga_Ladrillo
+
+                        elif event.key == K_UP and cursor_y - 50 >= 0:
                             cursor_y -= 50
                             blockcursor_position = (cursor_x, cursor_y)
+
                         elif event.key == K_DOWN and cursor_y + 100 <= altoVentana:
                             cursor_y += 50
                             blockcursor_position = (cursor_x, cursor_y)
+
                         elif event.key == K_RIGHT and cursor_x + 100 <= anchoVentana:
                             cursor_x += 50
                             blockcursor_position = (cursor_x, cursor_y)
+
                         elif event.key == K_LEFT and cursor_x - 50 >= 0:
                             cursor_x -= 50
                             blockcursor_position = (cursor_x, cursor_y)
-                        else:
-                            blockcursor_position = blockcursor_position
 
                 elif pausa and event.type == KEYDOWN and event.key == K_p:
                     pausa = False

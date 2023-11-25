@@ -11,9 +11,9 @@ class Player(pygame.sprite.Sprite):
         self.direccion="left"
         self.time = 0
         self.skins = [pygame.transform.scale(pygame.image.load("imagenes/tankVerde.png"), (50, 50)),
-                      pygame.transform.scale(pygame.image.load("imagenes/explosion.png"), (50, 50)),
                       pygame.transform.scale(pygame.image.load("imagenes/tankRojo.png"), (50, 50)),
                         pygame.transform.scale(pygame.image.load("imagenes/tankAzul.png"),(50, 50))]
+        self.image_shot=pygame.transform.scale(pygame.image.load("imagenes/explosion.png"), (50, 50))
         self.icon = self.skins[0]
         self.rotaciones = [pygame.transform.rotate(self.icon,0),pygame.transform.rotate(self.icon,270),pygame.transform.rotate(self.icon,180),pygame.transform.rotate(self.icon,90)]
         self.image=self.rotaciones[0]
@@ -58,7 +58,7 @@ class Player(pygame.sprite.Sprite):
         self.image=self.rotaciones[0]
 
     def disparar(self):
-        self.image = self.skins[1]
+        self.image = self.image_shot
         self.shoot_time = pygame.time.get_ticks()
 
 
