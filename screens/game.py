@@ -4,9 +4,8 @@ import pygame
 import time
 import sys
 from random import randint
-from componentes import button, Entry,Label,Music,Aguila,Bloque,BloqueAcero,BloqueConcreto,BloqueMadera,Player,VentanaPausa
+from componentes import button,Label,Music,Aguila,Bloque,BloqueAcero,BloqueConcreto,BloqueMadera,Player,VentanaPausa, CursorBloques
 from interfaces.intPantallas import Pantallas
-from services import JsonController,FilesController
 from weapons.Bomb import Bomb 
 from weapons.Water import Water
 from weapons.Fire import Fire
@@ -51,6 +50,10 @@ class GameScreen(Pantallas):
         self.aguilaSprite = Group()
         self.aguilaSprite.add(self.aguila)
         self.aguila.set_position(0,200)
+
+        self.cursor=CursorBloques.CursorBloques(self.MainWindow)
+        self.cursorSprite=Group()
+        self.cursorSprite.add=(self.cursor)
 
         self.music = Music.Music(self.MainWindow, self.musica1)
         self.music.playSong()
@@ -97,7 +100,7 @@ class GameScreen(Pantallas):
         self.tiempo_ultima_recarga_Ladrillo = pygame.time.get_ticks()
         self.bloques_recargados=0
 
-        self.cantidadBloques={'acero':5, 'madera':10, 'ladrillo':8}
+        self.cantidadBloques={'acero':10, 'madera':10, 'ladrillo':10}
         self.coloresBloques={'acero':(169, 169, 169), 'madera': (139,69,19), 'ladrillo': (255,0,0)}
 
         self.colorTexto=(0,0,0)
@@ -108,18 +111,8 @@ class GameScreen(Pantallas):
 
         
     def mostrar_contador_bombas(self, contador, MainWindow):
-        """
-        Display the bomb counter on the screen.
-
-        Args:
-            contador (int): The bomb count.
-
-        Returns:
-            None
-        """
         blanco = (255, 255, 255)
         negro = (0, 0, 0)
-        # Clear the counter area
         font = pygame.font.Font(None, 36)
         texto = font.render(f'Bombas: {contador}', True, blanco)
         MainWindow.blit(texto, (1200 - texto.get_width() - 10, 0))
@@ -135,6 +128,7 @@ class GameScreen(Pantallas):
         font = pygame.font.Font(None, 36)
         texto = font.render(f'Bolas de Fuego: {contador}', True, blanco)
         MainWindow.blit(texto, (1200 - texto.get_width() - 10, 60))
+
     def runner(self):
         
         for event in pygame.event.get():
@@ -273,6 +267,9 @@ class GameScreen(Pantallas):
 
         self.tanqueSprite.update(self.MainWindow)
         self.tanqueSprite.draw(self.MainWindow)
+
+        self.cursorSprite.update(self.MainWindow)
+        self.cursorSprite.draw(self.MainWindow)
 
         self.aguilaSprite.draw(self.MainWindow)
 
