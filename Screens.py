@@ -1,4 +1,6 @@
 import i18n
+
+import Blocks.BloqueAcero
 i18n.load_path.append('./translation/')
 i18n.set('locale', 'es')
 i18n.set('file_format', 'json')
@@ -291,21 +293,21 @@ class Screens:
 
         self.labelCharacterInScreen.update_text(self.playerName)
 
-        steelblock = pygame.image.load("Assets/Blocks/SteelBlock.png")
-        steelblock = pygame.transform.scale(steelblock,(50,50))
+        blockcursor=pygame.image.load("Assets/Cursor/Blocks_Cursor.png")
+        blockcursor= pygame.transform.scale(blockcursor,(50,50))
+        cursor_x=0
+        cursor_y=0
+        blockcursor_position=(cursor_x,cursor_y)
+
+        steelblock = Blocks.BloqueAcero.BloqueAcero(self.MainWindow,cursor_x,cursor_y)
+        steelblock_image = pygame.transform.scale(pygame.image.load("Assets/Blocks/SteelBlock.png"),(50,50))
         woodblock = pygame.image.load("Assets/Blocks/woodblock.jpg")
         woodblock = pygame.transform.scale(woodblock, (50, 50))
         brickblock = pygame.image.load("Assets/Blocks/brickblock.jpg")
         brickblock = pygame.transform.scale(brickblock, (50, 50))
 
         blocks=Group()
-        
-
-        blockcursor=pygame.image.load("Assets/Cursor/Blocks_Cursor.png")
-        blockcursor= pygame.transform.scale(blockcursor,(50,50))
-        cursor_x=0
-        cursor_y=0
-        blockcursor_position=(cursor_x,cursor_y)
+        blocks.add(steelblock)
 
         mensaje_tiempo_inicio_Acero= None
         mensaje_tiempo_inicio_Madera = None
@@ -330,12 +332,13 @@ class Screens:
                         running = False 
                         self.winScreen(points)
                     elif event.type == KEYDOWN:
-                        if event.type == KEYDOWN and event.key == K_g:
+                        if event.key == K_g:
                             self.fondo = self.fondosDisponibles[randint(0, len(self.fondosDisponibles) - 1)]
 
                         elif event.key == K_1 and cantidadBloques['acero'] > 0:
                             cantidadBloques['acero'] -= 1
                             bloque_acero = (cursor_x, cursor_y)
+                            steelblock.update(cursor_x,cursor_y)
                             bloques_acero.append(bloque_acero)
                             mensaje_tiempo_inicio_Acero = tiempo_ultima_recarga_Acero
 
@@ -442,7 +445,8 @@ class Screens:
             self.MainWindow.blit(blockcursor,blockcursor_position)
 
             for bloque_acero in bloques_acero:
-                self.MainWindow.blit(steelblock, bloque_acero)
+                #self.MainWindow.blit(steelblock, bloque_acero)
+                blocks.draw(self.MainWindow)
             for bloque_madera in bloques_madera:
                 self.MainWindow.blit(woodblock, bloque_madera)
             for bloque_ladrillo in bloques_ladrillo:
