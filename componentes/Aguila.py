@@ -2,7 +2,6 @@ import pygame
 import sys
 from pygame.locals import *
 
-
 width, height = 500, 400
 
 class Aguila(pygame.sprite.Sprite):
@@ -11,7 +10,7 @@ class Aguila(pygame.sprite.Sprite):
 
         super().__init__()
         self.original_image = pygame.image.load("imagenes/aguila.png")
-        self.image = pygame.transform.scale(self.original_image, (70, 70))
+        self.image = pygame.transform.scale(self.original_image, (50, 50))
 
 
         self.rect = self.image.get_rect()
@@ -29,7 +28,7 @@ class Aguila(pygame.sprite.Sprite):
     def reducir_vida(self, cantidad):
         self.vida -= cantidad
         if self.vida < 0:
-            self.vida = 0  # Asegura que la vida no sea negativa
+            self.vida = 0 
 
     def obtener_vida(self):
         return self.vida
