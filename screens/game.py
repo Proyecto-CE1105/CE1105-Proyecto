@@ -12,8 +12,8 @@ from weapons.Fire import Fire
 from componentes.ContadorBloques import dibujar_contador, recargar_acero, recargar_madera, recargar_ladrillo
 
 class GameScreen(Pantallas):
-    def __init__(self,controlador,jugador1,jugador2,musica1,musica2):
-
+    def __init__(self,controlador,jugador1,jugador2,musica1,musica2, socket):
+        self.socket = socket
         self.controlador=controlador
         self.pantalla=controlador.screen
         self.MainWindow=controlador.screen
@@ -337,7 +337,7 @@ class GameScreen(Pantallas):
                 texto_mensaje_rect = texto_mensaje.get_rect(midbottom=(self.anchoVentana // 2, self.altoVentana - 20))
                 self.MainWindow.blit(texto_mensaje, texto_mensaje_rect)
 
-        self.tanqueSprite.update(self.MainWindow)
+        self.tanqueSprite.update(self.MainWindow,self.socket)
         self.tanqueSprite.draw(self.MainWindow)
 
         self.cursorSprite.update(self.MainWindow)

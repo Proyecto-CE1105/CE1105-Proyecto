@@ -1,3 +1,4 @@
+import Socket
 from interfaces.intPantallas import Pantallas
 from pantallas import pantalla1,secundaria
 from screens import menu,singUp,login,game
@@ -11,6 +12,7 @@ import i18n as inter
 class Main:
     def __init__(self):
         #internacionalizacion
+        self.socket = Socket.Socket()
         self.i18n=inter
         self.i18n.load_path.append('./translation/')
         self.i18n.set('locale', 'es')
@@ -50,9 +52,12 @@ class Main:
         del temp
     
     def empezarPartida(self,jugador1,jugador2,musica1,musica2):
+
         self.status="partidad"
         self.music.stop()
-        self.pantalla=game.GameScreen(self,jugador1,jugador2,musica1,musica2)
+        self.socket.setup_socket_and_thread()
+        self.pantalla=game.GameScreen(self,jugador1,jugador2,musica1,musica2, self.socket)
+
 
     def run(self):
         self.music.playSong()
