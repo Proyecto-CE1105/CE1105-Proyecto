@@ -298,6 +298,9 @@ class Screens:
         brickblock = pygame.image.load("Assets/Blocks/brickblock.jpg")
         brickblock = pygame.transform.scale(brickblock, (50, 50))
 
+        blocks=Group()
+        
+
         blockcursor=pygame.image.load("Assets/Cursor/Blocks_Cursor.png")
         blockcursor= pygame.transform.scale(blockcursor,(50,50))
         cursor_x=0
