@@ -1,0 +1,21 @@
+{
+    "en":{
+    "login":"login",
+    "singup":"Sing up",
+    "attacker":"attacker",
+    "defender":"defender",
+    "user":"user:",
+    "password":"password:",
+    "email":"mail_",
+    "rol":"rol:",
+    "music":"music:",
+    "photo":"photo:",
+    "register":"Registeruser",
+    "selec_music":"SelectMusic",
+    "select_picture":"SelectPhoto",
+    "time":"time",
+    "destroy":"Destoyed blocks",
+    "points":"points",
+    "seconds":"segundos",
+    "player":"player"
+}}
