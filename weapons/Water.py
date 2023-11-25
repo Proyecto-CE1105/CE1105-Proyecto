@@ -10,7 +10,7 @@ class Water(pygame.sprite.Sprite):
         self.direccion = waterDir
         self.tankPos = tankRect
         self.pantalla =MainWindow
-        self.original_image = pygame.image.load("imagenes/wwaterball.png")
+        self.original_image = pygame.image.load("Assets/Weapons/WaterBall.png")
         self.image = pygame.transform.scale(self.original_image, (50, 50))
         self.rect = self.image.get_rect()
         self.rect.x = -self.rect.width
@@ -42,7 +42,6 @@ class Water(pygame.sprite.Sprite):
     def can_place_water():
         return Water.water_count > 0
 
-    # Getters to obtain positions of water ball image's sides
     def get_left(self):
         return self.rect.left
 

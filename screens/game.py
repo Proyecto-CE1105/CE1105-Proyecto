@@ -51,9 +51,9 @@ class GameScreen(Pantallas):
         self.aguilaSprite.add(self.aguila)
         self.aguila.set_position(0,200)
 
-        self.cursor=CursorBloques.CursorBloques(self.MainWindow)
         self.cursorSprite=Group()
-        self.cursorSprite.add=(self.cursor)
+        self.cursor=CursorBloques.CursorBloques(self.MainWindow)
+        self.cursorSprite.add(self.cursor)
 
         self.music = Music.Music(self.MainWindow, self.musica1)
         self.music.playSong()

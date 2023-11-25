@@ -10,7 +10,7 @@ class Fire(pygame.sprite.Sprite):
         self.direccion = fireDir
         self.tankPos = tankRect
         self.pantalla =MainWindow
-        self.original_image = pygame.image.load("imagenes/fireball.jpg")
+        self.original_image = pygame.image.load("Assets/Weapons/FireBall.png")
         self.image = pygame.transform.scale(self.original_image, (50, 50))
         self.rect = self.image.get_rect()
         self.rect.x = -self.rect.width

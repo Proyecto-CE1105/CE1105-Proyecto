@@ -29,22 +29,22 @@ class Player(pygame.sprite.Sprite):
         keys = pygame.key.get_pressed()
         if keys[pygame.K_w]:
             if self.rect.top >= 0:
-                self.rect.y -= 4
+                self.rect.y -= 5
                 self.direccion = "up"
                 self.image=self.rotaciones[1]
         if keys[pygame.K_s]:
             if self.rect.bottom <= MainWindow.get_height():
-                self.rect.y += 4
+                self.rect.y += 5
                 self.direccion = "down"
                 self.image=self.rotaciones[3]
         if keys[pygame.K_a]:
             if self.rect.left >= 0:
-                self.rect.x -= 4
+                self.rect.x -= 5
                 self.direccion = "left"
                 self.image=self.rotaciones[0]
         if keys[pygame.K_d]:
             if self.rect.right <= MainWindow.get_width():
-                self.rect.x += 4
+                self.rect.x += 5
                 self.direccion = "right"
                 self.image=self.rotaciones[2]
         if keys[pygame.K_q]:
