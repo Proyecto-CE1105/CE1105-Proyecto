@@ -199,22 +199,19 @@ class GameScreen(Pantallas):
                     #self.winScreen(self.points)
                 elif event.type == KEYDOWN and event.key == K_1 and self.cantidadBloques['acero'] > 0:
                     self.cantidadBloques['acero'] -= 1
-                    x, y = pygame.mouse.get_pos()
-                    bloque_acero = (x - 25, y - 25)
+                    bloque_acero = self.cursor.get_pos()
                     self.bloques_acero.append(bloque_acero)
                     ultimo_tiempo_acero = pygame.time.get_ticks()
                     self.mensaje_tiempo_inicio_Acero = self.tiempo_ultima_recarga_Acero
                 elif event.type == KEYDOWN and event.key == K_2 and self.cantidadBloques['madera'] > 0:
                     self.cantidadBloques['madera'] -= 1
-                    x, y = pygame.mouse.get_pos()
-                    bloque_madera = (x - 25, y - 25)
+                    bloque_madera = self.cursor.get_pos()
                     self.bloques_madera.append(bloque_madera)
                     self.ultimo_tiempo_madera = pygame.time.get_ticks()
                     self.mensaje_tiempo_inicio_Madera = self.tiempo_ultima_recarga_Madera
                 elif event.type == KEYDOWN and event.key == K_3 and self.cantidadBloques['ladrillo'] > 0:
                     self.cantidadBloques['ladrillo'] -= 1
-                    x, y = pygame.mouse.get_pos()
-                    bloque_ladrillo = (x - 25, y - 25)
+                    bloque_ladrillo = self.cursor.get_pos()
                     self.bloques_ladrillo.append(bloque_ladrillo)
                     ultimo_tiempo_ladrillo = pygame.time.get_ticks()
                     self.mensaje_tiempo_inicio_Ladrillo = self.tiempo_ultima_recarga_Ladrillo

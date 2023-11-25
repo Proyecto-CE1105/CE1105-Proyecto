@@ -18,7 +18,6 @@ class CursorBloques(pygame.sprite.Sprite):
         if keys[pygame.K_UP]:
             now = pygame.time.get_ticks()
             if self.rect.top-50 >= 0 and now-self.last_movement>self.time_move:
-                print(self.rect.top)
                 self.rect.y -= 50
                 self.last_movement=now
         if keys[pygame.K_DOWN]:
@@ -37,6 +36,6 @@ class CursorBloques(pygame.sprite.Sprite):
                 self.rect.x += 50
                 self.last_movement=now
     
-    def pos_getter(self):
+    def get_pos(self):
         return (self.rect.x, self.rect.y)
         
