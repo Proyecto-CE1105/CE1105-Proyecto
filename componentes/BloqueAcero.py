@@ -9,4 +9,8 @@ class BloqueAcero(pygame.sprite.Sprite):
         self.health=100
 
     def update(self):
-        pass
+        if self.health<=0:
+            pass
+    
+    def set_health(self,value):
+        self.health-=value
