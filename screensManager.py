@@ -57,7 +57,7 @@ class Main:
 
         self.status="partida"
         self.music.stop()
-        self.pantalla=game.GameScreen(self,jugador1,jugador2,musica1,musica2)
+        self.pantalla=game.GameScreen(self,jugador1,jugador2,musica1,musica2,self.socket)
     
     def gameOver(self,puntaje,jugadorNombre):
         self.status="gameOver"

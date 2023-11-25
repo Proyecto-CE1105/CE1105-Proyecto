@@ -1,4 +1,4 @@
-import socket, keyboard
+import socket
 from threading import Thread
 
 import pygame

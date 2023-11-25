@@ -35,7 +35,7 @@ class menuPrincipal(Pantallas):
                     self.change("podio")
                 if self.buttonIdioma.is_clicked(mouse.get_pos()):
                     print("singup clicked")
-                    self.idioma()
+                    pass
 
 
             self.buttonSignUp.seeActiveness(mouse.get_pos(), self.manager.screen)
