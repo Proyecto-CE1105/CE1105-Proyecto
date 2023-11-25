@@ -121,10 +121,6 @@ class GameScreen(Pantallas):
                     if event.key==K_p:
                         self.pausa = True
                         self.music.pause()
-                        # pauseTime=pause_time(musicStartTime)
-                        self.draw_pause(self.MainWindow, self.anchoVentana, self.altoVentana)
-                        self.MainWindow.blit(self.rect_surface, (0, 0))
-                        print("Juego Pausado")
 
                     elif event.key == K_g:
                         self.fondo = self.fondosDisponibles[randint(0, len(self.fondosDisponibles) - 1)]
@@ -208,88 +204,92 @@ class GameScreen(Pantallas):
         self.clock.tick(self.fps)
         dibujar_contador(self.MainWindow, self.cantidadBloques)
 
-        for bloque_acero in self.bloques_acero:
-            bloque_acero.update()
+        if not self.pausa:
+            for bloque_acero in self.bloques_acero:
+                bloque_acero.update()
 
-            bombs_hit = pygame.sprite.spritecollide(bloque_acero, self.bombSprite, True)
-            for bomb in bombs_hit:
-                bloque_acero.health-=100
-                Bomb.bomb_count += 1
+                bombs_hit = pygame.sprite.spritecollide(bloque_acero, self.bombSprite, True)
+                for bomb in bombs_hit:
+                    bloque_acero.health-=100
+                    Bomb.bomb_count += 1
 
-            fires_hit = pygame.sprite.spritecollide(bloque_acero, self.fireSprite, True)
-            for fire in fires_hit:
-                bloque_acero.health-=100
-                Fire.fire_count += 1
+                fires_hit = pygame.sprite.spritecollide(bloque_acero, self.fireSprite, True)
+                for fire in fires_hit:
+                    bloque_acero.health-=100
+                    Fire.fire_count += 1
 
-            waters_hit = pygame.sprite.spritecollide(bloque_acero, self.waterSprite, True)
-            for water in waters_hit:
-                bloque_acero.health-=50
-                Water.water_count += 1
+                waters_hit = pygame.sprite.spritecollide(bloque_acero, self.waterSprite, True)
+                for water in waters_hit:
+                    bloque_acero.health-=50
+                    Water.water_count += 1
 
-            if bloque_acero.health <= 0:
-                self.bloques_acero.remove(bloque_acero)
+                if bloque_acero.health <= 0:
+                    self.bloques_acero.remove(bloque_acero)
 
-            self.MainWindow.blit(bloque_acero.image, bloque_acero.rect)
+                self.MainWindow.blit(bloque_acero.image, bloque_acero.rect)
 
-        for bloque_madera in self.bloques_madera:
-            bloque_madera.update()
+            for bloque_madera in self.bloques_madera:
+                bloque_madera.update()
 
-            bombs_hit = pygame.sprite.spritecollide(bloque_madera, self.bombSprite, True)
-            for bomb in bombs_hit:
-                bloque_madera.health-=100
-                Bomb.bomb_count += 1
+                bombs_hit = pygame.sprite.spritecollide(bloque_madera, self.bombSprite, True)
+                for bomb in bombs_hit:
+                    bloque_madera.health-=100
+                    Bomb.bomb_count += 1
 
-            fires_hit = pygame.sprite.spritecollide(bloque_madera, self.fireSprite, True)
-            for fire in fires_hit:
-                bloque_madera.health-=100
-                Fire.fire_count += 1
+                fires_hit = pygame.sprite.spritecollide(bloque_madera, self.fireSprite, True)
+                for fire in fires_hit:
+                    bloque_madera.health-=100
+                    Fire.fire_count += 1
 
-            waters_hit = pygame.sprite.spritecollide(bloque_madera, self.waterSprite, True)
-            for water in waters_hit:
-                bloque_madera.health-=100
-                Water.water_count += 1
+                waters_hit = pygame.sprite.spritecollide(bloque_madera, self.waterSprite, True)
+                for water in waters_hit:
+                    bloque_madera.health-=100
+                    Water.water_count += 1
 
-            if bloque_madera.health <= 0:
-                self.bloques_madera.remove(bloque_madera)
+                if bloque_madera.health <= 0:
+                    self.bloques_madera.remove(bloque_madera)
 
-            self.MainWindow.blit(bloque_madera.image, bloque_madera.rect)
+                self.MainWindow.blit(bloque_madera.image, bloque_madera.rect)
 
-        for bloque_ladrillo in self.bloques_ladrillo:
-            bloque_ladrillo.update()
+            for bloque_ladrillo in self.bloques_ladrillo:
+                bloque_ladrillo.update()
 
-            bombs_hit = pygame.sprite.spritecollide(bloque_ladrillo, self.bombSprite, True)
-            for bomb in bombs_hit:
-                bloque_ladrillo.health-=100
-                Bomb.bomb_count += 1
+                bombs_hit = pygame.sprite.spritecollide(bloque_ladrillo, self.bombSprite, True)
+                for bomb in bombs_hit:
+                    bloque_ladrillo.health-=100
+                    Bomb.bomb_count += 1
 
-            fires_hit = pygame.sprite.spritecollide(bloque_ladrillo, self.fireSprite, True)
-            for fire in fires_hit:
-                bloque_ladrillo.health-=50
-                Fire.fire_count += 1
+                fires_hit = pygame.sprite.spritecollide(bloque_ladrillo, self.fireSprite, True)
+                for fire in fires_hit:
+                    bloque_ladrillo.health-=50
+                    Fire.fire_count += 1
 
-            waters_hit = pygame.sprite.spritecollide(bloque_ladrillo, self.waterSprite, True)
-            for water in waters_hit:
-                bloque_ladrillo.health-=33.34
-                Water.water_count += 1
+                waters_hit = pygame.sprite.spritecollide(bloque_ladrillo, self.waterSprite, True)
+                for water in waters_hit:
+                    bloque_ladrillo.health-=33.34
+                    Water.water_count += 1
 
-            if bloque_ladrillo.health <= 0:
-                self.bloques_ladrillo.remove(bloque_ladrillo)
+                if bloque_ladrillo.health <= 0:
+                    self.bloques_ladrillo.remove(bloque_ladrillo)
 
-            self.MainWindow.blit(bloque_ladrillo.image, bloque_ladrillo.rect)
+                self.MainWindow.blit(bloque_ladrillo.image, bloque_ladrillo.rect)
 
-        self.tanqueSprite.update(self.MainWindow)
+            self.tanqueSprite.update(self.MainWindow)
         self.tanqueSprite.draw(self.MainWindow)
 
-        self.cursorSprite.update(self.MainWindow)
+        if not self.pausa:
+            self.cursorSprite.update(self.MainWindow)
         self.cursorSprite.draw(self.MainWindow)
 
         self.aguilaSprite.draw(self.MainWindow)
-
-        self.bombSprite.update()
+        if not self.pausa:
+            self.bombSprite.update()
         self.bombSprite.draw(self.MainWindow)
-        self.fireSprite.update()
+        if not self.pausa:
+            self.fireSprite.update()
         self.fireSprite.draw(self.MainWindow)
-        self.waterSprite.update()
+        if not self.pausa:
+            self.waterSprite.update()
         self.waterSprite.draw(self.MainWindow)
 
         self.mostrar_contador_bombas(Bomb.bomb_count, self.MainWindow)
